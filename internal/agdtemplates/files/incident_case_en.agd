@@ -1,0 +1,134 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- INC-001 | Problem Section Tagging | Pin the affected feature and section first
+- INC-010 | Bug Situation Capture | Record repro conditions and observed symptoms
+- INC-020 | Fast Root-Cause Analysis | Build first-pass cause conclusion from evidence
+- INC-030 | Improvement Direction | Decide fix options, priority, and risk
+- INC-040 | AI Work Handoff Request | Write an execution-ready handoff for AI
+- INC-050 | AI Work Result Summary | Summarize AI changes and touched points
+- INC-060 | Validation and Closure Decision | Confirm close/follow-up decision with evidence
+
+@section INC-001
+title: Problem Section Tagging
+summary: Lock the incident to a feature tag and section ID before deep investigation
+links: INCIDENT-TAG-001
+content:
+<<<
+[Feature tag]
+- feature_tag:
+
+[Affected section]
+- source_doc:
+- section_id:
+- page/module:
+
+[Initial impact]
+- severity:
+- user impact:
+>>>
+
+@section INC-010
+title: Bug Situation Capture
+summary: Capture repro path and signal evidence quickly
+links: INCIDENT-REPRO-001
+content:
+<<<
+[Repro conditions]
+1)
+2)
+
+[Observed symptoms]
+- error message:
+- log/trace links:
+- metric anomalies:
+>>>
+
+@section INC-020
+title: Fast Root-Cause Analysis
+summary: Narrow down hypotheses with evidence and counter-evidence
+links: INCIDENT-RCA-001
+content:
+<<<
+[Cause candidates]
+1) hypothesis:
+   - evidence:
+   - counter-evidence:
+
+[Current primary cause]
+- cause:
+- confidence:
+>>>
+
+@section INC-030
+title: Improvement Direction
+summary: Separate short-term mitigation and long-term fix choices
+links: INCIDENT-FIX-001
+content:
+<<<
+[Options]
+1) temporary mitigation:
+2) permanent fix:
+
+[Selected plan]
+- reason:
+- expected risk:
+- done criteria:
+>>>
+
+@section INC-040
+title: AI Work Handoff Request
+summary: Package a prompt that AI can execute without ambiguity
+links: INCIDENT-AI-HANDOFF-001
+content:
+<<<
+[Request template]
+- target document:
+- target section:
+- requested change:
+- reason:
+- impact:
+- constraints:
+- done criteria:
+>>>
+
+@section INC-050
+title: AI Work Result Summary
+summary: Summarize AI output so humans can review quickly
+links: INCIDENT-AI-RESULT-001
+content:
+<<<
+[AI execution summary]
+- updated sections:
+- added @change entries:
+- key modifications:
+
+[Review notes]
+- items requiring verification:
+>>>
+
+@section INC-060
+title: Validation and Closure Decision
+summary: Verify outcome and decide close/follow-up
+links: INCIDENT-CLOSE-001
+content:
+<<<
+[Validation results]
+- test results:
+- production metrics:
+
+[Decision]
+- close / follow-up required:
+- next actions:
+>>>
+
+@change CHG-{{DATE}}-01
+target: INC-001
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial template scaffolding
+impact: Enables single-file flow from incident tagging to AI handoff/result summary
+

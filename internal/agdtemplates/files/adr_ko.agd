@@ -1,0 +1,100 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- ADR-001 | 배경 및 문제 | 어떤 배경에서 어떤 결정을 내려야 하는지 정리한다
+- ADR-010 | 결정 기준 | 선택 판단에 사용할 기준을 명시한다
+- ADR-020 | 대안 비교 | 고려한 대안을 장단점으로 비교한다
+- ADR-030 | 최종 결정 | 채택한 대안과 채택 이유를 기록한다
+- ADR-040 | 영향 및 후속 조치 | 기술/운영 영향과 후속 작업을 정의한다
+
+@section ADR-001
+title: 배경 및 문제
+summary: 현재 한계와 해결해야 할 핵심 문제를 기술한다
+links: ARCH-001
+content:
+<<<
+[배경]
+- 현재 구조:
+- 현재 문제:
+
+[결정 필요 항목]
+1)
+2)
+>>>
+
+@section ADR-010
+title: 결정 기준
+summary: 성능, 비용, 복잡도 등 판단 기준을 우선순위로 정한다
+links: NFR-001
+content:
+<<<
+1) 성능:
+2) 안정성:
+3) 구현 복잡도:
+4) 운영 비용:
+>>>
+
+@section ADR-020
+title: 대안 비교
+summary: 후보 대안을 같은 기준으로 비교해 선택 근거를 만든다
+links: RFC-001
+content:
+<<<
+[대안 A]
+- 장점:
+- 단점:
+
+[대안 B]
+- 장점:
+- 단점:
+
+[대안 C]
+- 장점:
+- 단점:
+>>>
+
+@section ADR-030
+title: 최종 결정
+summary: 채택한 안과 채택 이유, 비채택 대안을 명시한다
+links: DECISION-BOARD
+content:
+<<<
+[채택안]
+- 
+
+[채택 이유]
+1)
+2)
+
+[비채택 사유]
+- 대안 A:
+- 대안 B:
+>>>
+
+@section ADR-040
+title: 영향 및 후속 조치
+summary: 결정의 영향 범위와 마이그레이션 계획을 정리한다
+links: TASK-ARCH-001
+content:
+<<<
+[영향]
+- 코드:
+- 인프라:
+- 운영:
+
+[후속 조치]
+1) 작업:
+   - 담당:
+   - 기한:
+>>>
+
+@change CHG-{{DATE}}-01
+target: ADR-030
+date: {{DATE}}
+author: {{OWNER}}
+reason: 템플릿 초기 생성
+impact: 실제 시스템 제약 조건으로 결정 기준 보완 필요
+

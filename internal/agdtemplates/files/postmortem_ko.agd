@@ -1,0 +1,127 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- PM-001 | 사건 요약 | 사건 기간과 영향 범위를 요약한다
+- PM-010 | 타임라인 | 감지부터 복구까지 주요 이벤트를 기록한다
+- PM-015 | 의사결정 체인과 가정 | 핵심 결정과 당시 가정을 복원한다
+- PM-020 | 근본 원인 분석 | 직접 원인과 근본 원인을 구분한다
+- PM-030 | 대응 회고 | 잘한 점과 개선점을 균형 있게 정리한다
+- PM-040 | 재발 방지 액션 | 후속 조치와 담당자를 명시한다
+- PM-050 | source 반영 완료 증거 | 회고 결과의 source 문서 반영을 완료 조건으로 관리한다
+
+@section PM-001
+title: 사건 요약
+summary: 사건 발생 시간, 영향도, 사용자 피해를 한 곳에 기록한다
+links: INCIDENT-001
+content:
+<<<
+[사건 기간]
+- 시작:
+- 종료:
+
+[영향]
+- 사용자 영향:
+- 추정 영향 사용자 수:
+>>>
+
+@section PM-010
+title: 타임라인
+summary: 고신호 이벤트를 시간순으로 기록한다
+links: LOG-001
+content:
+<<<
+00:00 - 최초 알림
+00:00 - 온콜 확인
+00:00 - 원인 추적 시작
+00:00 - 완화 조치 적용
+00:00 - 복구 확인
+>>>
+
+@section PM-015
+title: 의사결정 체인과 가정
+summary: 왜 그런 결정을 했는지 당시 근거와 가정을 복원한다
+links: DECISION-TRACE-001
+content:
+<<<
+[핵심 의사결정]
+1) 결정:
+   - 가정:
+   - 당시 근거:
+   - 승인자:
+
+[깨진 가정]
+1)
+2)
+>>>
+
+@section PM-020
+title: 근본 원인 분석
+summary: 증상 중심이 아니라 원인 중심으로 재발 요인을 정리한다
+links: PR-001
+content:
+<<<
+[직접 원인]
+1)
+2)
+
+[근본 원인]
+1)
+2)
+
+[놓친 신호]
+- 조기 경고:
+- 테스트 공백:
+>>>
+
+@section PM-030
+title: 대응 회고
+summary: 대응 과정의 강점과 약점을 팀 학습 관점에서 정리한다
+links: RETRO-001
+content:
+<<<
+[잘한 점]
+1)
+2)
+
+[개선 필요]
+1)
+2)
+>>>
+
+@section PM-040
+title: 재발 방지 액션
+summary: 실행 가능한 후속 액션을 owner와 due date까지 정의한다
+links: ACTION-BOARD-001
+content:
+<<<
+1) 액션: / 담당: / 기한:
+2) 액션: / 담당: / 기한:
+3) 액션: / 담당: / 기한:
+>>>
+
+@section PM-050
+title: source 반영 완료 증거
+summary: postmortem 완료 전 source 문서 반영 증거를 반드시 남긴다
+links: SOURCE-FEEDBACK-001
+content:
+<<<
+[source 업데이트]
+1) source 문서:
+   - 업데이트 섹션:
+   - change ID:
+   - owner:
+   - 완료일:
+
+[완료 게이트]
+- source 반영 증거가 있어야 postmortem close 가능
+>>>
+
+@change CHG-{{DATE}}-01
+target: PM-040
+date: {{DATE}}
+author: {{OWNER}}
+reason: 템플릿 초기 생성
+impact: 사건별 증거와 후속 조치로 보완 필요

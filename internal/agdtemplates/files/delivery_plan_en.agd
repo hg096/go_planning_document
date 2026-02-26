@@ -1,0 +1,72 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- DEL-001 | Frontend Implementation Plan | Define UI/state/data-loading implementation scope
+- DEL-010 | QA Validation Plan | Define functional/regression scenarios and evidence rules
+- DEL-020 | Release Execution Checklist | Define release checks and rollback criteria
+
+@section DEL-001
+title: Frontend Implementation Plan
+summary: Make UI behavior and implementation scope explicit
+links: DELIVERY-FE-001
+content:
+<<<
+[Page/feature scope]
+1) page:
+   - key action:
+   - data source:
+   - exception handling:
+
+[Implementation tasks]
+1)
+2)
+>>>
+
+@section DEL-010
+title: QA Validation Plan
+summary: Standardize test scenarios and quality evidence
+links: DELIVERY-QA-001
+content:
+<<<
+[Functional validation]
+1) scenario:
+   - expected outcome:
+
+[Regression validation]
+1) impacted feature:
+   - checks:
+
+[Evidence]
+- test logs:
+- screenshots/links:
+>>>
+
+@section DEL-020
+title: Release Execution Checklist
+summary: Lock release and rollback criteria before execution
+links: DELIVERY-REL-001
+content:
+<<<
+[Pre-release checks]
+1)
+2)
+
+[Post-release checks]
+1)
+2)
+
+[Rollback criteria]
+- condition:
+- procedure:
+>>>
+
+@change CHG-{{DATE}}-01
+target: DEL-001
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial template scaffolding
+impact: Unifies frontend delivery and QA/release validation into one plan
+

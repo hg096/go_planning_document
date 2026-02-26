@@ -1,0 +1,97 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- ADR-001 | Context and Problem | Define background and decision scope
+- ADR-010 | Decision Criteria | Define criteria used for evaluation
+- ADR-020 | Alternatives | Compare alternatives with pros/cons
+- ADR-030 | Final Decision | Record selected option and rationale
+- ADR-040 | Impact and Follow-up | Define impact and migration steps
+
+@section ADR-001
+title: Context and Problem
+summary: Explain current constraints and decision need
+links: ARCH-001
+content:
+<<<
+[Context]
+- Current architecture:
+- Pain points:
+
+[Decision needed]
+1)
+2)
+>>>
+
+@section ADR-010
+title: Decision Criteria
+summary: Use explicit criteria to avoid subjective decisions
+links: NFR-001
+content:
+<<<
+1) Performance
+2) Reliability
+3) Implementation complexity
+4) Operational cost
+>>>
+
+@section ADR-020
+title: Alternatives
+summary: Compare candidate options in a consistent format
+links: RFC-001
+content:
+<<<
+[Option A]
+- Pros:
+- Cons:
+
+[Option B]
+- Pros:
+- Cons:
+
+[Option C]
+- Pros:
+- Cons:
+>>>
+
+@section ADR-030
+title: Final Decision
+summary: Document selected option and non-selected reasons
+links: DECISION-BOARD
+content:
+<<<
+[Selected option]
+-
+
+[Selection rationale]
+1)
+2)
+
+[Rejection reasons]
+- Option A:
+- Option B:
+>>>
+
+@section ADR-040
+title: Impact and Follow-up
+summary: Define rollout impact and migration actions
+links: TASK-ARCH-001
+content:
+<<<
+[Impact]
+- Code:
+- Infra:
+- Operations:
+
+[Follow-up actions]
+1) Task: / Owner: / Due:
+>>>
+
+@change CHG-{{DATE}}-01
+target: ADR-030
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial template scaffolding
+impact: Replace with architecture-specific decisions and constraints

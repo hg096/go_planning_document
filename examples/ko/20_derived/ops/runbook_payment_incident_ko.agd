@@ -1,0 +1,101 @@
+﻿@meta
+title: 결제 장애 대응 런북
+version: 0.1
+owner: sre-team
+
+@map
+- RUN-001 | 감지 기준 | 장애를 감지하는 지표와 알림 조건을 정의한다
+- RUN-010 | 장애 등급 분류 | 영향 범위에 따라 대응 우선순위를 정한다
+- RUN-020 | 즉시 롤백 절차 | 5분 내 서비스 안정화를 위한 절차를 수행한다
+- RUN-030 | 커뮤니케이션 | 내부와 외부 공지를 표준 템플릿으로 전파한다
+- RUN-040 | 복구 확인 | 장애 종료 기준과 사후 점검 항목을 확인한다
+
+@section RUN-001
+title: 감지 기준
+summary: 결제 실패율과 지연 지표를 기준으로 자동 알림을 트리거한다
+links: ALERT-payment-failure, ALERT-payment-latency
+content:
+<<<
+알림 조건:
+1) 5분 평균 실패율 3 퍼센트 초과
+2) 승인 지연 P95 2.5초 초과
+3) 승인 API 타임아웃 1분 누적 50건 초과
+
+알림 채널:
+- slack #incident-payment
+- pager duty on-call
+>>>
+
+@section RUN-010
+title: 장애 등급 분류
+summary: 장애 영향 사용자 수와 지속 시간을 기준으로 등급을 부여한다
+links: POLICY-INCIDENT-SEVERITY
+content:
+<<<
+SEV1:
+- 결제 기능 전면 불가
+- 10분 이상 지속 또는 매출 손실 즉시 발생
+
+SEV2:
+- 일부 결제 수단 불가
+- 우회 결제 가능
+
+SEV3:
+- 지연 증가 또는 일시적 오류
+- 자동 복구 가능성 높음
+>>>
+
+@section RUN-020
+title: 즉시 롤백 절차
+summary: 신규 릴리즈 영향이 의심되면 안전 버전으로 즉시 복귀한다
+links: RUN-CMD-ROLLBACK, DASHBOARD-payment-live
+content:
+<<<
+실행 순서:
+1) 배포 상태 확인 후 신규 버전 트래픽 0 퍼센트
+2) 이전 안정 버전 트래픽 100 퍼센트
+3) 캐시 및 큐 적체 확인
+4) 10분 모니터링 후 정상화 판정
+
+주의:
+- 데이터 스키마 변경이 포함된 경우 다운그레이드 가이드 병행
+>>>
+
+@section RUN-030
+title: 커뮤니케이션
+summary: 기술 대응과 별도로 상태 공지를 일정 주기로 공유한다
+links: TEMPLATE-incident-internal, TEMPLATE-incident-external
+content:
+<<<
+내부 공지:
+- 최초 공지: 인지 후 5분 이내
+- 업데이트: 15분 간격
+- 종료 공지: 원인, 영향, 조치 요약 포함
+
+외부 공지:
+- 고객 영향 확인 시 상태 페이지에 즉시 반영
+>>>
+
+@section RUN-040
+title: 복구 확인
+summary: 지표 정상화와 미처리 작업 여부를 확인하고 장애를 종료한다
+links: CHECKLIST-incident-close
+content:
+<<<
+종료 조건:
+1) 실패율 1 퍼센트 이하 15분 연속 유지
+2) 승인 지연 P95 1.8초 이하
+3) 미처리 큐 0 또는 정상 범위
+
+사후 작업:
+- incident-case 기록(30_shared/errFix) 완료
+- 필요 시 포스트모템 일정 확정
+- 후속 액션 티켓 생성
+>>>
+
+@change CHG-20260223-RUN01
+target: RUN-020
+date: 2026-02-23
+author: ai-agent
+reason: 롤백 직후 10분 모니터링 단계를 필수 절차로 추가
+impact: 온콜 체크리스트와 자동화 스크립트 업데이트 필요

@@ -1,0 +1,39 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Go build cache and test artifacts
+.gocache/
+*.test
+*.out
+coverage.out
+coverage.txt
+cover.out
+*.prof
+
+# Local binaries
+# *.exe
+*.dll
+*.so
+*.dylib
+
+# Generated runtime workspace
+agd_docs/
+
+# Logs/temp
+*.log
+*.tmp
+tmp/
+temp/
+.tmp_editorconfig_view.txt
+
+# Local environment files
+.env
+.env.*

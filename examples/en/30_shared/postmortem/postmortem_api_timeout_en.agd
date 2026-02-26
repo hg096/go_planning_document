@@ -1,0 +1,123 @@
+﻿@meta
+title: Postmortem - Payment Approval Timeout
+version: 0.1
+owner: platform-pay
+
+@map
+- PM-001 | Incident Summary | Record incident duration and user impact in one place
+- PM-010 | Timeline | Keep high-signal, time-ordered event history
+- PM-015 | Decision Chain and Assumptions | Restore key decisions and assumptions to trace repeat failure patterns
+- PM-020 | Root Cause Analysis | Focus on causes, not only symptoms
+- PM-030 | Response Review | Keep balanced review for team learning
+- PM-040 | Prevention Actions | Define owner and due date for each action item
+- PM-050 | Source Feedback Completion | Require source-doc feedback evidence before closing postmortem
+
+@section PM-001
+title: Incident Summary
+summary: Record incident duration and user impact in one place
+links: INCIDENT-001
+content:
+<<<
+[Incident window]
+- Start:
+- End:
+
+[Impact]
+- User-facing impact:
+- Estimated affected users:
+>>>
+
+@section PM-010
+title: Timeline
+summary: Keep high-signal, time-ordered event history
+links: LOG-001
+content:
+<<<
+00:00 - First alert
+00:00 - On-call acknowledged
+00:00 - Investigation started
+00:00 - Mitigation applied
+00:00 - Recovery confirmed
+>>>
+
+@section PM-015
+title: Decision Chain and Assumptions
+summary: Restore key decisions and assumptions to trace repeat failure patterns
+links: DECISION-TRACE-CHK
+content:
+<<<
+- Record decision, evidence, approver, and failed assumptions
+>>>
+
+@section PM-020
+title: Root Cause Analysis
+summary: Focus on causes, not only symptoms
+links: PR-001
+content:
+<<<
+[Direct cause]
+1)
+2)
+
+[Root cause]
+1)
+2)
+
+[Missed signals]
+- Early warning:
+- Test gap:
+>>>
+
+@section PM-030
+title: Response Review
+summary: Keep balanced review for team learning
+links: RETRO-001
+content:
+<<<
+[What went well]
+1)
+2)
+
+[Needs improvement]
+1)
+2)
+>>>
+
+@section PM-040
+title: Prevention Actions
+summary: Define owner and due date for each action item
+links: ACTION-BOARD-001
+content:
+<<<
+1) Action: / Owner: / Due:
+2) Action: / Owner: / Due:
+3) Action: / Owner: / Due:
+>>>
+
+@section PM-050
+title: Source Feedback Completion
+summary: Require source-doc feedback evidence before closing postmortem
+links: SOURCE-FEEDBACK-CHK
+content:
+<<<
+- Record source doc, section, change ID, and completion date
+>>>
+
+@change CHG-2026-02-23-01
+target: PM-040
+date: 2026-02-23
+author: platform-pay
+reason: Initial template scaffolding
+impact: Replace with incident-specific evidence and actions
+
+@change CHG-2026-02-24-01
+target: PM-015
+date: 2026-02-24
+author: ai-agent
+reason: apply failure-analysis hardening
+
+@change CHG-2026-02-24-02
+target: PM-050
+date: 2026-02-24
+author: ai-agent
+reason: apply failure-analysis hardening

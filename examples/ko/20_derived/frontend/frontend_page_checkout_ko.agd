@@ -1,0 +1,159 @@
+﻿@meta
+title: 프론트 페이지 로직 - Checkout
+version: 1.0
+owner: checkout-frontend
+authority: derived
+source_doc: ../../10_source/service/service_logic_checkout_core_ko.agd
+source_sections: SYS-020->FP-020,SYS-030->FP-030,SYS-050->FP-040,SYS-060->FP-060
+
+@map
+- FP-001 | 페이지 인벤토리 | 페이지별 목표와 핵심 CTA를 명시해 팀 간 이해를 맞춘다
+- FP-010 | 라우팅 및 접근 제어 | 인증 상태와 주문 상태에 따라 진입 규칙을 일관되게 유지한다
+- FP-020 | 페이지별 데이터 로딩 | 초기 로딩과 사용자 액션 API를 분리해 예측 가능한 UX를 만든다
+- FP-030 | 사용자 액션과 상태 전이 | 결제 흐름의 상태 전이를 명시해 예외 케이스 누락을 줄인다
+- FP-040 | 예외 상태 처리 | 오류 유형별 안내 문구와 다음 행동을 표준화한다
+- FP-050 | 컴포넌트 계약 | 페이지와 공통 컴포넌트 간의 입출력 계약을 명확히 한다
+- FP-060 | 분석 이벤트와 성능 | 결제 전환과 체감 성능을 함께 추적한다
+- FP-070 | 가정 및 리스크 신호 | 숨은 가정과 가정이 깨질 때의 경고 신호를 문서화한다
+
+@section FP-001
+title: 페이지 인벤토리
+summary: 페이지별 목표와 핵심 CTA를 명시해 팀 간 이해를 맞춘다
+links: IA-CHECKOUT-FE
+content:
+<<<
+1) /checkout
+- 목적: 결제 수단 선택 및 결제 요청 완료
+- 핵심 CTA: 결제하기
+
+2) /checkout/result
+- 목적: 결제 성공/실패 결과 확인 및 후속 행동 안내
+- 핵심 CTA: 주문 상세 보기
+>>>
+
+@section FP-010
+title: 라우팅 및 접근 제어
+summary: 인증 상태와 주문 상태에 따라 진입 규칙을 일관되게 유지한다
+links: ROUTE-CHECKOUT-FE
+content:
+<<<
+[라우트 규칙]
+- /checkout:
+  - 접근 조건: 로그인 + 유효한 주문 컨텍스트
+  - 실패 시 이동: /login 또는 /cart
+
+- /checkout/result:
+  - 접근 조건: 결제 시도 이력 존재
+  - 실패 시 이동: /orders
+
+[공통 가드]
+- 인증 가드: 미로그인 사용자는 로그인으로 이동
+- 상태 가드: 만료된 주문은 장바구니로 복귀
+>>>
+
+@section FP-020
+title: 페이지별 데이터 로딩
+summary: 초기 로딩과 사용자 액션 API를 분리해 예측 가능한 UX를 만든다
+links: FLOW-CHECKOUT-FE
+content:
+<<<
+[/checkout]
+- 초기 API: 결제수단 목록, 주문 요약
+- 액션 API: 결제 요청
+- 캐시 정책: 결제수단 목록 5분 캐시, 주문 요약은 실시간 조회
+
+[/checkout/result]
+- 초기 API: 결제 결과 조회
+- 액션 API: 없음
+- 캐시 정책: 결과 페이지는 no-cache
+>>>
+
+@section FP-030
+title: 사용자 액션과 상태 전이
+summary: 결제 흐름의 상태 전이를 명시해 예외 케이스 누락을 줄인다
+links: STATE-CHECKOUT-FE
+content:
+<<<
+[기본 전이]
+- idle -> submitting -> success
+- idle -> submitting -> fail
+
+[재시도 전이]
+- fail(retryable) -> submitting
+
+[결제수단 변경]
+- fail(non-retryable) -> method_change
+>>>
+
+@section FP-040
+title: 예외 상태 처리
+summary: 오류 유형별 안내 문구와 다음 행동을 표준화한다
+links: UX-ERROR-CHECKOUT
+content:
+<<<
+[retryable]
+- PAY_TIMEOUT: 재시도 CTA 노출
+
+[non-retryable]
+- CARD_DECLINED: 다른 결제수단 선택 안내
+- FRAUD_BLOCKED: 고객센터 문의 안내
+>>>
+
+@section FP-050
+title: 컴포넌트 계약
+summary: 페이지와 공통 컴포넌트 간의 입출력 계약을 명확히 한다
+links: UIKIT-CHECKOUT-FE
+content:
+<<<
+PaymentForm
+- props: amount, methods, onSubmit
+- events: submit, validation_error
+
+ErrorBanner
+- props: error_code, retryable
+- events: retry_click, change_method_click
+>>>
+
+@section FP-060
+title: 분석 이벤트와 성능
+summary: 결제 전환과 체감 성능을 함께 추적한다
+links: ANALYTICS-CHECKOUT-FE
+content:
+<<<
+[분석 이벤트]
+- 결제 버튼 클릭
+- 결제 성공
+- 결제 실패(에러코드 포함)
+
+[성능 지표]
+- 결제 페이지 진입 후 상호작용 가능 시점(INP)
+- 결제 결과 화면 렌더링 시간(LCP)
+>>>
+
+@section FP-070
+title: 가정 및 리스크 신호
+summary: 숨은 가정과 가정이 깨질 때의 경고 신호를 문서화한다
+links: RISK-ASSUMPTION-FE
+content:
+<<<
+- 핵심 가정 2개와 깨짐 신호 임계치 및 조치를 명시
+>>>
+
+@change CHG-2026-02-23-01
+target: FP-020
+date: 2026-02-23
+author: checkout-frontend
+reason: 템플릿 초기 생성
+impact: 실제 라우팅 및 상태관리 구조에 맞춘 상세 보강 필요
+
+@change CHG-2026-02-23-02
+target: FP-001
+date: 2026-02-23
+author: ai-agent
+reason: 권위 문서 연결 및 source_sections 매핑 정리
+
+@change CHG-2026-02-24-01
+target: FP-070
+date: 2026-02-24
+author: ai-agent
+reason: 실패사례 분석 프레임 반영

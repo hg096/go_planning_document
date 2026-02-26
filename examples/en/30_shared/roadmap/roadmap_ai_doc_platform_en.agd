@@ -1,0 +1,102 @@
+﻿@meta
+title: AI Documentation Platform Roadmap 2026 H1
+version: 0.1
+owner: platform-strategy
+
+@map
+- RD-001 | Vision | Define strategic direction and principles
+- RD-010 | Quarterly Goals | Define quarter-level outcomes and done criteria
+- RD-020 | Execution Plan | Break down execution by domain
+- RD-030 | Metrics | Define success and risk metrics
+- RD-040 | Risk Mitigation | Define top risks and mitigation plans
+
+@section RD-001
+title: Vision
+summary: Align teams around a clear direction
+links: VISION-001
+content:
+<<<
+[Problem space]
+- Current limitation:
+- Opportunity:
+
+[Principles]
+1)
+2)
+3)
+>>>
+
+@section RD-010
+title: Quarterly Goals
+summary: Define measurable goals per quarter
+links: OKR-001
+content:
+<<<
+Q1:
+- Goal:
+- Done criteria:
+
+Q2:
+- Goal:
+- Done criteria:
+
+Q3:
+- Goal:
+- Done criteria:
+>>>
+
+@section RD-020
+title: Execution Plan
+summary: Track delivery across product, platform, and operations
+links: PLAN-001
+content:
+<<<
+[Product]
+1)
+2)
+
+[Platform]
+1)
+2)
+
+[Operations]
+1)
+2)
+>>>
+
+@section RD-030
+title: Metrics
+summary: Track outcome and quality in one view
+links: KPI-BOARD-001
+content:
+<<<
+[Core KPIs]
+1)
+2)
+3)
+
+[Risk indicators]
+1)
+2)
+>>>
+
+@section RD-040
+title: Risk Mitigation
+summary: Define mitigation owner and plan before risk materializes
+links: RISK-REGISTER-001
+content:
+<<<
+1) Risk:
+   - Mitigation:
+2) Risk:
+   - Mitigation:
+3) Risk:
+   - Mitigation:
+>>>
+
+@change CHG-2026-02-23-01
+target: RD-010
+date: 2026-02-23
+author: platform-strategy
+reason: Initial template scaffolding
+impact: Replace with quarter-specific goals and measurable outcomes

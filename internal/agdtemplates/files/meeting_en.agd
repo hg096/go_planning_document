@@ -1,0 +1,87 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- MTG-001 | Agenda and Purpose | Define meeting goals and agenda
+- MTG-010 | Discussion Summary | Summarize key discussion points
+- MTG-020 | Decisions | Record final decisions and rationale
+- MTG-030 | Action Items | Define owner and due date per action
+- MTG-040 | Risks and Parking Lot | Track unresolved risks and deferred topics
+
+@section MTG-001
+title: Agenda and Purpose
+summary: Set clear purpose and discussion priority
+links: CAL-001
+content:
+<<<
+[Purpose]
+-
+
+[Agenda]
+1)
+2)
+3)
+>>>
+
+@section MTG-010
+title: Discussion Summary
+summary: Capture high-signal context for each agenda item
+links: NOTE-001
+content:
+<<<
+[Item 1]
+- Key question:
+- Summary:
+
+[Item 2]
+- Key question:
+- Summary:
+>>>
+
+@section MTG-020
+title: Decisions
+summary: Record final decision and decision rationale
+links: DECISION-LOG
+content:
+<<<
+1) Decision:
+   - Rationale:
+2) Decision:
+   - Rationale:
+>>>
+
+@section MTG-030
+title: Action Items
+summary: Keep owner/date so follow-up execution is clear
+links: TASK-BOARD-001
+content:
+<<<
+1) Task:
+   - Owner:
+   - Due date:
+2) Task:
+   - Owner:
+   - Due date:
+>>>
+
+@section MTG-040
+title: Risks and Parking Lot
+summary: Track unresolved risk and deferred topics
+links: RISK-001
+content:
+<<<
+1) Risk:
+   - Impact:
+   - Mitigation:
+2) Parking lot topic:
+   - Revisit date:
+>>>
+
+@change CHG-{{DATE}}-01
+target: MTG-020
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial template scaffolding
+impact: Replace with meeting-specific decisions and actions

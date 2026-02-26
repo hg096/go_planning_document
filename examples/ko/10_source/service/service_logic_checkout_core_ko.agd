@@ -1,0 +1,145 @@
+﻿@meta
+title: 서비스 전체 로직 - 체크아웃 코어
+version: 1.0
+owner: checkout-platform
+authority: source
+
+@map
+- SYS-001 | 서비스 개요 | 체크아웃 코어는 주문 검증, 결제 실행, 결과 기록을 담당한다
+- SYS-010 | 도메인 경계 | 주문, 결제, 알림 도메인의 책임을 분리해 변경 영향을 최소화한다
+- SYS-020 | 엔드투엔드 흐름 | 요청부터 저장/응답까지 전체 처리 경로를 단계별로 설명한다
+- SYS-030 | 상태 및 이벤트 전이 | 결제 상태와 이벤트 전이 조건을 일관되게 관리한다
+- SYS-040 | 외부 연동/API 계약 | 외부 PG 계약과 내부 API 스키마를 버전 단위로 관리한다
+- SYS-050 | 예외 및 복구 전략 | 재시도, 롤백, 보상 처리로 결제 불일치를 최소화한다
+- SYS-060 | 운영 관측 및 알림 | 운영 지표와 알림 기준을 수치로 관리한다
+- SYS-070 | 중단 기준(Abort Metric) 및 가드레일 | 계획 실패 징후를 조기에 감지하고 즉시 중단하기 위한 기준을 정의한다
+
+@section SYS-001
+title: 서비스 개요
+summary: 체크아웃 코어는 주문 검증, 결제 실행, 결과 기록을 담당한다
+links: PRODUCT-CHECKOUT-001
+content:
+<<<
+목적:
+- 안정적 결제 완료
+- 오류 시 빠른 복구
+
+핵심 사용자:
+- 웹/앱 결제 사용자
+- 운영 온콜 팀
+>>>
+
+@section SYS-010
+title: 도메인 경계
+summary: 주문, 결제, 알림 도메인의 책임을 분리해 변경 영향을 최소화한다
+links: DOMAIN-CHECKOUT-001
+content:
+<<<
+1) 주문 도메인
+- 책임: 결제 가능 상태 검증
+
+2) 결제 도메인
+- 책임: 승인/취소/재시도 처리
+
+3) 알림 도메인
+- 책임: 결제 결과 이벤트 발행
+>>>
+
+@section SYS-020
+title: 엔드투엔드 흐름
+summary: 요청부터 저장/응답까지 전체 처리 경로를 단계별로 설명한다
+links: FLOW-CHECKOUT-E2E
+content:
+<<<
+1) 요청 진입 및 인증 확인
+2) 주문 상태 검증
+3) 결제 승인 요청
+4) 결과 영속화
+5) 결제 이벤트 발행
+6) 사용자 응답 반환
+>>>
+
+@section SYS-030
+title: 상태 및 이벤트 전이
+summary: 결제 상태와 이벤트 전이 조건을 일관되게 관리한다
+links: EVENT-CHECKOUT-001
+content:
+<<<
+상태:
+- CREATED -> AUTHORIZED -> CAPTURED
+- CREATED -> FAILED
+
+이벤트:
+- payment.authorized
+- payment.failed
+- payment.captured
+>>>
+
+@section SYS-040
+title: 외부 연동/API 계약
+summary: 외부 PG 계약과 내부 API 스키마를 버전 단위로 관리한다
+links: OPENAPI-CHECKOUT-CORE
+content:
+<<<
+내부 API:
+- POST /core/checkout/pay
+- fields: order_id, payment_method, amount
+
+외부 연동:
+- PG: PayGateX v3
+- timeout: 2s, retry: 1회
+>>>
+
+@section SYS-050
+title: 예외 및 복구 전략
+summary: 재시도, 롤백, 보상 처리로 결제 불일치를 최소화한다
+links: RUNBOOK-PAY-FAILURE
+content:
+<<<
+예외 유형:
+1) 승인 타임아웃
+2) 승인 거절
+3) 내부 저장 실패
+
+복구:
+- retryable 오류는 1회 재시도
+- 저장 실패 시 보상 취소 이벤트 발행
+>>>
+
+@section SYS-060
+title: 운영 관측 및 알림
+summary: 운영 지표와 알림 기준을 수치로 관리한다
+links: SLO-CHECKOUT-CORE
+content:
+<<<
+핵심 지표:
+- 승인 성공률 >= 99.2%
+- 결제 API P95 <= 900ms
+- 실패 이벤트 누락률 0%
+
+알림 기준:
+- 5분 실패율 >= 3% -> SEV2
+- 5분 실패율 >= 7% -> SEV1
+>>>
+
+@section SYS-070
+title: 중단 기준(Abort Metric) 및 가드레일
+summary: 계획 실패 징후를 조기에 감지하고 즉시 중단하기 위한 기준을 정의한다
+links: GATE-ABORT-CHK
+content:
+<<<
+- KPI 하락/에러 버짓/사용자 피해 임계치 초과 시 롤아웃 중단
+>>>
+
+@change CHG-2026-02-23-01
+target: SYS-050
+date: 2026-02-23
+author: checkout-platform
+reason: 저장 실패 시 보상 트랜잭션 정책을 명확히 추가
+impact: 이벤트 컨슈머 재처리 규칙 문서와 동기화 필요
+
+@change CHG-2026-02-24-01
+target: SYS-070
+date: 2026-02-24
+author: ai-agent
+reason: 실패사례 분석 프레임 반영

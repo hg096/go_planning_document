@@ -1,0 +1,153 @@
+﻿@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+
+@map
+- SYS-001 | 서비스 개요 | 서비스 목적, 대상 사용자, 핵심 가치를 요약한다
+- SYS-010 | 도메인 경계 | 모듈 경계와 책임을 정의한다
+- SYS-020 | 엔드투엔드 흐름 | 요청부터 응답까지 전체 처리 흐름을 정리한다
+- SYS-030 | 상태 및 이벤트 전이 | 비즈니스 상태 전이와 이벤트 조건을 명시한다
+- SYS-040 | 외부 연동 및 API 계약 | 연동 경계와 인터페이스 계약을 기록한다
+- SYS-050 | 예외 및 복구 전략 | 실패 처리, 재시도, 보상 전략을 정의한다
+- SYS-060 | 운영 관측 및 알림 | 운영 지표와 알림 임계치를 정의한다
+- SYS-070 | 중단 기준(Abort Metric) 및 가드레일 | 잘못된 방향을 조기 중단할 기준을 정의한다
+
+@section SYS-001
+title: 서비스 개요
+summary: 문서가 다루는 서비스 범위와 목표를 명확히 정의한다
+links: PRODUCT-001
+content:
+<<<
+[목적]
+-
+
+[핵심 사용자]
+-
+
+[핵심 가치]
+1)
+2)
+>>>
+
+@section SYS-010
+title: 도메인 경계
+summary: 모듈 책임을 분리해 변경 영향도를 줄인다
+links: DOMAIN-001
+content:
+<<<
+[도메인 목록]
+1) 도메인:
+   - 책임:
+   - 비범위:
+2) 도메인:
+   - 책임:
+   - 비범위:
+>>>
+
+@section SYS-020
+title: 엔드투엔드 흐름
+summary: 요청 진입부터 응답까지 단계별 경로를 설명한다
+links: FLOW-001
+content:
+<<<
+1) 요청 진입
+2) 인증/인가
+3) 도메인 검증
+4) 핵심 처리
+5) 외부 연동
+6) 영속화
+7) 응답 반환
+>>>
+
+@section SYS-030
+title: 상태 및 이벤트 전이
+summary: 비즈니스 상태 전이와 이벤트 트리거 조건을 정리한다
+links: EVENT-001
+content:
+<<<
+[핵심 상태]
+1) 상태:
+   - 진입 조건:
+   - 이탈 조건:
+
+[이벤트]
+1) 이벤트:
+   - 발생 조건:
+   - 구독 시스템:
+>>>
+
+@section SYS-040
+title: 외부 연동 및 API 계약
+summary: 인터페이스 계약을 명시해 연동 드리프트를 방지한다
+links: OPENAPI-001
+content:
+<<<
+[내부 API]
+- endpoint:
+- request:
+- response:
+
+[외부 연동]
+- 시스템:
+- 계약 버전:
+- timeout/retry:
+>>>
+
+@section SYS-050
+title: 예외 및 복구 전략
+summary: 실패 유형별 복구 전략을 정의해 사용자 영향을 최소화한다
+links: RUN-FAILURE-001
+content:
+<<<
+[실패 유형]
+1) 검증 실패
+2) 외부 연동 실패
+3) 내부 처리 실패
+
+[복구 전략]
+- 재시도:
+- 롤백:
+- 보상 트랜잭션:
+>>>
+
+@section SYS-060
+title: 운영 관측 및 알림
+summary: 운영 지표와 알림 임계치를 수치로 관리한다
+links: SLO-001
+content:
+<<<
+[핵심 지표]
+- latency p95:
+- error rate:
+- throughput:
+
+[알림 임계치]
+- sev1:
+- sev2:
+>>>
+
+@section SYS-070
+title: 중단 기준(Abort Metric) 및 가드레일
+summary: 계획 실패 징후를 조기에 감지하고 즉시 중단하기 위한 기준을 정의한다
+links: GATE-ABORT-001
+content:
+<<<
+[중단 조건]
+1) KPI 하락 임계치:
+2) 에러 버짓 소진 임계치:
+3) 사용자 피해 임계치:
+
+[중단 시 즉시 조치]
+1) 롤아웃 중단 및 안전 모드 전환
+2) owner와 승인자 즉시 호출
+3) incident-case(30_shared/errFix) 생성 및 source 업데이트 작업 등록
+4) 필요 시 postmortem 작성 일정 확정
+>>>
+
+@change CHG-{{DATE}}-01
+target: SYS-020
+date: {{DATE}}
+author: {{OWNER}}
+reason: 템플릿 초기 생성
+impact: 실제 서비스 흐름과 계약 정보로 즉시 보완 필요
