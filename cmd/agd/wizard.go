@@ -31,7 +31,7 @@ func commandWizard(_ []string) int {
 	for {
 		fmt.Println("")
 		fmt.Println(text("[1] Select document", "[1] Select document"))
-		fmt.Println(text("[2] Generate doc kit (starter/bridge/change/incident/quality)", "[2] Generate doc kit (starter/bridge/change/incident/quality)"))
+		fmt.Println(text("[2] Generate doc kit", "[2] 문서 키트 생성"))
 		fmt.Println(text("[3] Validate whole docs tree", "[3] Validate whole docs tree"))
 		fmt.Println(text("[4] New document", "[4] New document"))
 		fmt.Println(text("[5] Show source/derived relation graph", "[5] Show source/derived relation graph"))
@@ -357,15 +357,14 @@ func wizardServiceGate(reader *bufio.Reader) int {
 
 func wizardKit(reader *bufio.Reader) int {
 	fmt.Println("")
-	fmt.Println(text("Kit profile:", "Kit profile:"))
-	fmt.Println(text("  [1] starter-kit     - initial source baseline", "  [1] starter-kit     - initial source baseline"))
-	fmt.Println(text("  [2] bridge-lite     - minimal AI bridge core flow", "  [2] bridge-lite     - minimal AI bridge core flow"))
-	fmt.Println(text("  [3] change-flow     - maintenance + feature change flow", "  [3] change-flow     - maintenance + feature change flow"))
-	fmt.Println(text("  [4] incident-lifecycle - incident response + follow-up flow", "  [4] incident-lifecycle - incident response + follow-up flow"))
-	fmt.Println(text("  [5] quality-gate    - test/perf/security/release gate flow", "  [5] quality-gate    - test/perf/security/release gate flow"))
-	fmt.Println(text("  [0] back", "  [0] back"))
+	fmt.Println(text("Kit profile:", "키트 프로필:"))
+	fmt.Println(text("  [1] starter-kit         - initial source baseline", "  [1] starter-kit         - 초기 기획 시작용 기본 세트"))
+	fmt.Println(text("  [2] new-project         - create project-key folder starter docs", "  [2] new-project         - 프로젝트 키 폴더 기반 신규 기획 세트"))
+	fmt.Println(text("  [3] maintenance         - maintenance flow with source section link", "  [3] maintenance         - 유지보수 흐름 + 소스 섹션 파생 연결"))
+	fmt.Println(text("  [4] incident            - incident flow with source section link", "  [4] incident            - 오류 대응 흐름 + 소스 섹션 파생 연결"))
+	fmt.Println(text("  [0] back", "  [0] 뒤로가기"))
 
-	profileInput, err := promptRequired(reader, text("Profile (1-5 or name)", "Profile (1-5 or name)"))
+	profileInput, err := promptRequired(reader, text("Profile (1-4 or name)", "프로필 (1-4 또는 이름)"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
@@ -378,13 +377,11 @@ func wizardKit(reader *bufio.Reader) int {
 	case "1":
 		profileRaw = "starter-kit"
 	case "2":
-		profileRaw = "bridge-lite"
+		profileRaw = "new-project"
 	case "3":
-		profileRaw = "change-flow"
+		profileRaw = "maintenance"
 	case "4":
-		profileRaw = "incident-lifecycle"
-	case "5":
-		profileRaw = "quality-gate"
+		profileRaw = "incident"
 	}
 	profile, ok := normalizeKitProfile(profileRaw)
 	if !ok {
@@ -410,7 +407,7 @@ func wizardKit(reader *bufio.Reader) int {
 	featureTag := ""
 	incidentSourceDoc := ""
 	incidentSourceSection := ""
-	if profile == "incident-lifecycle" {
+	if profile == "incident" || profile == "maintenance" {
 		selected, autoTag, err := promptIncidentSectionCandidate(reader, strings.TrimSpace(root))
 		if err != nil {
 			if errors.Is(err, errWizardBack) {
@@ -1100,24 +1097,13 @@ func collectIncidentSectionCandidates(root string) ([]incidentSectionCandidate, 
 		return nil, err
 	}
 
-	targets := []struct {
-		domain string
-		rel    string
-	}{
-		{domain: "service", rel: filepath.Join("10_source", "service")},
-		{domain: "frontend", rel: filepath.Join("20_derived", "frontend")},
-	}
-
-	out := make([]incidentSectionCandidate, 0)
-	for _, target := range targets {
-		targetDir := filepath.Join(baseRoot, target.rel)
+	scanDir := func(out []incidentSectionCandidate, domain, targetDir string) ([]incidentSectionCandidate, error) {
 		if _, err := os.Stat(targetDir); err != nil {
 			if os.IsNotExist(err) {
-				continue
+				return out, nil
 			}
 			return nil, err
 		}
-
 		files, err := listAGDFiles(targetDir)
 		if err != nil {
 			return nil, err
@@ -1135,7 +1121,73 @@ func collectIncidentSectionCandidates(root string) ([]incidentSectionCandidate, 
 					continue
 				}
 				out = append(out, incidentSectionCandidate{
-					Domain:       target.domain,
+					Domain:       domain,
+					DocPath:      docPath,
+					DocRel:       docRel,
+					SectionID:    sectionID,
+					SectionTitle: strings.TrimSpace(section.Title),
+				})
+			}
+		}
+		return out, nil
+	}
+
+	domainByPath := func(docRel string) string {
+		norm := strings.ToLower(filepath.ToSlash(strings.TrimSpace(docRel)))
+		switch {
+		case strings.HasPrefix(norm, "10_source/service/"):
+			return "service"
+		case strings.HasPrefix(norm, "20_derived/frontend/"):
+			return "frontend"
+		case strings.HasPrefix(norm, "10_source/"):
+			return "source"
+		case strings.HasPrefix(norm, "20_derived/"):
+			return "derived"
+		case strings.HasPrefix(norm, "30_shared/"):
+			return "shared"
+		default:
+			return "doc"
+		}
+	}
+
+	targets := []struct {
+		domain string
+		rel    string
+	}{
+		{domain: "service", rel: filepath.Join("10_source", "service")},
+		{domain: "frontend", rel: filepath.Join("20_derived", "frontend")},
+	}
+
+	out := make([]incidentSectionCandidate, 0)
+	for _, target := range targets {
+		var err error
+		out, err = scanDir(out, target.domain, filepath.Join(baseRoot, target.rel))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// If service/frontend has no candidates, broaden to whole docs root.
+	if len(out) == 0 {
+		files, err := listAGDFiles(baseRoot)
+		if err != nil {
+			return nil, err
+		}
+		for _, file := range files {
+			doc, parseErrs, loadErr := agd.LoadFile(file)
+			if loadErr != nil || len(parseErrs) > 0 {
+				continue
+			}
+			docPath := filepath.Clean(file)
+			docRel := relativePathForReport(baseRoot, docPath)
+			domain := domainByPath(docRel)
+			for _, section := range doc.Sections {
+				sectionID := strings.TrimSpace(section.ID)
+				if sectionID == "" {
+					continue
+				}
+				out = append(out, incidentSectionCandidate{
+					Domain:       domain,
 					DocPath:      docPath,
 					DocRel:       docRel,
 					SectionID:    sectionID,
@@ -1145,10 +1197,23 @@ func collectIncidentSectionCandidates(root string) ([]incidentSectionCandidate, 
 		}
 	}
 
-	rank := map[string]int{"service": 0, "frontend": 1}
+	rank := map[string]int{
+		"service":  0,
+		"frontend": 1,
+		"source":   2,
+		"derived":  3,
+		"shared":   4,
+		"doc":      5,
+	}
 	sort.Slice(out, func(i, j int) bool {
-		ri := rank[out[i].Domain]
-		rj := rank[out[j].Domain]
+		ri, okI := rank[out[i].Domain]
+		if !okI {
+			ri = 99
+		}
+		rj, okJ := rank[out[j].Domain]
+		if !okJ {
+			rj = 99
+		}
 		if ri != rj {
 			return ri < rj
 		}
@@ -1196,7 +1261,7 @@ func promptIncidentSectionCandidate(reader *bufio.Reader, root string) (incident
 	}
 
 	fmt.Println(text(
-		"Select issue-root section (scanned from service/frontend):", "Select issue-root section (scanned from service/frontend):",
+		"Select source section for derived link:", "파생 연결 기준이 되는 소스 섹션을 선택하세요:",
 	))
 	for i, c := range candidates {
 		title := strings.TrimSpace(c.SectionTitle)

@@ -8,7 +8,7 @@ import (
 )
 
 func TestKitProjectScopedSubdir(t *testing.T) {
-	got := kitProjectScopedSubdir("change-flow", filepath.Join("20_derived", "frontend"), "checkout")
+	got := kitProjectScopedSubdir("new-project", filepath.Join("20_derived", "frontend"), "checkout")
 	want := filepath.Join("10_source", "product", "checkout")
 	if got != want {
 		t.Fatalf("unexpected scoped subdir: got=%q want=%q", got, want)
@@ -24,14 +24,14 @@ func TestKitProjectScopedSubdir(t *testing.T) {
 		t.Fatalf("bridge-lite should not append project key: got=%q", keepBridge)
 	}
 
-	keepMaintenance := kitProjectScopedSubdir("change-flow", filepath.Join("30_shared", "maintenance"), "checkout")
+	keepMaintenance := kitProjectScopedSubdir("maintenance", filepath.Join("30_shared", "maintenance"), "checkout")
 	if keepMaintenance != filepath.Join("30_shared", "maintenance") {
-		t.Fatalf("change-flow maintenance doc should stay single-file path: got=%q", keepMaintenance)
+		t.Fatalf("maintenance doc should stay single-file path: got=%q", keepMaintenance)
 	}
 
-	keepIncident := kitProjectScopedSubdir("incident-lifecycle", filepath.Join("30_shared", "errFix"), "checkout")
+	keepIncident := kitProjectScopedSubdir("incident", filepath.Join("30_shared", "errFix"), "checkout")
 	if keepIncident != filepath.Join("30_shared", "errFix") {
-		t.Fatalf("incident-lifecycle should not append project key: got=%q", keepIncident)
+		t.Fatalf("incident should not append project key: got=%q", keepIncident)
 	}
 
 	keepQuality := kitProjectScopedSubdir("quality-gate", filepath.Join("20_derived", "qa"), "checkout")
@@ -39,7 +39,7 @@ func TestKitProjectScopedSubdir(t *testing.T) {
 		t.Fatalf("quality-gate should not append project key: got=%q", keepQuality)
 	}
 
-	if keep := kitProjectScopedSubdir("change-flow", filepath.Join("10_source", "product"), ""); keep != filepath.Join("10_source", "product") {
+	if keep := kitProjectScopedSubdir("maintenance", filepath.Join("10_source", "product"), ""); keep != filepath.Join("10_source", "product") {
 		t.Fatalf("empty key should keep base subdir, got=%q", keep)
 	}
 }

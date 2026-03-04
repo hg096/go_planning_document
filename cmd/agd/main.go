@@ -97,8 +97,8 @@ Usage:
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
   agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]
-  agd kit <starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
-  agd starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd kit <starter-kit|new-project|maintenance|incident> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd starter-kit|new-project|maintenance|incident <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]
 
 Advanced:
@@ -127,8 +127,8 @@ Advanced:
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
   agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]
-  agd kit <starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
-  agd starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd kit <starter-kit|new-project|maintenance|incident> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd starter-kit|new-project|maintenance|incident <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]
 
 고급:

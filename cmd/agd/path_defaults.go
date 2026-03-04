@@ -101,11 +101,10 @@ func docsRootInputPromptShort() string {
 }
 
 func docsRootSectionScanHint() string {
-	service := filepath.ToSlash(filepath.Join(docsRootDisplayPath(), "10_source", "service"))
-	frontend := filepath.ToSlash(filepath.Join(docsRootDisplayPath(), "20_derived", "frontend"))
+	root := docsRootDisplayPath()
 	return text(
-		"no sections found under "+service+" or "+frontend,
-		service+" 또는 "+frontend+" 경로에서 섹션을 찾지 못했습니다",
+		"no sections found under "+root,
+		root+" 경로에서 섹션을 찾지 못했습니다",
 	)
 }
 

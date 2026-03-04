@@ -44,6 +44,25 @@ Recommended practice:
 2) Keep derived docs under 20_derived and connect source_doc/source_sections.
 3) Move outdated docs to 90_archive instead of deleting immediately.
 
+Folder details:
+
+- 00_inbox: capture raw ideas before formal structuring
+- 10_source/product: product scope, requirements, release decision source
+- 10_source/service: backend/service logic source and operational guardrails
+- 10_source/policy: rules, standards, release/approval policy source
+- 10_source/architecture: architecture decisions (ADR) and trade-offs
+- 20_derived/frontend: UI flow/spec docs derived from source logic
+- 20_derived/qa: test plans/checklists derived from source requirements
+- 20_derived/ops: runbook/operations docs derived from service/policy
+- 30_shared/meeting: meeting notes, decisions, follow-up owners
+- 30_shared/handoff: cross-team handoff package and acceptance checklist
+- 30_shared/roadmap: milestone timeline, priority changes, dependency view
+- 30_shared/postmortem: incident retrospectives and prevention actions
+- 30_shared/experiment: hypotheses, experiment setup, result summary
+- 30_shared/maintenance: active maintenance workspace (single-file flow)
+- 30_shared/errFix: active incident/bug workspace (single-file flow)
+- 90_archive: retired docs kept for traceability/audit
+
 Path references (updated):
 
 - postmortem: 30_shared/postmortem/<file>.agd
@@ -83,6 +102,25 @@ const docsScaffoldReadmeKO = `# AGD 문서 폴더 가이드
 1) 주제마다 10_source 아래에 기준 문서를 1개 유지합니다.
 2) 파생 문서는 20_derived 아래에 두고 source_doc/source_sections를 연결합니다.
 3) 오래된 문서는 바로 삭제하지 말고 90_archive로 이동합니다.
+
+폴더별 상세 설명:
+
+- 00_inbox: 정리 전 아이디어/요청을 임시로 모아두는 공간
+- 10_source/product: 제품 범위, 요구사항, 릴리즈 기준을 정의하는 기준 문서
+- 10_source/service: 서비스/백엔드 로직과 운영 가드레일을 정의하는 기준 문서
+- 10_source/policy: 규칙, 표준, 승인/배포 정책을 관리하는 기준 문서
+- 10_source/architecture: 아키텍처 의사결정(ADR)과 트레이드오프 기록
+- 20_derived/frontend: source 로직에서 파생된 화면/UX 흐름 문서
+- 20_derived/qa: source 요구사항에서 파생된 테스트 계획/체크리스트
+- 20_derived/ops: 서비스/정책 기반으로 파생된 운영 runbook 문서
+- 30_shared/meeting: 회의 기록, 의사결정, 후속 액션 담당자 정리
+- 30_shared/handoff: 팀 간 인수인계 패키지와 수락 체크리스트
+- 30_shared/roadmap: 마일스톤 일정, 우선순위 변경, 의존성 정리
+- 30_shared/postmortem: 장애/이슈 회고와 재발 방지 액션 기록
+- 30_shared/experiment: 가설, 실험 설계, 결과 요약 관리
+- 30_shared/maintenance: 유지보수 진행 문서를 모으는 단일 흐름 작업 공간
+- 30_shared/errFix: 오류,버그 대응 문서를 모으는 단일 흐름 작업 공간
+- 90_archive: 종료 문서를 추적 가능하게 보관하는 아카이브
 
 경로 참고 (업데이트):
 

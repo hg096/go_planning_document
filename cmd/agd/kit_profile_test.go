@@ -5,15 +5,15 @@ import "testing"
 func TestNormalizeKitProfile(t *testing.T) {
 	cases := map[string]string{
 		"starter-kit":        "starter-kit",
+		"new-project":        "new-project",
 		"bridge-lite":        "bridge-lite",
-		"change-flow":        "change-flow",
-		"incident-lifecycle": "incident-lifecycle",
+		"change-flow":        "maintenance",
+		"maintenance":        "maintenance",
+		"incident-lifecycle": "incident",
 		"quality-gate":       "quality-gate",
 		"bridge":             "bridge-lite",
 		"minimal":            "bridge-lite",
-		"maintenance":        "change-flow",
-		"new-project":        "change-flow",
-		"incident-response":  "incident-lifecycle",
+		"incident-response":  "incident",
 	}
 
 	for input, want := range cases {

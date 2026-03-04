@@ -54,7 +54,7 @@ type unresolvedRoleLink struct {
 	Reason       string
 }
 
-const kitProfileUsage = "starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate"
+const kitProfileUsage = "starter-kit|new-project|maintenance|incident"
 
 func commandKitEasy(args []string) int {
 	if len(args) == 0 {
@@ -75,16 +75,24 @@ func commandKitEasy(args []string) int {
 	switch commandToken {
 	case "starter-kit":
 		profileRaw = "starter-kit"
+	case "new-project":
+		profileRaw = "new-project"
+	case "change-flow":
+		profileRaw = "maintenance"
+	case "incident-lifecycle":
+		profileRaw = "incident"
+	case "quality-gate":
+		profileRaw = "quality-gate"
 	case "maintenance-kit":
-		profileRaw = "change-flow"
+		profileRaw = "maintenance"
 	case "new-project-kit":
-		profileRaw = "change-flow"
+		profileRaw = "new-project"
 	case "incident-kit":
-		profileRaw = "incident-lifecycle"
+		profileRaw = "incident"
 	case "change-flow-kit":
-		profileRaw = "change-flow"
+		profileRaw = "maintenance"
 	case "incident-lifecycle-kit":
-		profileRaw = "incident-lifecycle"
+		profileRaw = "incident"
 	case "quality-gate-kit":
 		profileRaw = "quality-gate"
 	case "kit":
@@ -210,7 +218,7 @@ func commandKitEasy(args []string) int {
 		))
 		return 2
 	}
-	useRootTagging := profile == "incident-lifecycle" || profile == "change-flow"
+	useRootTagging := profile == "incident" || profile == "maintenance"
 	if useRootTagging {
 		rawFeatureTag := strings.TrimSpace(featureTag)
 		featureTag = ""
@@ -224,10 +232,10 @@ func commandKitEasy(args []string) int {
 				return 2
 			}
 		}
-		if profile == "incident-lifecycle" && featureTag == "" && strings.TrimSpace(tagSourceDocRaw) == "" {
+		if profile == "incident" && featureTag == "" && strings.TrimSpace(tagSourceDocRaw) == "" {
 			fmt.Fprintln(os.Stderr, text(
-				"kit error: incident-lifecycle requires --feature-tag (ex: FT-CHECKOUT)",
-				"kit error: incident-lifecycle requires --feature-tag (ex: FT-CHECKOUT)",
+				"kit error: incident requires --feature-tag (ex: FT-CHECKOUT)",
+				"kit error: incident requires --feature-tag (ex: FT-CHECKOUT)",
 			))
 			return 2
 		}
@@ -279,12 +287,12 @@ func commandKitEasy(args []string) int {
 		}
 	} else if strings.TrimSpace(featureTag) != "" {
 		fmt.Fprintln(os.Stderr, text(
-			"kit warning: --feature-tag is only used for incident-lifecycle/change-flow (ignored)", "kit warning: --feature-tag is only used for incident-lifecycle/change-flow (ignored)",
+			"kit warning: --feature-tag is only used for incident/maintenance (ignored)", "kit warning: --feature-tag is only used for incident/maintenance (ignored)",
 		))
 		featureTag = ""
 		if strings.TrimSpace(tagSourceDocRaw) != "" || strings.TrimSpace(tagSectionInput) != "" {
 			fmt.Fprintln(os.Stderr, text(
-				"kit warning: --tag-source/--tag-section are only used for incident-lifecycle/change-flow (ignored)", "kit warning: --tag-source/--tag-section are only used for incident-lifecycle/change-flow (ignored)",
+				"kit warning: --tag-source/--tag-section are only used for incident/maintenance (ignored)", "kit warning: --tag-source/--tag-section are only used for incident/maintenance (ignored)",
 			))
 		}
 	}
@@ -364,13 +372,13 @@ func commandKitEasy(args []string) int {
 			continue
 		}
 	}
-	if profile == "incident-lifecycle" {
+	if profile == "incident" {
 		if err := applyIncidentFeatureTagRooting(keyToPath, featureTag, lang, "ai-agent", incidentSourceDocPath, incidentSourceSectionID); err != nil {
 			fmt.Fprintf(os.Stderr, "kit error: %v\n", err)
 			return 1
 		}
 	}
-	if profile == "change-flow" && strings.TrimSpace(featureTag) != "" {
+	if profile == "maintenance" && strings.TrimSpace(featureTag) != "" {
 		if err := applyMaintenanceFeatureTagRooting(keyToPath, featureTag, lang, "ai-agent", incidentSourceDocPath, incidentSourceSectionID); err != nil {
 			fmt.Fprintf(os.Stderr, "kit error: %v\n", err)
 			return 1
@@ -389,16 +397,16 @@ func commandKitEasy(args []string) int {
 		}
 		fmt.Printf("  - %s [%s, %s]\n", rel, spec.DocType, roleLabel)
 	}
-	if profile == "incident-lifecycle" {
+	if profile == "incident" {
 		traceChain := incidentTraceChainForKeyMap(featureTag, keyToPath)
 		fmt.Printf(text("Incident feature root tag: %s\n", "Incident feature root tag: %s\n"), featureTag)
 		fmt.Printf(text("Root trace chain: %s\n", "Root trace chain: %s\n"), traceChain)
 	}
-	if profile == "change-flow" && strings.TrimSpace(featureTag) != "" {
-		fmt.Printf(text("Change-flow maintenance root tag: %s\n", "Change-flow maintenance root tag: %s\n"), featureTag)
+	if profile == "maintenance" && strings.TrimSpace(featureTag) != "" {
+		fmt.Printf(text("Maintenance root tag: %s\n", "Maintenance root tag: %s\n"), featureTag)
 		if strings.TrimSpace(incidentSourceDocPath) != "" && strings.TrimSpace(incidentSourceSectionID) != "" {
 			fmt.Printf(text(
-				"Change-flow source section: %s | %s\n", "Change-flow source section: %s | %s\n",
+				"Maintenance source section: %s | %s\n", "Maintenance source section: %s | %s\n",
 			), incidentSourceDocPath, incidentSourceSectionID)
 		}
 	}
@@ -423,18 +431,21 @@ func kitProjectScopedSubdir(profile, baseSubdir, projectKey string) string {
 		return base
 	}
 	prof := strings.ToLower(strings.TrimSpace(profile))
-	if prof == "starter-kit" || prof == "bridge-lite" || prof == "incident-lifecycle" || prof == "quality-gate" {
+	if prof == "starter-kit" || prof == "bridge-lite" || prof == "incident" || prof == "quality-gate" {
 		return base
 	}
-	if prof == "change-flow" {
+	if prof == "new-project" {
+		if key == "" {
+			return filepath.Join("10_source", "product")
+		}
+		return filepath.Join("10_source", "product", key)
+	}
+	if prof == "maintenance" {
 		maintenanceBase := filepath.Join("30_shared", "maintenance")
 		if filepath.Clean(base) == filepath.Clean(maintenanceBase) {
 			return base
 		}
-		if key == "" {
-			return base
-		}
-		return filepath.Join("10_source", "product", key)
+		return base
 	}
 	if key == "" {
 		return base
@@ -450,15 +461,16 @@ func normalizeKitProfile(raw string) (string, bool) {
 	switch key {
 	case "starter-kit", "starter", "start", "bootstrap", "starterkit":
 		return "starter-kit", true
+	case "new-project", "new", "new-project-kit", "project":
+		return "new-project", true
 	case "bridge-lite", "bridge", "bridge-kit", "bridge-lite-kit", "lite-bridge", "minimal-kit", "minimal":
 		return "bridge-lite", true
 	case "change-flow", "change", "flow", "changeflow",
-		"maintenance", "maint", "maintenance-kit", "maintenance-single", "single-maintenance",
-		"new-project", "new", "new-project-kit":
-		return "change-flow", true
+		"maintenance", "maint", "maintenance-kit", "maintenance-single", "single-maintenance":
+		return "maintenance", true
 	case "incident-lifecycle", "incident-lifecycle-kit", "incident-lifecycle-flow",
 		"incident-response", "incident", "incident-kit", "error-response":
-		return "incident-lifecycle", true
+		return "incident", true
 	case "quality-gate", "quality-gate-kit", "quality", "qualitygate", "release-gate":
 		return "quality-gate", true
 	default:
@@ -765,8 +777,14 @@ func applyIncidentFeatureTagRooting(
 			sourceDoc := strings.TrimSpace(sourceDocPath)
 			sectionID := strings.TrimSpace(sourceSectionID)
 			if sourceDoc != "" && sectionID != "" {
+				resolvedSource := filepath.Clean(sourceDoc)
+				if !filepath.IsAbs(resolvedSource) {
+					if absSource, absErr := filepath.Abs(resolvedSource); absErr == nil {
+						resolvedSource = filepath.Clean(absSource)
+					}
+				}
 				storedSource := filepath.Clean(sourceDoc)
-				if rel, relErr := filepath.Rel(filepath.Dir(path), sourceDoc); relErr == nil {
+				if rel, relErr := filepath.Rel(filepath.Dir(path), resolvedSource); relErr == nil {
 					storedSource = filepath.Clean(rel)
 				}
 				changed = upsertMetaValue(doc.Meta, "incident_source_doc", storedSource) || changed
@@ -880,8 +898,14 @@ func applyMaintenanceFeatureTagRooting(
 	storedSource := ""
 	sectionID := strings.TrimSpace(sourceSectionID)
 	if strings.TrimSpace(sourceDocPath) != "" && sectionID != "" {
+		resolvedSource := filepath.Clean(sourceDocPath)
+		if !filepath.IsAbs(resolvedSource) {
+			if absSource, absErr := filepath.Abs(resolvedSource); absErr == nil {
+				resolvedSource = filepath.Clean(absSource)
+			}
+		}
 		storedSource = filepath.Clean(sourceDocPath)
-		if rel, relErr := filepath.Rel(filepath.Dir(path), sourceDocPath); relErr == nil {
+		if rel, relErr := filepath.Rel(filepath.Dir(path), resolvedSource); relErr == nil {
 			storedSource = filepath.Clean(rel)
 		}
 		changed = upsertMetaValue(doc.Meta, "maintenance_source_doc", storedSource) || changed
@@ -1073,18 +1097,21 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Bridge Lite Delivery Plan", TitleKO: "%s - Bridge Lite Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
 			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Bridge Lite Runbook", TitleKO: "%s - Bridge Lite Runbook", Role: "derived", SourceKey: "service", SourceSections: "SYS-050->RUN-020,SYS-060->RUN-001,SYS-070->RUN-040"},
 		}
-	case "change-flow":
+	case "new-project":
 		return []kitDocSpec{
-			{Key: "maintenance_case", DocType: "maintenance-case", Subdir: filepath.Join("30_shared", "maintenance"), FileSuffix: "maintenance_case", TitleEN: "%s - Change Flow Maintenance Case", TitleKO: "%s - Change Flow Maintenance Case", Role: "source"},
-			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Change Flow Core Spec", TitleKO: "%s - Change Flow Core Spec", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Change Flow Delivery Plan", TitleKO: "%s - Change Flow Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-010"},
-			{Key: "change_log", DocType: "change-log", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "change_log", TitleEN: "%s - Change Flow Log", TitleKO: "%s - Change Flow Log", Role: "source"},
+			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - New Project Core Spec", TitleKO: "%s - New Project Core Spec", Role: "source"},
+			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "product"), FileSuffix: "service_logic", TitleEN: "%s - New Project Service Logic", TitleKO: "%s - New Project Service Logic", Role: "source"},
+			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "product"), FileSuffix: "policy", TitleEN: "%s - New Project Policy", TitleKO: "%s - New Project Policy", Role: "source"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - New Project Delivery Plan", TitleKO: "%s - New Project Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
+			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("10_source", "product"), FileSuffix: "roadmap", TitleEN: "%s - New Project Roadmap", TitleKO: "%s - New Project Roadmap"},
 		}
-	case "incident-lifecycle":
+	case "maintenance":
 		return []kitDocSpec{
-			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("30_shared", "errFix"), FileSuffix: "incident_case", TitleEN: "%s - Incident Lifecycle Case", TitleKO: "%s - Incident Lifecycle Case", Role: "source"},
-			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Incident Lifecycle Runbook", TitleKO: "%s - Incident Lifecycle Runbook", Role: "derived", SourceKey: "incident_case", SourceSections: "INC-030->RUN-020,INC-060->RUN-040"},
-			{Key: "postmortem", DocType: "postmortem", Subdir: filepath.Join("30_shared", "postmortem"), FileSuffix: "postmortem", TitleEN: "%s - Incident Lifecycle Postmortem", TitleKO: "%s - Incident Lifecycle Postmortem", Role: "derived", SourceKey: "incident_case", SourceSections: "INC-010->PM-010,INC-020->PM-020,INC-060->PM-050"},
+			{Key: "maintenance_case", DocType: "maintenance-case", Subdir: filepath.Join("30_shared", "maintenance"), FileSuffix: "maintenance_case", TitleEN: "%s - Maintenance Case", TitleKO: "%s - Maintenance Case", Role: "source"},
+		}
+	case "incident":
+		return []kitDocSpec{
+			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("30_shared", "errFix"), FileSuffix: "incident_case", TitleEN: "%s - Incident Case", TitleKO: "%s - Incident Case", Role: "source"},
 		}
 	case "quality-gate":
 		return []kitDocSpec{

@@ -15,7 +15,7 @@ agd.exe wizard
 
 ```txt
 [1] 문서 선택
-[2] 문서 키트 생성 (starter/bridge/change/incident/quality)
+[2] 문서 키트 생성
 [3] 문서 트리 전체 검증
 [4] 새 문서 만들기
 [5] source/derived 관계 그래프 보기
