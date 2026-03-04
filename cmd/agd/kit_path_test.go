@@ -8,7 +8,7 @@ import (
 )
 
 func TestKitProjectScopedSubdir(t *testing.T) {
-	got := kitProjectScopedSubdir("new-project", filepath.Join("20_derived", "frontend"), "checkout")
+	got := kitProjectScopedSubdir("change-flow", filepath.Join("20_derived", "frontend"), "checkout")
 	want := filepath.Join("10_source", "product", "checkout")
 	if got != want {
 		t.Fatalf("unexpected scoped subdir: got=%q want=%q", got, want)
@@ -19,17 +19,27 @@ func TestKitProjectScopedSubdir(t *testing.T) {
 		t.Fatalf("starter-kit should not append project key: got=%q", keepDerived)
 	}
 
-	keepMaintenance := kitProjectScopedSubdir("maintenance", filepath.Join("30_shared", "maintenance"), "checkout")
+	keepBridge := kitProjectScopedSubdir("bridge-lite", filepath.Join("20_derived", "ops"), "checkout")
+	if keepBridge != filepath.Join("20_derived", "ops") {
+		t.Fatalf("bridge-lite should not append project key: got=%q", keepBridge)
+	}
+
+	keepMaintenance := kitProjectScopedSubdir("change-flow", filepath.Join("30_shared", "maintenance"), "checkout")
 	if keepMaintenance != filepath.Join("30_shared", "maintenance") {
-		t.Fatalf("maintenance should not append project key: got=%q", keepMaintenance)
+		t.Fatalf("change-flow maintenance doc should stay single-file path: got=%q", keepMaintenance)
 	}
 
-	keepIncident := kitProjectScopedSubdir("incident-response", filepath.Join("30_shared", "errFix"), "checkout")
+	keepIncident := kitProjectScopedSubdir("incident-lifecycle", filepath.Join("30_shared", "errFix"), "checkout")
 	if keepIncident != filepath.Join("30_shared", "errFix") {
-		t.Fatalf("incident-response should not append project key: got=%q", keepIncident)
+		t.Fatalf("incident-lifecycle should not append project key: got=%q", keepIncident)
 	}
 
-	if keep := kitProjectScopedSubdir("new-project", filepath.Join("10_source", "product"), ""); keep != filepath.Join("10_source", "product") {
+	keepQuality := kitProjectScopedSubdir("quality-gate", filepath.Join("20_derived", "qa"), "checkout")
+	if keepQuality != filepath.Join("20_derived", "qa") {
+		t.Fatalf("quality-gate should not append project key: got=%q", keepQuality)
+	}
+
+	if keep := kitProjectScopedSubdir("change-flow", filepath.Join("10_source", "product"), ""); keep != filepath.Join("10_source", "product") {
 		t.Fatalf("empty key should keep base subdir, got=%q", keep)
 	}
 }

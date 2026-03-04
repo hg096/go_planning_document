@@ -51,8 +51,12 @@ func run(args []string) int {
 		return commandRoleGraphEasy(args[1:])
 	case "kit",
 		"starter-kit", "maintenance", "maintenance-kit",
+		"bridge-lite", "bridge", "bridge-kit",
 		"new-project", "new-project-kit",
-		"incident-response", "incident", "incident-kit":
+		"change-flow",
+		"incident-response", "incident", "incident-kit",
+		"incident-lifecycle",
+		"quality-gate":
 		return commandKitEasy(append([]string{args[0]}, args[1:]...))
 	case "view":
 		return commandViewEasy(args[1:])
@@ -93,8 +97,8 @@ Usage:
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
   agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]
-  agd kit <starter-kit|maintenance|new-project|incident-response> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
-  agd starter-kit|maintenance|new-project|incident-response <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd kit <starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]
 
 Advanced:
@@ -123,8 +127,8 @@ Advanced:
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
   agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]
-  agd kit <starter-kit|maintenance|new-project|incident-response> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
-  agd starter-kit|maintenance|new-project|incident-response <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd kit <starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
+  agd starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]
 
 고급:

@@ -24,8 +24,12 @@ cover.out
 *.so
 *.dylib
 
+# Local git-hook overrides
+.githooks/*.local
+.githooks/*.bak
+
 # Generated runtime workspace
-agd_docs/
+/agd_docs/
 
 # Logs/temp
 *.log

@@ -1,4 +1,4 @@
-﻿# AGD 시작 가이드 (처음 사용자용)
+# AGD 시작 가이드 (처음 사용자용)
 
 AGD는 **사람과 AI가 같은 문서를 기준으로 협업**하기 위한 문서 포맷입니다.
 목표는 단순합니다.
@@ -62,6 +62,35 @@ go build -o agd.exe ./cmd/agd
 ```cmd
 go build -ldflags "-X main.defaultLang=en" -o agd_en.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=ko" -o agd_ko.exe ./cmd/agd
+```
+
+### 1-1) 원클릭 세팅(사용자용 최소 설치 권장)
+
+`cmd` 한 줄로 `agd/`만 체크아웃하고 세팅합니다.
+
+```cmd
+cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> <repo-folder> && cd /d <repo-folder> && git sparse-checkout init --no-cone && git sparse-checkout set /agd/ && git checkout && agd\setup.cmd"
+```
+
+이미 전체 저장소를 클론했다면 아래 한 줄로 `agd/`만 남기고 세팅할 수 있습니다.
+
+```cmd
+agd\setup.cmd -SlimCheckout
+```
+
+자동 수행 항목:
+
+- `git config core.hooksPath agd/.githooks` 설정
+- `agd\agd_docs`, `agd\examples` strict 검증 실행
+- CI 워크플로/PR 템플릿 설치(기존 파일 있으면 백업 후 교체)
+
+자주 쓰는 옵션:
+
+```cmd
+agd\setup.cmd -SkipCheck
+agd\setup.cmd -SkipTemplates
+agd\setup.cmd -NoTemplateBackup
+agd\setup.cmd -SlimCheckout
 ```
 
 실행 예시:
@@ -331,16 +360,18 @@ REM 출력에 추천 근거(ID/suffix/title)도 함께 표시
 
 REM 프로젝트 방향별 문서 킷 자동 생성
 agd.exe kit starter-kit <project-key>
-agd.exe kit maintenance <project-key>
-agd.exe kit new-project <project-key>
-agd.exe kit incident-response <project-key> --feature-tag FT-CHECKOUT
-agd.exe kit incident-response <project-key> --feature-tag FT-SYS-020 --tag-source agd_docs\\10_source\\service\\service_logic_checkout_core.agd --tag-section SYS-020
+agd.exe kit bridge-lite <project-key>
+agd.exe kit change-flow <project-key>
+agd.exe kit incident-lifecycle <project-key> --feature-tag FT-CHECKOUT
+agd.exe kit quality-gate <project-key>
+agd.exe kit incident-lifecycle <project-key> --feature-tag FT-SYS-020 --tag-source agd_docs\\10_source\\service\\service_logic_checkout_core.agd --tag-section SYS-020
 agd.exe kit starter-kit <project-key> --no-graph
 REM 단축형(프로필을 명령어로 직접 호출)
 agd.exe starter-kit <project-key>
-agd.exe maintenance <project-key>
-agd.exe new-project <project-key>
-agd.exe incident-response <project-key> --feature-tag FT-CHECKOUT
+agd.exe bridge-lite <project-key>
+agd.exe change-flow <project-key>
+agd.exe incident-lifecycle <project-key> --feature-tag FT-CHECKOUT
+agd.exe quality-gate <project-key>
 
 REM 권위/파생 관계도 출력
 agd.exe role-graph
@@ -361,17 +392,18 @@ agd.exe quick
 
 킷 프로필 기본 의도:
 
-- `starter-kit`: 프로젝트 시작에 필요한 최소 기준(source)+파생(derived) 문서 세트를 생성
-- `maintenance`: 단일 유지보수 문서 생성 (`agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`)
-- `new-project`: 신규 기능 추가/개선 작업 중심 문서 세트를 생성
-- `incident-response`: 단일 장애 문서 생성 (`agd_docs/30_shared/errFix/<project>_incident_case.agd`)
-- `maintenance`/`incident-response`: `<project>` 이름의 하위 폴더는 만들지 않고, 위 경로에 단일 문서 파일만 생성
-- `postmortem` 타입 수동 생성 경로: `agd_docs/30_shared/postmortem/<file>.agd`
-- `incident-response`는 `--feature-tag` 기준으로 생성된 `incident-case` 문서에 루트 추적 블록을 자동 주입합니다.
-- 위자드(`agd wizard` -> 문서 킷 생성 -> incident-response)는 `agd_docs/10_source/service`, `agd_docs/20_derived/frontend`를 스캔해 섹션 목록을 보여주고, 선택한 섹션 기준으로 태그/연결(`incident_source_doc`, `incident_source_section`)을 자동 설정합니다.
+- `starter-kit`: baseline source+derived set for project bootstrap
+- `bridge-lite`: minimal AI bridge core set (`service-logic + core-spec + delivery-plan + runbook`)
+- `change-flow`: integrated maintenance + feature change set (`maintenance-case + core-spec + delivery-plan + change-log`)
+- `incident-lifecycle`: incident response + follow-up set (`incident-case + runbook + postmortem`)
+- `quality-gate`: release quality gate set (`policy + qa-plan + runbook + delivery-plan`)
+- legacy alias: `maintenance`/`new-project` -> `change-flow`, `incident-response` -> `incident-lifecycle`
+- `postmortem` manual create path: `agd_docs/30_shared/postmortem/<file>.agd`
+- `incident-lifecycle`는 `--feature-tag` 기준으로 생성된 `incident-case` 문서에 루트 추적 블록을 자동 주입합니다.
+- 위자드(`agd wizard` -> 문서 킷 생성 -> incident-lifecycle)는 `agd_docs/10_source/service`, `agd_docs/20_derived/frontend`를 스캔해 섹션 목록을 보여주고, 선택한 섹션 기준으로 태그/연결(`incident_source_doc`, `incident_source_section`)을 자동 설정합니다.
 - `incident-case` 기본 흐름: `INC-001(문제 태깅) -> INC-010(버그 상황) -> INC-020(원인 분석) -> INC-030(개선 방향) -> INC-040(AI 양도) -> INC-050(AI 결과) -> INC-060(검증/종료)`
-- `incident-response`는 기본적으로 `--feature-tag`를 사용하며, `--tag-source + --tag-section`을 함께 주면 섹션 기준으로 태그를 자동 생성할 수 있습니다.
-- `starter-kit`/`maintenance`/`new-project`의 derived 문서는 `source_sections`를 기본 하드코딩하지 않습니다. 생성 후 `role-set ... auto|strict-auto|smart-auto` 또는 수동 CSV로 명시하세요.
+- `incident-lifecycle`는 기본적으로 `--feature-tag`를 사용하며, `--tag-source + --tag-section`을 함께 주면 섹션 기준으로 태그를 자동 생성할 수 있습니다.
+- `starter-kit`/`change-flow`의 derived 문서는 `source_sections`를 기본 하드코딩하지 않습니다. 생성 후 `role-set ... auto|strict-auto|smart-auto` 또는 수동 CSV로 명시하세요.
 - 종료 처리 규칙: `END__*_maintenance_case.agd`(maintenance), `END__*_incident_case.agd`(errFix) 파일은 스캔/선택/관계도에서 자동 제외됩니다.
 
 `AI 기획 작성 가이드(ai_planning_guide)` 내용은 별도 파일 기본 생성 대신 `agd_docs/README.md`에 통합되었습니다.
@@ -417,7 +449,61 @@ agd.exe quick
 - `examples/TEMPLATE_SHOWCASE_INDEX_en.md`
 - `examples/README.md`
 
-## 9. 참고 문서
+## 9. 운영 강제 세팅 (Git Hook + CI)
+
+기존 프로젝트와 충돌을 줄이기 위해 AGD는 `agd/` 폴더 안에서만 동작하도록 분리합니다.
+호스트 프로젝트 루트에는 훅/워크플로를 직접 고정 생성하지 않고, 필요 시 템플릿 설치 방식으로 적용합니다.
+
+### 9-1) 로컬 pre-commit 훅 설정
+
+1) AGD 폴더 기준 세팅 실행:
+
+```cmd
+agd\setup.cmd
+```
+
+2) 저장소 포함 훅 파일:
+
+- `agd/.githooks/pre-commit`
+- `agd/scripts/git-hooks/pre-commit.ps1`
+
+3) 커밋 시 자동 강제 규칙:
+
+- `agd/` 하위에서 변경된 `.agd` 파일만 검사
+- `agd\agd_docs` 전체 strict 검증
+- `agd\examples` 변경 시 examples strict 검증
+
+### 9-2) GitHub Actions 머지 게이트
+
+기본 제공 위치(템플릿):
+
+- `agd/templates/agd-guard.yml`
+
+`agd\setup.cmd` 기본 실행 시 자동 설치됩니다.
+수동으로 CI 템플릿만 다시 설치하려면:
+
+```cmd
+agd\setup.cmd -InstallCiTemplate
+```
+
+위 명령은 `.github/workflows/agd-guard.yml`로 복사합니다.
+
+### 9-3) PR 체크리스트 강제
+
+기본 제공 위치(템플릿):
+
+- `agd/templates/pull_request_template.md`
+
+`agd\setup.cmd` 기본 실행 시 자동 설치됩니다.
+수동으로 PR 템플릿만 다시 설치하려면:
+
+```cmd
+agd\setup.cmd -InstallPrTemplate
+```
+
+위 명령은 `.github/pull_request_template.md`로 복사합니다.
+
+## 10. 참고 문서
 
 - 규격(국문): `docs/AGD_SPEC_v0.1.md`
 - Specification (English): `docs/AGD_SPEC_v0.1.en.md`
@@ -429,7 +515,9 @@ agd.exe quick
 - Failure Analysis Framework (English): `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_en.md`
 - Start Guide (English): `README.en.md`
 - 문서 루트 구조 가이드: `agd_docs/README.md`
-- CLI 엔트리: `cmd/agd/main.go`
+- 격리형 패키지 가이드: `agd/README.md`
+- 원클릭 부트스트랩(cmd): `agd/setup.cmd`
+- 부트스트랩 스크립트(PowerShell): `agd/scripts/setup.ps1`
 - 게이트 강제 실행 래퍼(cmd): `run-safe.cmd`
 - 코어 로직: `internal/agd/*`
 - 템플릿 소스: `internal/agdtemplates/*`

@@ -30,8 +30,10 @@ func commandHelp(_ []string) int {
 
 8) Generate kit in one shot:
    agd starter-kit checkout
-   agd maintenance checkout --owner ops-team
-   agd incident-response checkout --feature-tag FT-CHECKOUT
+   agd bridge-lite checkout --owner product-team
+   agd change-flow checkout --owner ops-team
+   agd incident-lifecycle checkout --feature-tag FT-CHECKOUT
+   agd quality-gate checkout --owner qa-team
 
 9) Show source/derived graph:
    agd role-graph
@@ -64,8 +66,10 @@ func commandHelp(_ []string) int {
 
 8) 문서 키트 한 번에 생성:
    agd starter-kit checkout
-   agd maintenance checkout --owner ops-team
-   agd incident-response checkout --feature-tag FT-CHECKOUT
+   agd bridge-lite checkout --owner product-team
+   agd change-flow checkout --owner ops-team
+   agd incident-lifecycle checkout --feature-tag FT-CHECKOUT
+   agd quality-gate checkout --owner qa-team
 
 9) source/derived 그래프 보기:
    agd role-graph

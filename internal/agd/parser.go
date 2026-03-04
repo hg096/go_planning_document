@@ -1,4 +1,4 @@
-﻿package agd
+package agd
 
 import (
 	"fmt"
@@ -31,6 +31,7 @@ func Parse(raw string) (*Document, []string) {
 	errors := make([]string, 0)
 
 	normalized := strings.ReplaceAll(raw, "\r\n", "\n")
+	normalized = strings.TrimPrefix(normalized, "\uFEFF")
 	lines := strings.Split(normalized, "\n")
 
 	blocks := make([]*block, 0)

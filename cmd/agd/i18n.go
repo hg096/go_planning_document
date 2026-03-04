@@ -1,4 +1,4 @@
-﻿// i18n.go handles language selection and fallback text localization.
+// i18n.go handles language selection and fallback text localization.
 // i18n.go는 언어 선택과 텍스트 fallback 현지화를 처리합니다.
 package main
 
@@ -68,14 +68,14 @@ var koFallbackExact = map[string]string{
 	"AGD Wizard":                         "AGD 마법사",
 	"Type a number to choose an action.": "번호를 입력해 작업을 선택하세요.",
 	"[1] Select document":                "[1] 문서 선택",
-	"[2] Generate doc kit (starter/maintenance/new/incident)": "[2] 문서 키트 생성 (starter/maintenance/new/incident)",
-	"[3] Validate whole docs tree":                            "[3] 전체 문서 트리 검증",
-	"[4] New document":                                        "[4] 새 문서",
-	"[5] Show source/derived relation graph":                  "[5] source/derived 관계 그래프 보기",
-	"[0] Exit":                                                "[0] 종료",
-	"Select":                                                  "선택",
-	"Bye.":                                                    "종료합니다.",
-	"Invalid choice. Use 0-5.":                                "잘못된 선택입니다. 0-5를 사용하세요.",
+	"[2] Generate doc kit (starter/bridge/change/incident/quality)": "[2] 문서 키트 생성 (starter/bridge/change/incident/quality)",
+	"[3] Validate whole docs tree":                                  "[3] 전체 문서 트리 검증",
+	"[4] New document":                                              "[4] 새 문서",
+	"[5] Show source/derived relation graph":                        "[5] source/derived 관계 그래프 보기",
+	"[0] Exit":                                                      "[0] 종료",
+	"Select":                                                        "선택",
+	"Bye.":                                                          "종료합니다.",
+	"Invalid choice. Use 0-5.":                                      "잘못된 선택입니다. 0-5를 사용하세요.",
 
 	"Selected document: %s\n":                                 "선택된 문서: %s\n",
 	"Selected document -> %s\n":                               "문서 선택 완료 -> %s\n",
@@ -106,12 +106,13 @@ var koFallbackExact = map[string]string{
 	"Allow missing impact? (y/N)":                  "impact 누락을 허용할까요? (y/N)",
 
 	"Kit profile:": "키트 프로필:",
-	"  [1] starter-kit     - initial source baseline":           "  [1] starter-kit     - 초기 source 기준선",
-	"  [2] maintenance     - single-file maintenance flow":      "  [2] maintenance     - 단일 파일 유지보수 흐름",
-	"  [3] new-project     - new feature expansion flow":        "  [3] new-project     - 신규 기능 확장 흐름",
-	"  [4] incident-response - single-file incident trace flow": "  [4] incident-response - 단일 파일 오류,버그 추적 흐름",
+	"  [1] starter-kit     - initial source baseline":               "  [1] starter-kit     - 초기 source 기준선",
+	"  [2] bridge-lite     - minimal AI bridge core flow":           "  [2] bridge-lite     - minimal AI bridge core flow",
+	"  [3] change-flow     - maintenance + feature change flow":     "  [3] change-flow     - maintenance + feature change flow",
+	"  [4] incident-lifecycle - incident response + follow-up flow": "  [4] incident-lifecycle - incident response + follow-up flow",
+	"  [5] quality-gate    - test/perf/security/release gate flow":  "  [5] quality-gate    - test/perf/security/release gate flow",
 	"  [0] back":                            "  [0] 뒤로가기",
-	"Profile (1-4 or name)":                 "프로필 (1-4 또는 이름)",
+	"Profile (1-5 or name)":                 "프로필 (1-5 또는 이름)",
 	"Invalid profile.":                      "잘못된 프로필입니다.",
 	"Project key (ex: checkout)":            "프로젝트 키 (예: checkout)",
 	"Owner (Enter to leave empty)":          "담당자 (비우려면 Enter)",

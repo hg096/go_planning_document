@@ -1,0 +1,94 @@
+﻿@meta
+title: Payment Incident Runbook
+version: 0.1
+owner: sre-pay
+
+@map
+- RUN-001 | Detection Conditions | Define alert thresholds and detection signals
+- RUN-010 | Severity Classification | Define severity levels by user impact
+- RUN-020 | Immediate Actions | Define first-10-minute stabilization steps
+- RUN-030 | Communication | Define internal and external update protocol
+- RUN-040 | Exit Criteria | Define incident closure conditions
+
+@section RUN-001
+title: Detection Conditions
+summary: Combine failure and latency signals for reliable incident detection
+links: ALERT-001
+content:
+<<<
+[Signal thresholds]
+1) Failure rate:
+2) Latency P95:
+3) Timeout count:
+
+[Channels]
+- Slack:
+- Pager:
+>>>
+
+@section RUN-010
+title: Severity Classification
+summary: Classify incidents by impact breadth and duration
+links: POLICY-SEVERITY
+content:
+<<<
+SEV1:
+- Condition:
+
+SEV2:
+- Condition:
+
+SEV3:
+- Condition:
+>>>
+
+@section RUN-020
+title: Immediate Actions
+summary: Stabilize service first, investigate in parallel
+links: CMD-ROLLBACK-001
+content:
+<<<
+1) Start on-call bridge
+2) Pause risky rollout / rollback decision
+3) Check critical dependencies
+4) Apply temporary mitigation
+>>>
+
+@section RUN-030
+title: Communication
+summary: Keep updates consistent and time-bound
+links: TEMPLATE-INCIDENT
+content:
+<<<
+[Internal updates]
+- First update due:
+- Update cadence:
+
+[External updates]
+- Status-page trigger:
+- Customer communication channel:
+>>>
+
+@section RUN-040
+title: Exit Criteria
+summary: Close incident only after metrics normalize and follow-ups are filed
+links: CHECKLIST-CLOSE
+content:
+<<<
+[Closure checks]
+1) Failure-rate normalized
+2) Latency normalized
+3) Backlog cleared
+
+[Follow-up]
+- Incident-case logged (30_shared/errFix)
+- Postmortem scheduled if needed
+- Action tickets created
+>>>
+
+@change CHG-2026-02-23-01
+target: RUN-020
+date: 2026-02-23
+author: sre-pay
+reason: Initial template scaffolding
+impact: Replace with command-level procedures for your environment

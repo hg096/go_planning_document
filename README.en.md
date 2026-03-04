@@ -1,4 +1,4 @@
-﻿# AGD Quick Start Guide (Beginner)
+# AGD Quick Start Guide (Beginner)
 
 AGD is a document format for **human + AI collaboration on one source of truth**.
 
@@ -53,6 +53,35 @@ go build -ldflags "-X main.defaultLang=en" -o agd_en.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=ko" -o agd_ko.exe ./cmd/agd
 ```
 
+### One-Command Setup (Recommended: minimal user install)
+
+Use this single `cmd` line to checkout only `agd/` and run setup:
+
+```cmd
+cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> <repo-folder> && cd /d <repo-folder> && git sparse-checkout init --no-cone && git sparse-checkout set /agd/ && git checkout && agd\setup.cmd"
+```
+
+If you already cloned the full repository, slim it down to `agd/` first:
+
+```cmd
+agd\setup.cmd -SlimCheckout
+```
+
+What it does:
+
+- sets `git config core.hooksPath agd/.githooks`
+- validates `agd/agd_docs` and `agd/examples` with strict checks
+- installs CI workflow and PR template (backs up existing files before overwrite)
+
+Useful options:
+
+```cmd
+agd\setup.cmd -SkipCheck
+agd\setup.cmd -SkipTemplates
+agd\setup.cmd -NoTemplateBackup
+agd\setup.cmd -SlimCheckout
+```
+
 ## 3. Easiest Start: Wizard
 
 ```cmd
@@ -68,7 +97,7 @@ English wizard menu:
 Select document
 
 [1] Select document
-[2] Generate doc kit (starter/maintenance/new/incident)
+[2] Generate doc kit (starter/bridge/change/incident/quality)
 [3] Validate whole docs tree
 [4] New document
 [5] Show source/derived relation graph
@@ -144,8 +173,10 @@ agd.exe section-add core_spec_checkout CORE-050 "Payment Failure Recovery" "Defi
 agd.exe logic-log core_spec_checkout CORE-020 --reason "Applied retry branch update" --impact "lower drop rate on transient payment failures"
 agd.exe incident-tag checkout_incident_case FT-CHECKOUT service_logic_checkout_core [section-id] --reason "set issue root to exact feature section" --impact "AI can track the target section precisely"
 agd.exe kit starter-kit checkout
-agd.exe maintenance checkout --owner ops-team
-agd.exe incident-response checkout --feature-tag FT-CHECKOUT
+agd.exe bridge-lite checkout --owner product-team
+agd.exe change-flow checkout --owner ops-team
+agd.exe incident-lifecycle checkout --feature-tag FT-CHECKOUT
+agd.exe quality-gate checkout --owner qa-team
 agd.exe kit starter-kit checkout --no-graph
 agd.exe role-graph
 agd.exe role-graph --format mermaid --out agd_docs\role_graph.mmd
@@ -157,12 +188,13 @@ agd.exe view core_spec_checkout
 Kit profile intent:
 
 - `starter-kit`: minimal source+derived baseline for first setup
-- `maintenance`: single maintenance case doc (`agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`)
-- `new-project`: set for adding or improving new feature scope
-- `incident-response`: single incident case doc (`agd_docs/30_shared/errFix/<project>_incident_case.agd`)
-- `maintenance`/`incident-response`: do not create a `<project>` subfolder; only create the single file at the path above
+- `bridge-lite`: minimal AI bridge core set (`service-logic + core-spec + delivery-plan + runbook`)
+- `change-flow`: integrated maintenance + feature-change set (`maintenance-case + core-spec + delivery-plan + change-log`)
+- `incident-lifecycle`: incident response + follow-up set (`incident-case + runbook + postmortem`)
+- `quality-gate`: release quality gate set (`policy + qa-plan + runbook + delivery-plan`)
+- legacy aliases still work: `maintenance`/`new-project` -> `change-flow`, `incident-response` -> `incident-lifecycle`
 - manual `postmortem` type path: `agd_docs/30_shared/postmortem/<file>.agd`
-- `incident-response` auto-injects the rooted trace block into the generated `incident-case` doc using `--feature-tag`.
+- `incident-lifecycle` auto-injects the rooted trace block into the generated `incident-case` doc using `--feature-tag`.
 - `incident-case` default flow: `INC-001(tag issue) -> INC-010(capture bug) -> INC-020(quick RCA) -> INC-030(fix direction) -> INC-040(AI handoff) -> INC-050(AI result) -> INC-060(validate/close)`
 - If `--feature-tag` is omitted, an automatic tag is generated from the project key (example: `checkout` -> `FT-CHECKOUT`).
 - Close-state rule: `END__*_maintenance_case.agd` (maintenance) and `END__*_incident_case.agd` (errFix) are auto-excluded from scan/select/role-graph.
@@ -184,9 +216,10 @@ agd.exe map-suggest frontend_pages service_overview strict-auto
 agd.exe map-suggest frontend_pages service_overview smart-auto
 
 agd.exe starter-kit checkout
-agd.exe maintenance checkout
-agd.exe new-project checkout
-agd.exe incident-response checkout --feature-tag FT-CHECKOUT
+agd.exe bridge-lite checkout
+agd.exe change-flow checkout
+agd.exe incident-lifecycle checkout --feature-tag FT-CHECKOUT
+agd.exe quality-gate checkout
 ```
 
 `source_sections` mapping rules:
@@ -257,7 +290,61 @@ For single-case maintenance/incident flows, use kit-generated paths instead of f
 - `agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
 - `agd_docs/30_shared/errFix/<project>_incident_case.agd`
 
-## 8. References
+## 8. Enforced Ops Setup (Git Hook + CI)
+
+To avoid conflicts with ongoing host projects, AGD is isolated under `agd/` and managed from there.
+Root-level hook/workflow files are not forced by default; install is template-based.
+
+### 8-1) Local pre-commit hook
+
+1) Run package setup:
+
+```cmd
+agd\setup.cmd
+```
+
+2) Hook files included in this repo:
+
+- `agd/.githooks/pre-commit`
+- `agd/scripts/git-hooks/pre-commit.ps1`
+
+3) Enforced checks at commit time:
+
+- Checks only staged `.agd` changes under `agd/`
+- Runs strict tree validation for `agd\agd_docs`
+- Runs strict validation for `agd\examples` when examples changed
+
+### 8-2) GitHub Actions required check
+
+Template location:
+
+- `agd/templates/agd-guard.yml`
+
+`agd\setup.cmd` installs this by default.
+To reinstall CI template only:
+
+```cmd
+agd\setup.cmd -InstallCiTemplate
+```
+
+This copies to `.github/workflows/agd-guard.yml`.
+
+### 8-3) Pull request checklist
+
+Template location:
+
+- `agd/templates/pull_request_template.md`
+
+`agd\setup.cmd` installs this by default.
+To reinstall PR template only:
+
+```cmd
+agd\setup.cmd -InstallPrTemplate
+```
+
+This copies to `.github/pull_request_template.md`.
+
+## 9. References
 
 - Korean start guide: `README.md`
 - Korean template guide: `docs/AGD_TEMPLATE_GUIDE_ko.md`
@@ -267,6 +354,10 @@ For single-case maintenance/incident flows, use kit-generated paths instead of f
 - Korean failure analysis framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_ko.md`
 - English failure analysis framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_en.md`
 - Docs root folder guide: `agd_docs/README.md`
+- Isolated package guide (EN): `agd/README.en.md`
+- Isolated package guide (KO): `agd/README.md`
+- One-command bootstrap (cmd): `agd/setup.cmd`
+- Bootstrap script (PowerShell): `agd/scripts/setup.ps1`
 - Gate-enforced execution wrapper (cmd): `run-safe.cmd`
 - Spec (KR): `docs/AGD_SPEC_v0.1.md`
 - Spec (EN): `docs/AGD_SPEC_v0.1.en.md`

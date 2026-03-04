@@ -54,13 +54,17 @@ type unresolvedRoleLink struct {
 	Reason       string
 }
 
+const kitProfileUsage = "starter-kit|bridge-lite|change-flow|incident-lifecycle|quality-gate"
+
 func commandKitEasy(args []string) int {
 	if len(args) == 0 {
 		fmt.Fprintln(os.Stderr, text(
-			"usage: agd kit <starter-kit|maintenance|new-project|incident-response> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", "usage: agd kit <starter-kit|maintenance|new-project|incident-response> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]",
+			fmt.Sprintf("usage: agd kit <%s> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
+			fmt.Sprintf("usage: agd kit <%s> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
 		))
 		fmt.Fprintln(os.Stderr, text(
-			"   or: agd starter-kit|maintenance|new-project|incident-response <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", "   or: agd starter-kit|maintenance|new-project|incident-response <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]",
+			fmt.Sprintf("   or: agd %s <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
+			fmt.Sprintf("   or: agd %s <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
 		))
 		return 2
 	}
@@ -72,15 +76,22 @@ func commandKitEasy(args []string) int {
 	case "starter-kit":
 		profileRaw = "starter-kit"
 	case "maintenance-kit":
-		profileRaw = "maintenance"
+		profileRaw = "change-flow"
 	case "new-project-kit":
-		profileRaw = "new-project"
+		profileRaw = "change-flow"
 	case "incident-kit":
-		profileRaw = "incident-response"
+		profileRaw = "incident-lifecycle"
+	case "change-flow-kit":
+		profileRaw = "change-flow"
+	case "incident-lifecycle-kit":
+		profileRaw = "incident-lifecycle"
+	case "quality-gate-kit":
+		profileRaw = "quality-gate"
 	case "kit":
 		if len(rest) == 0 {
 			fmt.Fprintln(os.Stderr, text(
-				"kit error: profile is required (starter-kit|maintenance|new-project|incident-response)", "kit error: profile is required (starter-kit|maintenance|new-project|incident-response)",
+				fmt.Sprintf("kit error: profile is required (%s)", kitProfileUsage),
+				fmt.Sprintf("kit error: profile is required (%s)", kitProfileUsage),
 			))
 			return 2
 		}
@@ -167,10 +178,12 @@ func commandKitEasy(args []string) int {
 		default:
 			if strings.HasPrefix(token, "-") {
 				fmt.Fprintln(os.Stderr, text(
-					"usage: agd kit <starter-kit|maintenance|new-project|incident-response> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", "usage: agd kit <starter-kit|maintenance|new-project|incident-response> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]",
+					fmt.Sprintf("usage: agd kit <%s> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
+					fmt.Sprintf("usage: agd kit <%s> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
 				))
 				fmt.Fprintln(os.Stderr, text(
-					"   or: agd starter-kit|maintenance|new-project|incident-response <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", "   or: agd starter-kit|maintenance|new-project|incident-response <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]",
+					fmt.Sprintf("   or: agd %s <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
+					fmt.Sprintf("   or: agd %s <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]", kitProfileUsage),
 				))
 				return 2
 			}
@@ -197,7 +210,7 @@ func commandKitEasy(args []string) int {
 		))
 		return 2
 	}
-	useRootTagging := profile == "incident-response" || profile == "maintenance"
+	useRootTagging := profile == "incident-lifecycle" || profile == "change-flow"
 	if useRootTagging {
 		rawFeatureTag := strings.TrimSpace(featureTag)
 		featureTag = ""
@@ -211,10 +224,10 @@ func commandKitEasy(args []string) int {
 				return 2
 			}
 		}
-		if profile == "incident-response" && featureTag == "" && strings.TrimSpace(tagSourceDocRaw) == "" {
+		if profile == "incident-lifecycle" && featureTag == "" && strings.TrimSpace(tagSourceDocRaw) == "" {
 			fmt.Fprintln(os.Stderr, text(
-				"kit error: incident-response requires --feature-tag (ex: FT-CHECKOUT)",
-				"kit error: incident-response requires --feature-tag (ex: FT-CHECKOUT)",
+				"kit error: incident-lifecycle requires --feature-tag (ex: FT-CHECKOUT)",
+				"kit error: incident-lifecycle requires --feature-tag (ex: FT-CHECKOUT)",
 			))
 			return 2
 		}
@@ -266,12 +279,12 @@ func commandKitEasy(args []string) int {
 		}
 	} else if strings.TrimSpace(featureTag) != "" {
 		fmt.Fprintln(os.Stderr, text(
-			"kit warning: --feature-tag is only used for incident-response/maintenance (ignored)", "kit warning: --feature-tag is only used for incident-response/maintenance (ignored)",
+			"kit warning: --feature-tag is only used for incident-lifecycle/change-flow (ignored)", "kit warning: --feature-tag is only used for incident-lifecycle/change-flow (ignored)",
 		))
 		featureTag = ""
 		if strings.TrimSpace(tagSourceDocRaw) != "" || strings.TrimSpace(tagSectionInput) != "" {
 			fmt.Fprintln(os.Stderr, text(
-				"kit warning: --tag-source/--tag-section are only used for incident-response/maintenance (ignored)", "kit warning: --tag-source/--tag-section are only used for incident-response/maintenance (ignored)",
+				"kit warning: --tag-source/--tag-section are only used for incident-lifecycle/change-flow (ignored)", "kit warning: --tag-source/--tag-section are only used for incident-lifecycle/change-flow (ignored)",
 			))
 		}
 	}
@@ -351,13 +364,13 @@ func commandKitEasy(args []string) int {
 			continue
 		}
 	}
-	if profile == "incident-response" {
+	if profile == "incident-lifecycle" {
 		if err := applyIncidentFeatureTagRooting(keyToPath, featureTag, lang, "ai-agent", incidentSourceDocPath, incidentSourceSectionID); err != nil {
 			fmt.Fprintf(os.Stderr, "kit error: %v\n", err)
 			return 1
 		}
 	}
-	if profile == "maintenance" && strings.TrimSpace(featureTag) != "" {
+	if profile == "change-flow" && strings.TrimSpace(featureTag) != "" {
 		if err := applyMaintenanceFeatureTagRooting(keyToPath, featureTag, lang, "ai-agent", incidentSourceDocPath, incidentSourceSectionID); err != nil {
 			fmt.Fprintf(os.Stderr, "kit error: %v\n", err)
 			return 1
@@ -376,16 +389,16 @@ func commandKitEasy(args []string) int {
 		}
 		fmt.Printf("  - %s [%s, %s]\n", rel, spec.DocType, roleLabel)
 	}
-	if profile == "incident-response" {
+	if profile == "incident-lifecycle" {
 		traceChain := incidentTraceChainForKeyMap(featureTag, keyToPath)
 		fmt.Printf(text("Incident feature root tag: %s\n", "Incident feature root tag: %s\n"), featureTag)
 		fmt.Printf(text("Root trace chain: %s\n", "Root trace chain: %s\n"), traceChain)
 	}
-	if profile == "maintenance" && strings.TrimSpace(featureTag) != "" {
-		fmt.Printf(text("Maintenance feature root tag: %s\n", "Maintenance feature root tag: %s\n"), featureTag)
+	if profile == "change-flow" && strings.TrimSpace(featureTag) != "" {
+		fmt.Printf(text("Change-flow maintenance root tag: %s\n", "Change-flow maintenance root tag: %s\n"), featureTag)
 		if strings.TrimSpace(incidentSourceDocPath) != "" && strings.TrimSpace(incidentSourceSectionID) != "" {
 			fmt.Printf(text(
-				"Maintenance source section: %s | %s\n", "Maintenance source section: %s | %s\n",
+				"Change-flow source section: %s | %s\n", "Change-flow source section: %s | %s\n",
 			), incidentSourceDocPath, incidentSourceSectionID)
 		}
 	}
@@ -410,14 +423,21 @@ func kitProjectScopedSubdir(profile, baseSubdir, projectKey string) string {
 		return base
 	}
 	prof := strings.ToLower(strings.TrimSpace(profile))
-	if prof == "starter-kit" || prof == "maintenance" || prof == "incident-response" {
+	if prof == "starter-kit" || prof == "bridge-lite" || prof == "incident-lifecycle" || prof == "quality-gate" {
 		return base
+	}
+	if prof == "change-flow" {
+		maintenanceBase := filepath.Join("30_shared", "maintenance")
+		if filepath.Clean(base) == filepath.Clean(maintenanceBase) {
+			return base
+		}
+		if key == "" {
+			return base
+		}
+		return filepath.Join("10_source", "product", key)
 	}
 	if key == "" {
 		return base
-	}
-	if prof == "new-project" {
-		return filepath.Join("10_source", "product", key)
 	}
 	return filepath.Join(base, key)
 }
@@ -430,12 +450,17 @@ func normalizeKitProfile(raw string) (string, bool) {
 	switch key {
 	case "starter-kit", "starter", "start", "bootstrap", "starterkit":
 		return "starter-kit", true
-	case "maintenance", "maint", "maintenance-kit", "maintenance-single", "single-maintenance":
-		return "maintenance", true
-	case "new-project", "new", "new-project-kit":
-		return "new-project", true
-	case "incident-response", "incident", "incident-kit", "error-response":
-		return "incident-response", true
+	case "bridge-lite", "bridge", "bridge-kit", "bridge-lite-kit", "lite-bridge", "minimal-kit", "minimal":
+		return "bridge-lite", true
+	case "change-flow", "change", "flow", "changeflow",
+		"maintenance", "maint", "maintenance-kit", "maintenance-single", "single-maintenance",
+		"new-project", "new", "new-project-kit":
+		return "change-flow", true
+	case "incident-lifecycle", "incident-lifecycle-kit", "incident-lifecycle-flow",
+		"incident-response", "incident", "incident-kit", "error-response":
+		return "incident-lifecycle", true
+	case "quality-gate", "quality-gate-kit", "quality", "qualitygate", "release-gate":
+		return "quality-gate", true
 	default:
 		return "", false
 	}
@@ -715,7 +740,7 @@ func applyIncidentFeatureTagRooting(
 	traceChain := incidentTraceChainForKeyMap(tag, keyToPath)
 	keys := []string{"ai_guide", "service", "runbook", "qa", "postmortem", "meeting", "policy"}
 	if _, ok := keyToPath["incident_case"]; ok {
-		keys = []string{"incident_case"}
+		keys = append([]string{"incident_case"}, keys...)
 	}
 
 	for _, key := range keys {
@@ -1035,31 +1060,43 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 	switch profile {
 	case "starter-kit":
 		return []kitDocSpec{
-			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service_logic", TitleEN: "%s - Service Logic", TitleKO: "%s - 서비스 로직", Role: "source"},
-			{Key: "prd", DocType: "prd", Subdir: filepath.Join("10_source", "product"), FileSuffix: "prd", TitleEN: "%s - Product Requirements", TitleKO: "%s - 제품 요구사항", Role: "source"},
-			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Release Policy", TitleKO: "%s - 릴리즈 정책", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - Delivery Plan", TitleKO: "%s - 전달 계획", Role: "source"},
-			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "roadmap", TitleEN: "%s - Roadmap", TitleKO: "%s - 로드맵"},
+			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service_logic", TitleEN: "%s - Service Logic", TitleKO: "%s - Service Logic", Role: "source"},
+			{Key: "prd", DocType: "prd", Subdir: filepath.Join("10_source", "product"), FileSuffix: "prd", TitleEN: "%s - Product Requirements", TitleKO: "%s - Product Requirements", Role: "source"},
+			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Release Policy", TitleKO: "%s - Release Policy", Role: "source"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - Delivery Plan", TitleKO: "%s - Delivery Plan", Role: "source"},
+			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "roadmap", TitleEN: "%s - Roadmap", TitleKO: "%s - Roadmap"},
 		}
-	case "maintenance":
+	case "bridge-lite":
 		return []kitDocSpec{
-			{Key: "maintenance_case", DocType: "maintenance-case", Subdir: filepath.Join("30_shared", "maintenance"), FileSuffix: "maintenance_case", TitleEN: "%s - Maintenance Unified Case", TitleKO: "%s - 유지보수 통합 케이스", Role: "source"},
+			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service_logic", TitleEN: "%s - Bridge Lite Service Logic", TitleKO: "%s - Bridge Lite Service Logic", Role: "source"},
+			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Bridge Lite Core Spec", TitleKO: "%s - Bridge Lite Core Spec", Role: "source"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Bridge Lite Delivery Plan", TitleKO: "%s - Bridge Lite Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
+			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Bridge Lite Runbook", TitleKO: "%s - Bridge Lite Runbook", Role: "derived", SourceKey: "service", SourceSections: "SYS-050->RUN-020,SYS-060->RUN-001,SYS-070->RUN-040"},
 		}
-	case "new-project":
+	case "change-flow":
 		return []kitDocSpec{
-			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Core Spec", TitleKO: "%s - 코어 스펙", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Delivery Plan", TitleKO: "%s - 전달 계획", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-010"},
-			{Key: "change_log", DocType: "change-log", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "change_log", TitleEN: "%s - Change Log", TitleKO: "%s - 변경 로그", Role: "source"},
+			{Key: "maintenance_case", DocType: "maintenance-case", Subdir: filepath.Join("30_shared", "maintenance"), FileSuffix: "maintenance_case", TitleEN: "%s - Change Flow Maintenance Case", TitleKO: "%s - Change Flow Maintenance Case", Role: "source"},
+			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Change Flow Core Spec", TitleKO: "%s - Change Flow Core Spec", Role: "source"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Change Flow Delivery Plan", TitleKO: "%s - Change Flow Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-010"},
+			{Key: "change_log", DocType: "change-log", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "change_log", TitleEN: "%s - Change Flow Log", TitleKO: "%s - Change Flow Log", Role: "source"},
 		}
-	case "incident-response":
+	case "incident-lifecycle":
 		return []kitDocSpec{
-			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("30_shared", "errFix"), FileSuffix: "incident_case", TitleEN: "%s - Incident Root Trace Case", TitleKO: "%s - 장애 루트 추적 케이스"},
+			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("30_shared", "errFix"), FileSuffix: "incident_case", TitleEN: "%s - Incident Lifecycle Case", TitleKO: "%s - Incident Lifecycle Case", Role: "source"},
+			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Incident Lifecycle Runbook", TitleKO: "%s - Incident Lifecycle Runbook", Role: "derived", SourceKey: "incident_case", SourceSections: "INC-030->RUN-020,INC-060->RUN-040"},
+			{Key: "postmortem", DocType: "postmortem", Subdir: filepath.Join("30_shared", "postmortem"), FileSuffix: "postmortem", TitleEN: "%s - Incident Lifecycle Postmortem", TitleKO: "%s - Incident Lifecycle Postmortem", Role: "derived", SourceKey: "incident_case", SourceSections: "INC-010->PM-010,INC-020->PM-020,INC-060->PM-050"},
+		}
+	case "quality-gate":
+		return []kitDocSpec{
+			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Quality Gate Policy", TitleKO: "%s - Quality Gate Policy", Role: "source"},
+			{Key: "qa", DocType: "qa-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "qa_plan", TitleEN: "%s - Quality Gate QA Plan", TitleKO: "%s - Quality Gate QA Plan", Role: "derived", SourceKey: "policy", SourceSections: "POL-010->QA-020,POL-030->QA-040"},
+			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Quality Gate Runbook", TitleKO: "%s - Quality Gate Runbook", Role: "derived", SourceKey: "policy", SourceSections: "POL-020->RUN-010,POL-030->RUN-020"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Quality Gate Delivery Plan", TitleKO: "%s - Quality Gate Delivery Plan", Role: "derived", SourceKey: "policy", SourceSections: "POL-010->DEL-010,POL-030->DEL-020"},
 		}
 	default:
 		return nil
 	}
 }
-
 func commandRoleGraphEasy(args []string) int {
 	root := docsRootDir
 	format := "text"

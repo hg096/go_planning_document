@@ -31,7 +31,7 @@ func commandWizard(_ []string) int {
 	for {
 		fmt.Println("")
 		fmt.Println(text("[1] Select document", "[1] Select document"))
-		fmt.Println(text("[2] Generate doc kit (starter/maintenance/new/incident)", "[2] Generate doc kit (starter/maintenance/new/incident)"))
+		fmt.Println(text("[2] Generate doc kit (starter/bridge/change/incident/quality)", "[2] Generate doc kit (starter/bridge/change/incident/quality)"))
 		fmt.Println(text("[3] Validate whole docs tree", "[3] Validate whole docs tree"))
 		fmt.Println(text("[4] New document", "[4] New document"))
 		fmt.Println(text("[5] Show source/derived relation graph", "[5] Show source/derived relation graph"))
@@ -359,12 +359,13 @@ func wizardKit(reader *bufio.Reader) int {
 	fmt.Println("")
 	fmt.Println(text("Kit profile:", "Kit profile:"))
 	fmt.Println(text("  [1] starter-kit     - initial source baseline", "  [1] starter-kit     - initial source baseline"))
-	fmt.Println(text("  [2] maintenance     - single-file maintenance flow", "  [2] maintenance     - single-file maintenance flow"))
-	fmt.Println(text("  [3] new-project     - new feature expansion flow", "  [3] new-project     - new feature expansion flow"))
-	fmt.Println(text("  [4] incident-response - single-file incident trace flow", "  [4] incident-response - single-file incident trace flow"))
+	fmt.Println(text("  [2] bridge-lite     - minimal AI bridge core flow", "  [2] bridge-lite     - minimal AI bridge core flow"))
+	fmt.Println(text("  [3] change-flow     - maintenance + feature change flow", "  [3] change-flow     - maintenance + feature change flow"))
+	fmt.Println(text("  [4] incident-lifecycle - incident response + follow-up flow", "  [4] incident-lifecycle - incident response + follow-up flow"))
+	fmt.Println(text("  [5] quality-gate    - test/perf/security/release gate flow", "  [5] quality-gate    - test/perf/security/release gate flow"))
 	fmt.Println(text("  [0] back", "  [0] back"))
 
-	profileInput, err := promptRequired(reader, text("Profile (1-4 or name)", "Profile (1-4 or name)"))
+	profileInput, err := promptRequired(reader, text("Profile (1-5 or name)", "Profile (1-5 or name)"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
@@ -377,11 +378,13 @@ func wizardKit(reader *bufio.Reader) int {
 	case "1":
 		profileRaw = "starter-kit"
 	case "2":
-		profileRaw = "maintenance"
+		profileRaw = "bridge-lite"
 	case "3":
-		profileRaw = "new-project"
+		profileRaw = "change-flow"
 	case "4":
-		profileRaw = "incident-response"
+		profileRaw = "incident-lifecycle"
+	case "5":
+		profileRaw = "quality-gate"
 	}
 	profile, ok := normalizeKitProfile(profileRaw)
 	if !ok {
@@ -407,7 +410,7 @@ func wizardKit(reader *bufio.Reader) int {
 	featureTag := ""
 	incidentSourceDoc := ""
 	incidentSourceSection := ""
-	if profile == "incident-response" || profile == "maintenance" {
+	if profile == "incident-lifecycle" {
 		selected, autoTag, err := promptIncidentSectionCandidate(reader, strings.TrimSpace(root))
 		if err != nil {
 			if errors.Is(err, errWizardBack) {
