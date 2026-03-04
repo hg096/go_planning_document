@@ -35,6 +35,7 @@ func commandWizard(_ []string) int {
 		fmt.Println(text("[3] Validate whole docs tree", "[3] Validate whole docs tree"))
 		fmt.Println(text("[4] New document", "[4] New document"))
 		fmt.Println(text("[5] Show source/derived relation graph", "[5] Show source/derived relation graph"))
+		fmt.Println(text("[6] Code planning validation", "[6] 코드 기획 검증"))
 		fmt.Println(text("[0] Exit", "[0] Exit"))
 
 		choice, err := promptRequired(reader, text("Select", "Select"))
@@ -72,11 +73,15 @@ func commandWizard(_ []string) int {
 			if code := wizardRoleGraph(reader); code != 0 {
 				fmt.Printf("failed (code=%d)\n", code)
 			}
+		case "6":
+			if code := wizardCodePlanCheck(reader); code != 0 {
+				fmt.Printf("failed (code=%d)\n", code)
+			}
 		case "0", "q", "quit", "exit":
 			fmt.Println(text("Bye.", "Bye."))
 			return 0
 		default:
-			fmt.Println(text("Invalid choice. Use 0-5.", "Invalid choice. Use 0-5."))
+			fmt.Println(text("Invalid choice. Use 0-6.", "잘못된 선택입니다. 0-6을 사용하세요."))
 		}
 	}
 }
@@ -317,6 +322,51 @@ func wizardCheckAll(reader *bufio.Reader) int {
 		args = append(args, root)
 	}
 	return commandCheckAllEasy(args)
+}
+
+func wizardCodePlanCheck(reader *bufio.Reader) int {
+	root, err := promptOptional(reader, docsRootInputPromptShort())
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
+		return 1
+	}
+
+	fmt.Println(text("Change source mode:", "변경 소스 모드:"))
+	fmt.Println(text("  [1] auto (git -> cache fallback)", "  [1] auto (git 우선, 실패 시 cache)"))
+	fmt.Println(text("  [2] git", "  [2] git (현재 워킹트리 기준)"))
+	fmt.Println(text("  [3] cache", "  [3] cache (로컬 스냅샷 기준)"))
+	fmt.Println(text("  [0] back", "  [0] 뒤로가기"))
+	modeInput, err := promptOptional(reader, text("Mode (Enter=1)", "모드 (Enter=1)"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
+		return 1
+	}
+	modeInput = strings.TrimSpace(modeInput)
+	if modeInput == "0" {
+		return 0
+	}
+
+	mode := codePlanModeAuto
+	switch strings.ToLower(modeInput) {
+	case "", "1", "auto":
+		mode = codePlanModeAuto
+	case "2", "git":
+		mode = codePlanModeGit
+	case "3", "cache":
+		mode = codePlanModeCache
+	default:
+		fmt.Println(text("Invalid mode. Use 0-3.", "잘못된 모드입니다. 0-3을 사용하세요."))
+		return 2
+	}
+
+	args := make([]string, 0, 4)
+	if strings.TrimSpace(root) != "" {
+		args = append(args, strings.TrimSpace(root))
+	}
+	if mode != codePlanModeAuto {
+		args = append(args, "--mode", string(mode))
+	}
+	return commandCodePlanCheckEasy(args)
 }
 
 func wizardServiceGate(reader *bufio.Reader) int {

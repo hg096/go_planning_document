@@ -102,9 +102,7 @@ func collectDesignWarnings(root, filePath string, doc *agd.Document) []string {
 				}
 			}
 		}
-		if strings.HasPrefix(rel, "20_derived/frontend/") && doc.SectionByID("FP-070") == nil {
-			warnings = append(warnings, "frontend derived document should include FP-070 (Assumptions and Risk Signals)")
-		}
+
 		if strings.HasPrefix(rel, "20_derived/qa/") && doc.SectionByID("QA-050") == nil {
 			warnings = append(warnings, "qa derived document should include QA-050 (Assumptions and Risk Signals)")
 		}

@@ -49,6 +49,8 @@ func run(args []string) int {
 		return commandRoleSetEasy(args[1:])
 	case "role-graph", "graph", "relation-graph":
 		return commandRoleGraphEasy(args[1:])
+	case "code-plan-check", "plan-check", "code-planning-check":
+		return commandCodePlanCheckEasy(args[1:])
 	case "kit",
 		"starter-kit", "maintenance",
 		"new-project",
@@ -93,6 +95,7 @@ Usage:
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
   agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive] [--scope all|maintenance|incident|maintenance-incident|exclude-maintenance-incident]
+  agd code-plan-check [root] [--mode auto|git|cache] [--cache <file>] [--scope-policy <file>] [--strict-mapping]
   agd kit <starter-kit|new-project|maintenance|incident> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd starter-kit|new-project|maintenance|incident <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]
@@ -123,6 +126,7 @@ Advanced:
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
   agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive] [--scope all|maintenance|incident|maintenance-incident|exclude-maintenance-incident]
+  agd code-plan-check [root] [--mode auto|git|cache] [--cache <file>] [--scope-policy <file>] [--strict-mapping]
   agd kit <starter-kit|new-project|maintenance|incident> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd starter-kit|new-project|maintenance|incident <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]

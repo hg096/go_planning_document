@@ -56,7 +56,7 @@ Essential commands (restored):
 
 ```cmd
 REM git: download only 00_agd into current project root
-cmd /c "git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git .a&&git -C .a sparse-checkout set agd&&git -C .a checkout -q&&xcopy .a\agd 00_agd /e /i /y>nul&&rd /s /q .a"
+cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
 
 REM build: generate executables
 go build -o 00_agd\agd.exe ./cmd/agd

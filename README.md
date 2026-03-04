@@ -56,11 +56,12 @@ AGD의 답은 "완전한 문서 1개"를 만드는 것이 아니라, **충돌을
 - 초기 세팅 시 setup 스크립트로 훅 경로, 문서 검증, 템플릿 설치를 한 번에 맞추는 것을 권장합니다.
 - 세부 세팅 절차는 격리형 패키지 가이드([README.md](/D:/codePack/go/new_read/00_agd/README.md))를 참고하세요.
 
-필수 커맨드(복구):
+필수 커맨드:
 
 ```cmd
 REM git: 현재 프로젝트 루트에 00_agd 폴더만 내려받기
-cmd /c "git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git .a&&git -C .a sparse-checkout set agd&&git -C .a checkout -q&&xcopy .a\agd 00_agd /e /i /y>nul&&rd /s /q .a"
+cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
+"
 
 REM build: 실행 파일 생성
 go build -o 00_agd\agd.exe ./cmd/agd

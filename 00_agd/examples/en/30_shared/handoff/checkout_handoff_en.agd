@@ -1,0 +1,126 @@
+@meta
+title: Checkout Handoff
+version: 0.1
+owner: ai-agent
+doc_base_path: 
+
+@map
+- HO-000 | Input Guide | Quick rules for what to fill in this document
+- HO-001 | Scope Agreement | Define in/out scope for release handoff
+- HO-010 | API Contract | Share request/response/error contract
+- HO-020 | State Transitions | Define client state transitions and exceptions
+- HO-030 | Test Criteria | Define integration test expectations
+- HO-040 | Open Issues | Track unresolved risks before release
+
+@section HO-000
+title: Input Guide
+summary: Minimum input rules for consistent writing by humans and AI
+links: GUIDE-INPUT
+content:
+<<<
+[Required input]
+1) Fill every blank after -, 1), and : with concrete content.
+2) Use specific numbers, dates, owners, and evidence whenever possible.
+3) If unknown, do not leave blank; write TBD (needs confirmation).
+
+[AI request contract]
+- target_docs: actual file path
+- target_sections: section IDs or section paths
+- goal: why this change is needed (1-2 sentences)
+- constraints: scope/forbidden constraints
+- done: validation-based completion criteria
+
+[AI output contract]
+- Changed files / Changed sections / Reason / Impact / Risks / Validation
+
+[Done checklist]
+- Are @map rows and @section IDs aligned?
+- For edits, is @change reason/impact recorded?
+>>>
+
+@section HO-001
+title: Scope Agreement
+summary: Clarify scope early to reduce schedule risk
+links: SPRINT-001
+content:
+<<<
+[In scope]
+1)
+2)
+3)
+
+[Out of scope]
+1)
+2)
+>>>
+
+@section HO-010
+title: API Contract
+summary: Align required fields and error semantics across teams
+links: OPENAPI-001
+content:
+<<<
+[Request]
+- Endpoint:
+- Required fields:
+
+[Response]
+- Success shape:
+- Error shape:
+
+[Error codes]
+1)
+2)
+3)
+>>>
+
+@section HO-020
+title: State Transitions
+summary: Keep FE and BE state interpretation aligned
+links: FE-STATE-001
+content:
+<<<
+[State transitions]
+1) idle -> loading
+2) loading -> success
+3) loading -> fail
+4) fail -> loading
+
+[Exception handling]
+- retryable true:
+- retryable false:
+>>>
+
+@section HO-030
+title: Test Criteria
+summary: Define release-blocking test criteria
+links: TESTPLAN-001
+content:
+<<<
+[Required tests]
+1)
+2)
+3)
+
+[Done criteria]
+- P0 pass rate:
+- Mapping completeness:
+>>>
+
+@section HO-040
+title: Open Issues
+summary: Keep owner and status for each unresolved blocker
+links: ISSUE-BOARD-001
+content:
+<<<
+1) Issue: / Owner:
+2) Issue: / Owner:
+3) Issue: / Owner:
+>>>
+
+@change CHG-2026-03-04-01
+target: HO-010
+date: 2026-03-04
+author: ai-agent
+reason: Initial template scaffolding
+impact: Replace with real API schemas and test gates

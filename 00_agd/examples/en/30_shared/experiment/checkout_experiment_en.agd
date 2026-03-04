@@ -1,0 +1,132 @@
+@meta
+title: Checkout Experiment
+version: 0.1
+owner: ai-agent
+doc_base_path: 
+
+@map
+- EXP-000 | Input Guide | Quick rules for what to fill in this document
+- EXP-001 | Hypothesis | Define the hypothesis and expected impact
+- EXP-010 | Experiment Design | Define cohorts, duration, and controls
+- EXP-020 | Metrics | Define success metrics and thresholds
+- EXP-030 | Execution Plan | Define execution and rollback strategy
+- EXP-040 | Results and Conclusion | Record interpretation and next actions
+
+@section EXP-000
+title: Input Guide
+summary: Minimum input rules for consistent writing by humans and AI
+links: GUIDE-INPUT
+content:
+<<<
+[Required input]
+1) Fill every blank after -, 1), and : with concrete content.
+2) Use specific numbers, dates, owners, and evidence whenever possible.
+3) If unknown, do not leave blank; write TBD (needs confirmation).
+
+[AI request contract]
+- target_docs: actual file path
+- target_sections: section IDs or section paths
+- goal: why this change is needed (1-2 sentences)
+- constraints: scope/forbidden constraints
+- done: validation-based completion criteria
+
+[AI output contract]
+- Changed files / Changed sections / Reason / Impact / Risks / Validation
+
+[Done checklist]
+- Are @map rows and @section IDs aligned?
+- For edits, is @change reason/impact recorded?
+>>>
+
+@section EXP-001
+title: Hypothesis
+summary: State a falsifiable hypothesis tied to business outcomes
+links: HYP-001
+content:
+<<<
+[Problem]
+-
+
+[Hypothesis]
+-
+
+[Expected impact]
+-
+>>>
+
+@section EXP-010
+title: Experiment Design
+summary: Define treatment/control and control variables clearly
+links: EXP-DESIGN-001
+content:
+<<<
+[Cohorts]
+- Treatment:
+- Control:
+
+[Duration]
+- Start:
+- End:
+
+[Control variables]
+1)
+2)
+>>>
+
+@section EXP-020
+title: Metrics
+summary: Define primary and guardrail metrics with numeric criteria
+links: KPI-EXP-001
+content:
+<<<
+[Primary metrics]
+1)
+2)
+
+[Guardrail metrics]
+1)
+2)
+
+[Success criteria]
+- Minimum lift:
+- Significance threshold:
+>>>
+
+@section EXP-030
+title: Execution Plan
+summary: Define rollout steps and rollback conditions
+links: ROLLBACK-EXP-001
+content:
+<<<
+1) Preparation
+2) Launch
+3) Monitoring
+4) Stop/Ship
+
+[Rollback trigger]
+-
+>>>
+
+@section EXP-040
+title: Results and Conclusion
+summary: Capture outcomes and decision with evidence
+links: REPORT-EXP-001
+content:
+<<<
+[Result summary]
+-
+
+[Interpretation]
+-
+
+[Next action]
+1)
+2)
+>>>
+
+@change CHG-2026-03-04-01
+target: EXP-020
+date: 2026-03-04
+author: ai-agent
+reason: Initial template scaffolding
+impact: Replace with experiment-specific metrics and thresholds

@@ -1,0 +1,7 @@
+# One path/glob per line (repo-root relative)
+# Purpose: warning-first core logic review before agent edits.
+
+
+00_agd/scripts/setup.ps1
+00_agd/scripts/git-hooks/pre-commit.ps1
+

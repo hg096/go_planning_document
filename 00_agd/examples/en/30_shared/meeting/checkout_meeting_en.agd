@@ -1,0 +1,115 @@
+@meta
+title: Checkout Weekly Meeting
+version: 0.1
+owner: ai-agent
+doc_base_path: 
+
+@map
+- MTG-000 | Input Guide | Quick rules for what to fill in this document
+- MTG-001 | Agenda and Purpose | Define meeting goals and agenda
+- MTG-010 | Discussion Summary | Summarize key discussion points
+- MTG-020 | Decisions | Record final decisions and rationale
+- MTG-030 | Action Items | Define owner and due date per action
+- MTG-040 | Risks and Parking Lot | Track unresolved risks and deferred topics
+
+@section MTG-000
+title: Input Guide
+summary: Minimum input rules for consistent writing by humans and AI
+links: GUIDE-INPUT
+content:
+<<<
+[Required input]
+1) Fill every blank after -, 1), and : with concrete content.
+2) Use specific numbers, dates, owners, and evidence whenever possible.
+3) If unknown, do not leave blank; write TBD (needs confirmation).
+
+[AI request contract]
+- target_docs: actual file path
+- target_sections: section IDs or section paths
+- goal: why this change is needed (1-2 sentences)
+- constraints: scope/forbidden constraints
+- done: validation-based completion criteria
+
+[AI output contract]
+- Changed files / Changed sections / Reason / Impact / Risks / Validation
+
+[Done checklist]
+- Are @map rows and @section IDs aligned?
+- For edits, is @change reason/impact recorded?
+>>>
+
+@section MTG-001
+title: Agenda and Purpose
+summary: Set clear purpose and discussion priority
+links: CAL-001
+content:
+<<<
+[Purpose]
+-
+
+[Agenda]
+1)
+2)
+3)
+>>>
+
+@section MTG-010
+title: Discussion Summary
+summary: Capture high-signal context for each agenda item
+links: NOTE-001
+content:
+<<<
+[Item 1]
+- Key question:
+- Summary:
+
+[Item 2]
+- Key question:
+- Summary:
+>>>
+
+@section MTG-020
+title: Decisions
+summary: Record final decision and decision rationale
+links: DECISION-LOG
+content:
+<<<
+1) Decision:
+   - Rationale:
+2) Decision:
+   - Rationale:
+>>>
+
+@section MTG-030
+title: Action Items
+summary: Keep owner/date so follow-up execution is clear
+links: TASK-BOARD-001
+content:
+<<<
+1) Task:
+   - Owner:
+   - Due date:
+2) Task:
+   - Owner:
+   - Due date:
+>>>
+
+@section MTG-040
+title: Risks and Parking Lot
+summary: Track unresolved risk and deferred topics
+links: RISK-001
+content:
+<<<
+1) Risk:
+   - Impact:
+   - Mitigation:
+2) Parking lot topic:
+   - Revisit date:
+>>>
+
+@change CHG-2026-03-04-01
+target: MTG-020
+date: 2026-03-04
+author: ai-agent
+reason: Initial template scaffolding
+impact: Replace with meeting-specific decisions and actions

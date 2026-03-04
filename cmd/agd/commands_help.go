@@ -40,7 +40,12 @@ func commandHelp(_ []string) int {
    agd role-graph --scope maintenance
    agd role-graph --scope incident
 
-10) Interactive mode:
+10) Code planning validation:
+   agd code-plan-check
+   agd code-plan-check --mode git
+   agd code-plan-check --mode cache
+
+11) Interactive mode:
     agd wizard
 `, `AGD 빠른 가이드
 
@@ -77,7 +82,12 @@ func commandHelp(_ []string) int {
    agd role-graph --scope maintenance
    agd role-graph --scope incident
 
-10) 대화형 모드:
+10) 코드 기획 검증:
+   agd code-plan-check
+   agd code-plan-check --mode git
+   agd code-plan-check --mode cache
+
+11) 대화형 모드:
     agd wizard
 `))
 	return 0

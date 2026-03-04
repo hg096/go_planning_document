@@ -1,0 +1,13 @@
+# code-plan-check scope policy
+# - repo-root relative paths
+# - blank lines and # comments are ignored
+#
+# Add extra code extensions:
+# ext:.vue
+#
+# Force include path prefix:
+# include:src/generated/
+#
+# Exclude path prefix:
+# exclude:vendor/
+

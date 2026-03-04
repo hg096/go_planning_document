@@ -1,49 +1,55 @@
 # Template Showcase Index (EN)
 
-Examples are now arranged with the same hierarchy as `00_agd\agd_docs` (`10_source / 20_derived / 30_shared`).
+English examples follow the latest 9-template set under `examples/en`.
 
-## Template Examples
+Filename convention is `project_docType_lang`.
 
-- `prd` -> `examples/en/10_source/product/prd_subscription_checkout_en.agd`
-- `runbook` -> `examples/en/20_derived/ops/runbook_payment_incident_en.agd`
-- `postmortem` -> `examples/en/30_shared/postmortem/postmortem_api_timeout_en.agd`
-- `roadmap` -> `examples/en/30_shared/roadmap/roadmap_ai_doc_platform_en.agd`
-- `handoff` -> `examples/en/30_shared/handoff/handoff_backend_frontend_en.agd`
-- `meeting` -> `examples/en/30_shared/meeting/meeting_checkout_weekly_en.agd`
-- `adr` -> `examples/en/10_source/architecture/adr_checkout_retry_policy_en.agd`
-- `policy` -> `examples/en/10_source/policy/policy_release_gate_en.agd`
-- `experiment` -> `examples/en/30_shared/experiment/experiment_oneclick_checkout_en.agd`
-- `qa-plan` -> `examples/en/20_derived/qa/qa_plan_checkout_v2_en.agd`
-- `service-logic` -> `examples/en/10_source/service/service_logic_checkout_core_en.agd`
-- `frontend-page` -> `examples/en/20_derived/frontend/frontend_page_checkout_en.agd`
-- `maintenance-case` -> `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd` (kit-generated path)
-- `incident-case` -> `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd` (kit-generated path)
+Example: `checkout_core_spec_en.agd`
 
-## Source/Derived Role Examples
+## Template Example Files
 
-### 1) Service Logic (source) -> Frontend Page (derived)
+- `core-spec` -> `examples/en/10_source/product/checkout_core_spec_en.agd`
+- `policy` -> `examples/en/10_source/policy/checkout_policy_en.agd`
+- `delivery-plan` -> `examples/en/20_derived/frontend/checkout_delivery_plan_en.agd`
+- `meeting` -> `examples/en/30_shared/meeting/checkout_meeting_en.agd`
+- `handoff` -> `examples/en/30_shared/handoff/checkout_handoff_en.agd`
+- `roadmap` -> `examples/en/30_shared/roadmap/checkout_roadmap_en.agd`
+- `experiment` -> `examples/en/30_shared/experiment/checkout_experiment_en.agd`
+- `maintenance-case` -> `examples/en/30_shared/maintenance/checkout_maintenance_case_en.agd`
+- `incident-case` -> `examples/en/30_shared/errFix/checkout_incident_case_en.agd`
 
-- source: `examples/en/10_source/service/service_logic_checkout_core_en.agd`
-- derived: `examples/en/20_derived/frontend/frontend_page_checkout_en.agd`
+## Source/Derived Link Example
+
+`core_spec -> delivery_plan` linkage:
+
+- source: `examples/en/10_source/product/checkout_core_spec_en.agd`
+- derived: `examples/en/20_derived/frontend/checkout_delivery_plan_en.agd`
 - derived meta:
 - `authority: derived`
-- `source_doc: ../../10_source/service/service_logic_checkout_core_en.agd`
-- `source_sections: SYS-020->FP-020,SYS-060->FP-060,SYS-030->FP-030,SYS-050->FP-040`
+- `source_doc: ../../10_source/product/checkout_core_spec_en.agd`
+- `source_sections: CORE-010->DEL-001,CORE-030->DEL-020`
 
-### 2) Policy (source) -> QA Plan (derived)
+## Tag-Rooted Link Example
 
-- source: `examples/en/10_source/policy/policy_release_gate_en.agd`
-- derived: `examples/en/20_derived/qa/qa_plan_checkout_v2_en.agd`
-- derived meta:
-- `authority: derived`
-- `source_doc: ../../10_source/policy/policy_release_gate_en.agd`
-- `source_sections: POL-010->QA-030,POL-030->QA-040`
+Maintenance (`maintenance_case`) includes:
+
+- `maintenance_feature_tag: FT-CHECKOUT`
+- `maintenance_source_doc: 00_agd\examples\en\10_source\product\checkout_core_spec_en.agd`
+- `maintenance_source_section: CORE-010`
+- `[MAINTENANCE-ROOT-TAG] ... [/MAINTENANCE-ROOT-TAG]`
+
+Incident (`incident_case`) includes:
+
+- `incident_feature_tag: FT-CHECKOUT`
+- `incident_source_doc: 00_agd\examples\en\10_source\product\checkout_core_spec_en.agd`
+- `incident_source_section: CORE-010`
+- `[INCIDENT-PROBLEM-TAG] ... [/INCIDENT-PROBLEM-TAG]`
 
 ## Validation Commands
 
 ```cmd
-agd.exe check examples/en/10_source/service/service_logic_checkout_core_en.agd
-agd.exe check examples/en/20_derived/frontend/frontend_page_checkout_en.agd
-agd.exe check examples/en/10_source/policy/policy_release_gate_en.agd
-agd.exe check examples/en/20_derived/qa/qa_plan_checkout_v2_en.agd
+00_agd\agd_en.exe check-all 00_agd\examples --strict
+00_agd\agd_en.exe role-graph 00_agd\examples --scope all
+00_agd\agd_en.exe role-graph 00_agd\examples\en --scope maintenance
+00_agd\agd_en.exe role-graph 00_agd\examples\en --scope incident
 ```
