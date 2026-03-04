@@ -10,7 +10,7 @@ AGD 관련 자산은 모두 `agd/` 폴더 내부에서 관리합니다.
 - 실행 파일: `agd/agd.exe`, `agd/agd_en.exe`, `agd/agd_ko.exe`
 - 문서: `agd/docs/*`
 - 예시: `agd/examples/*`
-- 작업 문서 루트: `agd/agd_docs/*`
+- 작업 문서 루트: `00_agd/agd_docs/*`
 - 세팅 진입점: `agd/setup.cmd`
 - 로컬 훅: `agd/.githooks/pre-commit`
 - 훅 로직: `agd/scripts/git-hooks/pre-commit.ps1`
@@ -20,43 +20,41 @@ AGD 관련 자산은 모두 `agd/` 폴더 내부에서 관리합니다.
 
 ## 2) 원클릭 세팅 (소스 제외 최소 설치)
 
-`cmd` 한 줄로 `agd/`만 내려받아 세팅:
+`cmd` 한 줄로 프로젝트 루트에 `00_agd/`만 내려받기:
 
 ```cmd
-cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> <repo-folder> && cd /d <repo-folder> && git sparse-checkout init --no-cone && git sparse-checkout set /agd/ && git checkout && agd\setup.cmd"
+cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> .agd_tmp && git -C .agd_tmp sparse-checkout init --no-cone && git -C .agd_tmp sparse-checkout set /agd/ && git -C .agd_tmp checkout --quiet && xcopy .agd_tmp\agd 00_agd /E /I /Y >nul && rmdir /s /q .agd_tmp"
 ```
 
-이미 전체 저장소를 클론했다면:
+운영 훅/검증까지 적용하려면:
 
 ```cmd
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipTemplates
 ```
-
-`-SlimCheckout`은 이 저장소 클론에서 `agd/`만 남기고 작업 트리를 축소합니다.
 
 자동 수행 항목:
 
-- `git config core.hooksPath agd/.githooks` 설정
-- `agd/agd_docs`, `agd/examples` strict 검증 실행
+- `git config core.hooksPath 00_agd/.githooks` 설정
+- `00_agd/agd_docs`, `00_agd/examples` strict 검증 실행
 - CI 워크플로/PR 템플릿 설치(기존 파일이 있으면 백업 후 갱신)
 
 옵션:
 
 ```cmd
-agd\setup.cmd -SkipCheck
-agd\setup.cmd -SkipTemplates
-agd\setup.cmd -InstallCiTemplate
-agd\setup.cmd -InstallPrTemplate
-agd\setup.cmd -NoTemplateBackup
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipCheck
+00_agd\setup.cmd -SkipTemplates
+00_agd\setup.cmd -InstallCiTemplate
+00_agd\setup.cmd -InstallPrTemplate
+00_agd\setup.cmd -NoTemplateBackup
+00_agd\setup.cmd -SlimCheckout
 ```
 
 ## 3) 일상 사용
 
 ```cmd
-agd\agd_en.exe quick
-agd\agd_en.exe wizard
-agd\agd_en.exe check-all agd\agd_docs --strict
+00_agd\agd_en.exe quick
+00_agd\agd_en.exe wizard
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
 ```
 
 ## 4) 선택 CI 연동
@@ -64,7 +62,7 @@ agd\agd_en.exe check-all agd\agd_docs --strict
 호스트 저장소에 템플릿 설치:
 
 ```cmd
-agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
+00_agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
 ```
 
 복사 대상:

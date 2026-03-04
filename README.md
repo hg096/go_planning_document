@@ -64,40 +64,40 @@ go build -ldflags "-X main.defaultLang=en" -o agd_en.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=ko" -o agd_ko.exe ./cmd/agd
 ```
 
-### 1-1) 원클릭 세팅(사용자용 최소 설치 권장)
+### 1-1) 원클릭 세팅(프로젝트 루트 상단용 `00_agd` 설치)
 
-`cmd` 한 줄로 `agd/`만 체크아웃하고 세팅합니다.
-
-```cmd
-cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> <repo-folder> && cd /d <repo-folder> && git sparse-checkout init --no-cone && git sparse-checkout set /agd/ && git checkout && agd\setup.cmd"
-```
-
-이미 전체 저장소를 클론했다면 아래 한 줄로 `agd/`만 남기고 세팅할 수 있습니다.
+아래 한 줄만 실행하면 프로젝트 루트에 `00_agd/` 폴더만 내려받는 기본 세팅이 완료됩니다.
 
 ```cmd
-agd\setup.cmd -SlimCheckout
+cmd /c "git clone --depth 1 --filter=blob:none --no-checkout https://github.com/hg096/go_planning_document.git .agd_tmp && git -C .agd_tmp sparse-checkout init --no-cone && git -C .agd_tmp sparse-checkout set /agd/ && git -C .agd_tmp checkout --quiet && xcopy .agd_tmp\agd 00_agd /E /I /Y >nul && rmdir /s /q .agd_tmp"
 ```
 
-자동 수행 항목:
+운영 훅/검증까지 함께 적용하려면 아래를 추가로 한 번 실행하세요.
 
-- `git config core.hooksPath agd/.githooks` 설정
-- `agd\agd_docs`, `agd\examples` strict 검증 실행
+```cmd
+00_agd\setup.cmd -SkipTemplates
+```
+
+`00_agd\setup.cmd` 자동 수행 항목:
+
+- `git config core.hooksPath 00_agd/.githooks` 설정
+- `00_agd\agd_docs`, `00_agd\examples` strict 검증 실행
 - CI 워크플로/PR 템플릿 설치(기존 파일 있으면 백업 후 교체)
 
 자주 쓰는 옵션:
 
 ```cmd
-agd\setup.cmd -SkipCheck
-agd\setup.cmd -SkipTemplates
-agd\setup.cmd -NoTemplateBackup
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipCheck
+00_agd\setup.cmd -SkipTemplates
+00_agd\setup.cmd -NoTemplateBackup
+00_agd\setup.cmd -SlimCheckout
 ```
 
 실행 예시:
 
 ```cmd
-agd_en.exe
-agd_ko.exe
+00_agd\agd_en.exe
+00_agd\agd_ko.exe
 ```
 
 ### 2) 가장 쉬운 시작: 질문형 모드 실행
@@ -107,20 +107,20 @@ agd.exe
 ```
 
 실행 후 메뉴에서 번호를 고르고, 질문에 답만 입력하면 됩니다.
-문서 경로는 기본적으로 `agd_docs`를 기준으로 처리됩니다.
-기존 문서를 열 때 파일명만 입력하면 `agd_docs` 전체 하위 폴더에서 자동 탐색합니다.
-`agd_docs` 아래 하위 폴더가 있으면 위자드에서 폴더 선택지가 함께 표시됩니다.
-`agd_docs/README.md`는 스캐폴드 생성 시 언어(한국어/영어)에 맞춰 자동 생성되며, AI 작성 철학/운영 원칙 가이드가 포함됩니다.
+문서 경로는 기본적으로 `00_agd\agd_docs`를 기준으로 처리됩니다.
+기존 문서를 열 때 파일명만 입력하면 `00_agd\agd_docs` 전체 하위 폴더에서 자동 탐색합니다.
+`00_agd\agd_docs` 아래 하위 폴더가 있으면 위자드에서 폴더 선택지가 함께 표시됩니다.
+`00_agd/agd_docs/README.md`는 스캐폴드 생성 시 언어(한국어/영어)에 맞춰 자동 생성되며, AI 작성 철학/운영 원칙 가이드가 포함됩니다.
 
 새 문서 생성 시(`agd new`, 위자드 첫 화면 메뉴 `4`) 파일명만 입력하면 문서 타입 기준 폴더로 자동 배치됩니다.
 
-- `core-spec` -> `agd_docs\10_source\product\<file>.agd`
-- `delivery-plan` -> `agd_docs\10_source\product\<file>.agd`
-- `policy` -> `agd_docs\10_source\policy\<file>.agd`
-- `meeting` -> `agd_docs\30_shared\meeting\<file>.agd`
-- `experiment` -> `agd_docs\30_shared\experiment\<file>.agd`
-- `roadmap` -> `agd_docs\30_shared\roadmap\<file>.agd`
-- `handoff` -> `agd_docs\30_shared\handoff\<file>.agd`
+- `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
+- `delivery-plan` -> `00_agd\agd_docs\10_source\product\<file>.agd`
+- `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`
+- `meeting` -> `00_agd\agd_docs\30_shared\meeting\<file>.agd`
+- `experiment` -> `00_agd\agd_docs\30_shared\experiment\<file>.agd`
+- `roadmap` -> `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
+- `handoff` -> `00_agd\agd_docs\30_shared\handoff\<file>.agd`
 
 원하는 위치를 직접 지정하려면 경로를 함께 입력하면 됩니다.
 예: `agd.exe new core-spec 10_source/product/checkout_v2`
@@ -317,7 +317,7 @@ agd.exe wizard
 
 REM 검증
 agd.exe check <file.agd>
-REM 기본 위치: agd_docs
+REM 기본 위치: 00_agd\agd_docs
 
 REM 문서 트리 전체 검증 (설계 구조 + lint + source/derived 점검)
 agd.exe check-all [root]
@@ -364,7 +364,7 @@ agd.exe kit bridge-lite <project-key>
 agd.exe kit change-flow <project-key>
 agd.exe kit incident-lifecycle <project-key> --feature-tag FT-CHECKOUT
 agd.exe kit quality-gate <project-key>
-agd.exe kit incident-lifecycle <project-key> --feature-tag FT-SYS-020 --tag-source agd_docs\\10_source\\service\\service_logic_checkout_core.agd --tag-section SYS-020
+agd.exe kit incident-lifecycle <project-key> --feature-tag FT-SYS-020 --tag-source 00_agd\agd_docs\10_source\service\service_logic_checkout_core.agd --tag-section SYS-020
 agd.exe kit starter-kit <project-key> --no-graph
 REM 단축형(프로필을 명령어로 직접 호출)
 agd.exe starter-kit <project-key>
@@ -375,7 +375,7 @@ agd.exe quality-gate <project-key>
 
 REM 권위/파생 관계도 출력
 agd.exe role-graph
-agd.exe role-graph --format mermaid --out agd_docs\role_graph.mmd
+agd.exe role-graph --format mermaid --out 00_agd\agd_docs\role_graph.mmd
 agd.exe role-graph --include-archive
 
 REM Markdown 내보내기 (out 생략 시 같은 이름 .md 자동 생성)
@@ -398,16 +398,16 @@ agd.exe quick
 - `incident-lifecycle`: incident response + follow-up set (`incident-case + runbook + postmortem`)
 - `quality-gate`: release quality gate set (`policy + qa-plan + runbook + delivery-plan`)
 - legacy alias: `maintenance`/`new-project` -> `change-flow`, `incident-response` -> `incident-lifecycle`
-- `postmortem` manual create path: `agd_docs/30_shared/postmortem/<file>.agd`
+- `postmortem` manual create path: `00_agd/agd_docs/30_shared/postmortem/<file>.agd`
 - `incident-lifecycle`는 `--feature-tag` 기준으로 생성된 `incident-case` 문서에 루트 추적 블록을 자동 주입합니다.
-- 위자드(`agd wizard` -> 문서 킷 생성 -> incident-lifecycle)는 `agd_docs/10_source/service`, `agd_docs/20_derived/frontend`를 스캔해 섹션 목록을 보여주고, 선택한 섹션 기준으로 태그/연결(`incident_source_doc`, `incident_source_section`)을 자동 설정합니다.
+- 위자드(`agd wizard` -> 문서 킷 생성 -> incident-lifecycle)는 `00_agd/agd_docs/10_source/service`, `00_agd/agd_docs/20_derived/frontend`를 스캔해 섹션 목록을 보여주고, 선택한 섹션 기준으로 태그/연결(`incident_source_doc`, `incident_source_section`)을 자동 설정합니다.
 - `incident-case` 기본 흐름: `INC-001(문제 태깅) -> INC-010(버그 상황) -> INC-020(원인 분석) -> INC-030(개선 방향) -> INC-040(AI 양도) -> INC-050(AI 결과) -> INC-060(검증/종료)`
 - `incident-lifecycle`는 기본적으로 `--feature-tag`를 사용하며, `--tag-source + --tag-section`을 함께 주면 섹션 기준으로 태그를 자동 생성할 수 있습니다.
 - `starter-kit`/`change-flow`의 derived 문서는 `source_sections`를 기본 하드코딩하지 않습니다. 생성 후 `role-set ... auto|strict-auto|smart-auto` 또는 수동 CSV로 명시하세요.
 - 종료 처리 규칙: `END__*_maintenance_case.agd`(maintenance), `END__*_incident_case.agd`(errFix) 파일은 스캔/선택/관계도에서 자동 제외됩니다.
 
-`AI 기획 작성 가이드(ai_planning_guide)` 내용은 별도 파일 기본 생성 대신 `agd_docs/README.md`에 통합되었습니다.
-즉, 킷 생성 후에는 `agd_docs/README.md`를 기준 문서로 사용해 AI의 작성 규칙(권위/파생 원칙, reason/impact 기준, 요청/응답 계약)을 맞추세요.
+`AI 기획 작성 가이드(ai_planning_guide)` 내용은 별도 파일 기본 생성 대신 `00_agd/agd_docs/README.md`에 통합되었습니다.
+즉, 킷 생성 후에는 `00_agd/agd_docs/README.md`를 기준 문서로 사용해 AI의 작성 규칙(권위/파생 원칙, reason/impact 기준, 요청/응답 계약)을 맞추세요.
 
 ## 8. 바로 열어볼 예시 문서
 
@@ -440,8 +440,8 @@ agd.exe quick
 
 유지보수/장애 단일 케이스는 examples 고정 파일 대신 킷 생성 경로를 사용합니다.
 
-- `agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
-- `agd_docs/30_shared/errFix/<project>_incident_case.agd`
+- `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
+- `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd`
 
 템플릿별 활용 예시 인덱스:
 
@@ -459,7 +459,7 @@ agd.exe quick
 1) AGD 폴더 기준 세팅 실행:
 
 ```cmd
-agd\setup.cmd
+00_agd\setup.cmd
 ```
 
 2) 저장소 포함 훅 파일:
@@ -470,8 +470,8 @@ agd\setup.cmd
 3) 커밋 시 자동 강제 규칙:
 
 - `agd/` 하위에서 변경된 `.agd` 파일만 검사
-- `agd\agd_docs` 전체 strict 검증
-- `agd\examples` 변경 시 examples strict 검증
+- `00_agd\agd_docs` 전체 strict 검증
+- `00_agd\examples` 변경 시 examples strict 검증
 
 ### 9-2) GitHub Actions 머지 게이트
 
@@ -479,11 +479,11 @@ agd\setup.cmd
 
 - `agd/templates/agd-guard.yml`
 
-`agd\setup.cmd` 기본 실행 시 자동 설치됩니다.
+`00_agd\setup.cmd` 기본 실행 시 자동 설치됩니다.
 수동으로 CI 템플릿만 다시 설치하려면:
 
 ```cmd
-agd\setup.cmd -InstallCiTemplate
+00_agd\setup.cmd -InstallCiTemplate
 ```
 
 위 명령은 `.github/workflows/agd-guard.yml`로 복사합니다.
@@ -494,11 +494,11 @@ agd\setup.cmd -InstallCiTemplate
 
 - `agd/templates/pull_request_template.md`
 
-`agd\setup.cmd` 기본 실행 시 자동 설치됩니다.
+`00_agd\setup.cmd` 기본 실행 시 자동 설치됩니다.
 수동으로 PR 템플릿만 다시 설치하려면:
 
 ```cmd
-agd\setup.cmd -InstallPrTemplate
+00_agd\setup.cmd -InstallPrTemplate
 ```
 
 위 명령은 `.github/pull_request_template.md`로 복사합니다.
@@ -514,7 +514,7 @@ agd\setup.cmd -InstallPrTemplate
 - 실패사례 분석 프레임(국문): `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_ko.md`
 - Failure Analysis Framework (English): `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_en.md`
 - Start Guide (English): `README.en.md`
-- 문서 루트 구조 가이드: `agd_docs/README.md`
+- 문서 루트 구조 가이드: `00_agd/agd_docs/README.md`
 - 격리형 패키지 가이드: `agd/README.md`
 - 원클릭 부트스트랩(cmd): `agd/setup.cmd`
 - 부트스트랩 스크립트(PowerShell): `agd/scripts/setup.ps1`

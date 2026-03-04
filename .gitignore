@@ -30,7 +30,7 @@ cover.out
 
 # Generated runtime workspace
 /agd_docs/
-agd/agd_docs/
+00_agd/agd_docs/
 
 # Logs/temp
 *.log

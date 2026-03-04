@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -eu
+
+HOOK_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOOK_DIR/../scripts/git-hooks/pre-commit.ps1"
+exit $?

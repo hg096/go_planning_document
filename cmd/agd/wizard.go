@@ -290,7 +290,7 @@ func wizardCheckOnDoc(filePath string) int {
 }
 
 func wizardCheckAll(reader *bufio.Reader) int {
-	root, err := promptOptional(reader, text("Root folder (Enter for agd_docs)", "Root folder (Enter for agd_docs)"))
+	root, err := promptOptional(reader, docsRootInputPrompt())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
@@ -402,7 +402,7 @@ func wizardKit(reader *bufio.Reader) int {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
 	}
-	root, err := promptOptional(reader, text("Root folder (Enter for agd_docs)", "Root folder (Enter for agd_docs)"))
+	root, err := promptOptional(reader, docsRootInputPrompt())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
@@ -462,7 +462,7 @@ func wizardKit(reader *bufio.Reader) int {
 	return commandKitEasy(args)
 }
 func wizardRoleGraph(reader *bufio.Reader) int {
-	root, err := promptOptional(reader, text("Root (Enter for agd_docs)", "Root (Enter for agd_docs)"))
+	root, err := promptOptional(reader, docsRootInputPromptShort())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
@@ -1192,10 +1192,7 @@ func promptIncidentSectionCandidate(reader *bufio.Reader, root string) (incident
 		}
 	}
 	if len(candidates) == 0 {
-		return incidentSectionCandidate{}, "", fmt.Errorf("%s", text(
-			"no sections found under agd_docs/10_source/service or agd_docs/20_derived/frontend",
-			"no sections found under agd_docs/10_source/service or agd_docs/20_derived/frontend",
-		))
+		return incidentSectionCandidate{}, "", fmt.Errorf("%s", docsRootSectionScanHint())
 	}
 
 	fmt.Println(text(

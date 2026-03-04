@@ -37,7 +37,7 @@ func commandHelp(_ []string) int {
 
 9) Show source/derived graph:
    agd role-graph
-   agd role-graph --format mermaid --out agd_docs\role_graph.mmd
+   agd role-graph --format mermaid --out 00_agd\agd_docs\role_graph.mmd
 
 10) Interactive mode:
     agd wizard
@@ -73,7 +73,7 @@ func commandHelp(_ []string) int {
 
 9) source/derived 그래프 보기:
    agd role-graph
-   agd role-graph --format mermaid --out agd_docs\role_graph.mmd
+   agd role-graph --format mermaid --out 00_agd\agd_docs\role_graph.mmd
 
 10) 대화형 모드:
     agd wizard

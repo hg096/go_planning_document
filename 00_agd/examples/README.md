@@ -1,6 +1,6 @@
-﻿# Examples Directory Guide
+# Examples Directory Guide
 
-Examples are organized by language and by the same hierarchy used in `agd_docs`.
+Examples are organized by language and by the same hierarchy used in `00_agd\agd_docs`.
 
 ## Structure
 

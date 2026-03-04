@@ -55,31 +55,31 @@ go build -ldflags "-X main.defaultLang=ko" -o agd_ko.exe ./cmd/agd
 
 ### One-Command Setup (Recommended: minimal user install)
 
-Use this single `cmd` line to checkout only `agd/` and run setup:
+Use this single `cmd` line to download only `00_agd/` into your project root:
 
 ```cmd
-cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> <repo-folder> && cd /d <repo-folder> && git sparse-checkout init --no-cone && git sparse-checkout set /agd/ && git checkout && agd\setup.cmd"
+cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> .agd_tmp && git -C .agd_tmp sparse-checkout init --no-cone && git -C .agd_tmp sparse-checkout set /agd/ && git -C .agd_tmp checkout --quiet && xcopy .agd_tmp\agd 00_agd /E /I /Y >nul && rmdir /s /q .agd_tmp"
 ```
 
-If you already cloned the full repository, slim it down to `agd/` first:
+To apply hooks/validation setup after download:
 
 ```cmd
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipTemplates
 ```
 
 What it does:
 
-- sets `git config core.hooksPath agd/.githooks`
-- validates `agd/agd_docs` and `agd/examples` with strict checks
+- sets `git config core.hooksPath 00_agd/.githooks`
+- validates `00_agd/agd_docs` and `00_agd/examples` with strict checks
 - installs CI workflow and PR template (backs up existing files before overwrite)
 
 Useful options:
 
 ```cmd
-agd\setup.cmd -SkipCheck
-agd\setup.cmd -SkipTemplates
-agd\setup.cmd -NoTemplateBackup
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipCheck
+00_agd\setup.cmd -SkipTemplates
+00_agd\setup.cmd -NoTemplateBackup
+00_agd\setup.cmd -SlimCheckout
 ```
 
 ## 3. Easiest Start: Wizard
@@ -140,20 +140,20 @@ In wizard menu `4` (New document), the default type set is reduced to these 7 in
 
 CLI creation (`agd.exe new`, `agd.exe init`) is limited to the same 7 integrated-first types. Split/legacy types are blocked.
 
-Path input is resolved against `agd_docs` by default.
+Path input is resolved against `00_agd\agd_docs` by default.
 When opening existing docs, filename-only input is searched across subfolders.
 If duplicate filenames exist under subfolders, use a relative path like `front/home`.
-`agd_docs/README.md` is scaffold-generated in the selected language and includes the AI writing philosophy/operating guide.
+`00_agd/agd_docs/README.md` is scaffold-generated in the selected language and includes the AI writing philosophy/operating guide.
 
 For new document creation (`agd new`, wizard top menu `4`), filename-only output is auto-routed by doc type:
 
-- `core-spec` -> `agd_docs\10_source\product\<file>.agd`
-- `delivery-plan` -> `agd_docs\10_source\product\<file>.agd`
-- `policy` -> `agd_docs\10_source\policy\<file>.agd`
-- `meeting` -> `agd_docs\30_shared\meeting\<file>.agd`
-- `experiment` -> `agd_docs\30_shared\experiment\<file>.agd`
-- `roadmap` -> `agd_docs\30_shared\roadmap\<file>.agd`
-- `handoff` -> `agd_docs\30_shared\handoff\<file>.agd`
+- `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
+- `delivery-plan` -> `00_agd\agd_docs\10_source\product\<file>.agd`
+- `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`
+- `meeting` -> `00_agd\agd_docs\30_shared\meeting\<file>.agd`
+- `experiment` -> `00_agd\agd_docs\30_shared\experiment\<file>.agd`
+- `roadmap` -> `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
+- `handoff` -> `00_agd\agd_docs\30_shared\handoff\<file>.agd`
 
 To override, pass an explicit path.
 Example: `agd.exe new core-spec 10_source/product/checkout_v2`
@@ -179,7 +179,7 @@ agd.exe incident-lifecycle checkout --feature-tag FT-CHECKOUT
 agd.exe quality-gate checkout --owner qa-team
 agd.exe kit starter-kit checkout --no-graph
 agd.exe role-graph
-agd.exe role-graph --format mermaid --out agd_docs\role_graph.mmd
+agd.exe role-graph --format mermaid --out 00_agd\agd_docs\role_graph.mmd
 agd.exe view core_spec_checkout
 ```
 
@@ -193,14 +193,14 @@ Kit profile intent:
 - `incident-lifecycle`: incident response + follow-up set (`incident-case + runbook + postmortem`)
 - `quality-gate`: release quality gate set (`policy + qa-plan + runbook + delivery-plan`)
 - legacy aliases still work: `maintenance`/`new-project` -> `change-flow`, `incident-response` -> `incident-lifecycle`
-- manual `postmortem` type path: `agd_docs/30_shared/postmortem/<file>.agd`
+- manual `postmortem` type path: `00_agd/agd_docs/30_shared/postmortem/<file>.agd`
 - `incident-lifecycle` auto-injects the rooted trace block into the generated `incident-case` doc using `--feature-tag`.
 - `incident-case` default flow: `INC-001(tag issue) -> INC-010(capture bug) -> INC-020(quick RCA) -> INC-030(fix direction) -> INC-040(AI handoff) -> INC-050(AI result) -> INC-060(validate/close)`
 - If `--feature-tag` is omitted, an automatic tag is generated from the project key (example: `checkout` -> `FT-CHECKOUT`).
 - Close-state rule: `END__*_maintenance_case.agd` (maintenance) and `END__*_incident_case.agd` (errFix) are auto-excluded from scan/select/role-graph.
 
-`ai_planning_guide` content is now merged into `agd_docs/README.md` instead of being auto-generated as a separate file.
-After kit creation, use `agd_docs/README.md` as the policy anchor so AI output stays aligned with source/derived rules and rationale standards.
+`ai_planning_guide` content is now merged into `00_agd/agd_docs/README.md` instead of being auto-generated as a separate file.
+After kit creation, use `00_agd/agd_docs/README.md` as the policy anchor so AI output stays aligned with source/derived rules and rationale standards.
 
 ## 5. Document Roles: source / derived
 
@@ -287,8 +287,8 @@ Examples folder structure:
 
 For single-case maintenance/incident flows, use kit-generated paths instead of fixed example files:
 
-- `agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
-- `agd_docs/30_shared/errFix/<project>_incident_case.agd`
+- `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
+- `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd`
 
 ## 8. Enforced Ops Setup (Git Hook + CI)
 
@@ -300,7 +300,7 @@ Root-level hook/workflow files are not forced by default; install is template-ba
 1) Run package setup:
 
 ```cmd
-agd\setup.cmd
+00_agd\setup.cmd
 ```
 
 2) Hook files included in this repo:
@@ -311,8 +311,8 @@ agd\setup.cmd
 3) Enforced checks at commit time:
 
 - Checks only staged `.agd` changes under `agd/`
-- Runs strict tree validation for `agd\agd_docs`
-- Runs strict validation for `agd\examples` when examples changed
+- Runs strict tree validation for `00_agd\agd_docs`
+- Runs strict validation for `00_agd\examples` when examples changed
 
 ### 8-2) GitHub Actions required check
 
@@ -320,11 +320,11 @@ Template location:
 
 - `agd/templates/agd-guard.yml`
 
-`agd\setup.cmd` installs this by default.
+`00_agd\setup.cmd` installs this by default.
 To reinstall CI template only:
 
 ```cmd
-agd\setup.cmd -InstallCiTemplate
+00_agd\setup.cmd -InstallCiTemplate
 ```
 
 This copies to `.github/workflows/agd-guard.yml`.
@@ -335,11 +335,11 @@ Template location:
 
 - `agd/templates/pull_request_template.md`
 
-`agd\setup.cmd` installs this by default.
+`00_agd\setup.cmd` installs this by default.
 To reinstall PR template only:
 
 ```cmd
-agd\setup.cmd -InstallPrTemplate
+00_agd\setup.cmd -InstallPrTemplate
 ```
 
 This copies to `.github/pull_request_template.md`.
@@ -353,7 +353,7 @@ This copies to `.github/pull_request_template.md`.
 - English document structure guide: `docs/AGD_DOC_STRUCTURE_GUIDE_en.md`
 - Korean failure analysis framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_ko.md`
 - English failure analysis framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_en.md`
-- Docs root folder guide: `agd_docs/README.md`
+- Docs root folder guide: `00_agd/agd_docs/README.md`
 - Isolated package guide (EN): `agd/README.en.md`
 - Isolated package guide (KO): `agd/README.md`
 - One-command bootstrap (cmd): `agd/setup.cmd`

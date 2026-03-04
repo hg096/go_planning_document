@@ -1,7 +1,7 @@
 # AGD 템플릿 가이드 (최신)
 
 이 가이드는 처음 `agd.exe`를 사용하는 사용자를 위해 템플릿 생성과 운영 흐름을 설명합니다.
-기본 문서 루트는 `agd_docs`입니다.
+기본 문서 루트는 `00_agd\agd_docs`입니다.
 
 ## 0) 가장 쉬운 시작: Wizard (`agd.exe`)
 
@@ -90,24 +90,24 @@ agd.exe init --template core-spec-en --out docs/core_spec_checkout_en.agd --titl
 
 - `agd.exe init --list`는 이제 `*-ko`, `*-en` 템플릿을 모두 보여줍니다.
 
-## 3) 경로 입력 규칙 (`agd_docs` 기본)
+## 3) 경로 입력 규칙 (`00_agd\agd_docs` 기본)
 
-기존 문서를 열 때 파일명만 입력하면 `agd_docs` 하위 폴더 전체에서 검색합니다.
+기존 문서를 열 때 파일명만 입력하면 `00_agd\agd_docs` 하위 폴더 전체에서 검색합니다.
 
 - 입력: `core_spec_checkout`
-- 검색 대상: `agd_docs\**\core_spec_checkout.agd`
+- 검색 대상: `00_agd\agd_docs\**\core_spec_checkout.agd`
 
 하위 폴더에 동일 파일명이 여러 개면 `front/home` 같은 상대 경로를 사용합니다.
 
 새 문서(`agd new`, wizard 상위 메뉴 `4`)는 파일명만 주면 문서 타입 기준으로 자동 배치됩니다.
 
-- `core-spec`: `agd_docs\10_source\product\<file>.agd`
-- `delivery-plan`: `agd_docs\10_source\product\<file>.agd`
-- `policy`: `agd_docs\10_source\policy\<file>.agd`
-- `meeting`: `agd_docs\30_shared\meeting\<file>.agd`
-- `experiment`: `agd_docs\30_shared\experiment\<file>.agd`
-- `roadmap`: `agd_docs\30_shared\roadmap\<file>.agd`
-- `handoff`: `agd_docs\30_shared\handoff\<file>.agd`
+- `core-spec`: `00_agd\agd_docs\10_source\product\<file>.agd`
+- `delivery-plan`: `00_agd\agd_docs\10_source\product\<file>.agd`
+- `policy`: `00_agd\agd_docs\10_source\policy\<file>.agd`
+- `meeting`: `00_agd\agd_docs\30_shared\meeting\<file>.agd`
+- `experiment`: `00_agd\agd_docs\30_shared\experiment\<file>.agd`
+- `roadmap`: `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
+- `handoff`: `00_agd\agd_docs\30_shared\handoff\<file>.agd`
 
 자동 배치를 무시하려면 명시 경로를 직접 전달하세요.
 
@@ -140,7 +140,7 @@ agd.exe add <file.agd> <SECTION-ID> "<추가할 한 줄>" --reason "<사유>" --
 트리 전체 검증:
 
 ```cmd
-REM 문서 트리 전체 검증 (기본값: agd_docs)
+REM 문서 트리 전체 검증 (기본값: 00_agd\agd_docs)
 agd.exe check-all
 agd.exe check-all examples
 

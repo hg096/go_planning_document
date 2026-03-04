@@ -116,6 +116,8 @@ function Install-TemplateFile {
 }
 
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$packageRoot = Split-Path -Parent $scriptRoot
+$packageName = Split-Path -Leaf $packageRoot
 $script:GitPrefixArgs = @()
 $savedErrorAction = $ErrorActionPreference
 $repoRootOutput = $null
@@ -148,7 +150,8 @@ if ([string]::IsNullOrWhiteSpace($repoRoot)) {
 }
 Set-Location $repoRoot
 
-$relHooksPath = "agd/.githooks"
+$packageRoot = Join-Path $repoRoot $packageName
+$relHooksPath = "$packageName/.githooks"
 
 Invoke-Step "Repository root" {
     Write-Host $repoRoot
@@ -161,8 +164,8 @@ Invoke-Step "Checking required tools" {
 }
 
 Invoke-Step "Validating AGD package folder" {
-    if (-not (Test-Path (Join-Path $repoRoot "agd"))) {
-        throw "'agd' folder not found at repository root."
+    if (-not (Test-Path $packageRoot)) {
+        throw "'$packageName' folder not found at repository root."
     }
 }
 
@@ -173,7 +176,7 @@ if ($SlimCheckout) {
             throw "Slim checkout requires a clean working tree. Commit or stash local changes first."
         }
         Invoke-Git -Arguments @("sparse-checkout", "init", "--no-cone")
-        Invoke-Git -Arguments @("sparse-checkout", "set", "/agd/")
+        Invoke-Git -Arguments @("sparse-checkout", "set", "/$packageName/")
         Invoke-Git -Arguments @("checkout")
     }
 }
@@ -192,9 +195,9 @@ Invoke-Step "Workspace layout" {
     }
     if ($sourceDirs.Count -gt 0) {
         Write-Host ("full-source checkout detected: " + ($sourceDirs -join ", "))
-        Write-Host "tip: run agd\\setup.cmd -SlimCheckout to keep only agd/ in this clone."
+        Write-Host "tip: run $packageName\\setup.cmd -SlimCheckout to keep only $packageName/ in this clone."
     } else {
-        Write-Host "minimal checkout detected (agd-only)."
+        Write-Host "minimal checkout detected ($packageName-only)."
     }
 }
 
@@ -205,8 +208,8 @@ Invoke-Step "Configuring git hooks path" {
 }
 
 $agdBin = $null
-$agdEnPath = Join-Path $repoRoot "agd\agd_en.exe"
-$agdDefaultPath = Join-Path $repoRoot "agd\agd.exe"
+$agdEnPath = Join-Path $packageRoot "agd_en.exe"
+$agdDefaultPath = Join-Path $packageRoot "agd.exe"
 if (Test-Path $agdEnPath) {
     $agdBin = $agdEnPath
 } elseif (Test-Path $agdDefaultPath) {
@@ -214,24 +217,26 @@ if (Test-Path $agdEnPath) {
 }
 
 if ($null -eq $agdBin) {
-    throw "AGD executable not found. Expected: agd\\agd_en.exe or agd\\agd.exe"
+    throw "AGD executable not found. Expected: $packageName\\agd_en.exe or $packageName\\agd.exe"
 }
 
 if (-not $SkipCheck) {
     Invoke-Step "Running AGD validation checks" {
-        $agdDocs = Join-Path $repoRoot "agd\agd_docs"
-        $examples = Join-Path $repoRoot "agd\examples"
+        $agdDocsRel = "$packageName\agd_docs"
+        $examplesRel = "$packageName\examples"
+        $agdDocs = Join-Path $repoRoot $agdDocsRel
+        $examples = Join-Path $repoRoot $examplesRel
 
         if (Test-Path $agdDocs) {
-            Invoke-External -FilePath $agdBin -Arguments @("check-all", "agd\agd_docs", "--strict")
+            Invoke-External -FilePath $agdBin -Arguments @("check-all", $agdDocsRel, "--strict")
         } else {
-            Write-Host "skip: agd\agd_docs not found"
+            Write-Host "skip: $agdDocsRel not found"
         }
 
         if (Test-Path $examples) {
-            Invoke-External -FilePath $agdBin -Arguments @("check-all", "agd\examples", "--strict")
+            Invoke-External -FilePath $agdBin -Arguments @("check-all", $examplesRel, "--strict")
         } else {
-            Write-Host "skip: agd\examples not found"
+            Write-Host "skip: $examplesRel not found"
         }
     }
 } else {
@@ -257,7 +262,7 @@ if (-not $SkipTemplates) {
 
 if ($installCi) {
     Invoke-Step "Installing CI workflow template" {
-        $src = Join-Path $repoRoot "agd\templates\agd-guard.yml"
+        $src = Join-Path $packageRoot "templates\agd-guard.yml"
         $dst = Join-Path $repoRoot ".github\workflows\agd-guard.yml"
         Install-TemplateFile -SourcePath $src -DestinationPath $dst -NoBackup:$NoTemplateBackup
     }
@@ -265,7 +270,7 @@ if ($installCi) {
 
 if ($installPr) {
     Invoke-Step "Installing PR template" {
-        $src = Join-Path $repoRoot "agd\templates\pull_request_template.md"
+        $src = Join-Path $packageRoot "templates\pull_request_template.md"
         $dst = Join-Path $repoRoot ".github\pull_request_template.md"
         Install-TemplateFile -SourcePath $src -DestinationPath $dst -NoBackup:$NoTemplateBackup
     }
@@ -279,13 +284,13 @@ if ($SkipTemplates) {
 Write-Host ""
 Write-Host "Setup complete."
 Write-Host "Next commands:"
-Write-Host "  agd\\agd_en.exe quick"
-Write-Host "  agd\\agd_en.exe wizard"
+Write-Host "  $packageName\\agd_en.exe quick"
+Write-Host "  $packageName\\agd_en.exe wizard"
 Write-Host ""
 Write-Host "Optional setup flags:"
-Write-Host "  agd\\setup.cmd -SkipCheck"
-Write-Host "  agd\\setup.cmd -SkipTemplates"
-Write-Host "  agd\\setup.cmd -InstallCiTemplate"
-Write-Host "  agd\\setup.cmd -InstallPrTemplate"
-Write-Host "  agd\\setup.cmd -NoTemplateBackup"
-Write-Host "  agd\\setup.cmd -SlimCheckout"
+Write-Host "  $packageName\\setup.cmd -SkipCheck"
+Write-Host "  $packageName\\setup.cmd -SkipTemplates"
+Write-Host "  $packageName\\setup.cmd -InstallCiTemplate"
+Write-Host "  $packageName\\setup.cmd -InstallPrTemplate"
+Write-Host "  $packageName\\setup.cmd -NoTemplateBackup"
+Write-Host "  $packageName\\setup.cmd -SlimCheckout"

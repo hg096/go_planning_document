@@ -1,7 +1,7 @@
 # AGD Template Guide (Latest)
 
 This guide explains template creation and operation flow for first-time `agd.exe` users.
-Default document root is `agd_docs`.
+Default document root is `00_agd\agd_docs`.
 
 ## 0) Easiest Start: Wizard (`agd.exe`)
 
@@ -90,24 +90,24 @@ Note:
 
 - `agd.exe init --list` now shows both `*-ko` and `*-en` templates.
 
-## 3) Path Input Rules (`agd_docs` Default)
+## 3) Path Input Rules (`00_agd\agd_docs` Default)
 
-When opening existing docs, filename-only input is searched across `agd_docs` subfolders.
+When opening existing docs, filename-only input is searched across `00_agd\agd_docs` subfolders.
 
 - Input: `core_spec_checkout`
-- Search target: `agd_docs\**\core_spec_checkout.agd`
+- Search target: `00_agd\agd_docs\**\core_spec_checkout.agd`
 
 If duplicate filenames exist in subfolders, use a relative path like `front/home`.
 
 For new docs (`agd new`, wizard top-level menu `4`), filename-only output is auto-routed by doc type:
 
-- `core-spec`: `agd_docs\10_source\product\<file>.agd`
-- `delivery-plan`: `agd_docs\10_source\product\<file>.agd`
-- `policy`: `agd_docs\10_source\policy\<file>.agd`
-- `meeting`: `agd_docs\30_shared\meeting\<file>.agd`
-- `experiment`: `agd_docs\30_shared\experiment\<file>.agd`
-- `roadmap`: `agd_docs\30_shared\roadmap\<file>.agd`
-- `handoff`: `agd_docs\30_shared\handoff\<file>.agd`
+- `core-spec`: `00_agd\agd_docs\10_source\product\<file>.agd`
+- `delivery-plan`: `00_agd\agd_docs\10_source\product\<file>.agd`
+- `policy`: `00_agd\agd_docs\10_source\policy\<file>.agd`
+- `meeting`: `00_agd\agd_docs\30_shared\meeting\<file>.agd`
+- `experiment`: `00_agd\agd_docs\30_shared\experiment\<file>.agd`
+- `roadmap`: `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
+- `handoff`: `00_agd\agd_docs\30_shared\handoff\<file>.agd`
 
 To override, pass an explicit path.
 
@@ -140,7 +140,7 @@ For `edit`/`add`/`section-add`, `map-sync -> check` runs automatically after mut
 Whole-tree validation:
 
 ```cmd
-REM validate full document tree (default: agd_docs)
+REM validate full document tree (default: 00_agd\agd_docs)
 agd.exe check-all
 agd.exe check-all examples
 

@@ -1,11 +1,11 @@
-﻿# AGD Document Structure Guide (EN)
+# AGD Document Structure Guide (EN)
 
-This guide explains where to place AGD files under `agd_docs` and how to run a structure that stays manageable as documents grow.
+This guide explains where to place AGD files under `00_agd\agd_docs` and how to run a structure that stays manageable as documents grow.
 
 ## 1) Standard Folder Layout
 
 ```text
-agd_docs/
+00_agd/agd_docs/
   00_inbox/
   10_source/
     product/

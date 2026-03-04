@@ -1,6 +1,6 @@
-﻿# 템플릿 활용 예시 인덱스 (KO)
+# 템플릿 활용 예시 인덱스 (KO)
 
-국문 예시는 `agd_docs`와 같은 계층(`10_source / 20_derived / 30_shared`)으로 정리되어 있습니다.
+국문 예시는 `00_agd\agd_docs`와 같은 계층(`10_source / 20_derived / 30_shared`)으로 정리되어 있습니다.
 
 ## 템플릿별 예시 파일
 
@@ -16,8 +16,8 @@
 - `qa-plan` -> `examples/ko/20_derived/qa/qa_plan_checkout_v2_ko.agd`
 - `service-logic` -> `examples/ko/10_source/service/service_logic_checkout_core_ko.agd`
 - `frontend-page` -> `examples/ko/20_derived/frontend/frontend_page_checkout_ko.agd`
-- `maintenance-case` -> `agd_docs/30_shared/maintenance/<project>_maintenance_case.agd` (킷 생성 경로)
-- `incident-case` -> `agd_docs/30_shared/errFix/<project>_incident_case.agd` (킷 생성 경로)
+- `maintenance-case` -> `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd` (킷 생성 경로)
+- `incident-case` -> `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd` (킷 생성 경로)
 
 ## 권위/파생(source/derived) 예시
 

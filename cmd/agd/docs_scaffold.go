@@ -1,4 +1,4 @@
-﻿// docs_scaffold.go defines default docs folder scaffold and README templates.
+// docs_scaffold.go defines default docs folder scaffold and README templates.
 // docs_scaffold.go는 기본 문서 폴더 스캐폴드와 README 템플릿을 정의합니다.
 package main
 
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const docsRootDir = "agd_docs"
+const docsRootLeafDir = "agd_docs"
 
 var docsScaffoldFolders = []string{
 	"00_inbox",

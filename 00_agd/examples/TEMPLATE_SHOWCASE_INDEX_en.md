@@ -1,6 +1,6 @@
-﻿# Template Showcase Index (EN)
+# Template Showcase Index (EN)
 
-Examples are now arranged with the same hierarchy as `agd_docs` (`10_source / 20_derived / 30_shared`).
+Examples are now arranged with the same hierarchy as `00_agd\agd_docs` (`10_source / 20_derived / 30_shared`).
 
 ## Template Examples
 
@@ -16,8 +16,8 @@ Examples are now arranged with the same hierarchy as `agd_docs` (`10_source / 20
 - `qa-plan` -> `examples/en/20_derived/qa/qa_plan_checkout_v2_en.agd`
 - `service-logic` -> `examples/en/10_source/service/service_logic_checkout_core_en.agd`
 - `frontend-page` -> `examples/en/20_derived/frontend/frontend_page_checkout_en.agd`
-- `maintenance-case` -> `agd_docs/30_shared/maintenance/<project>_maintenance_case.agd` (kit-generated path)
-- `incident-case` -> `agd_docs/30_shared/errFix/<project>_incident_case.agd` (kit-generated path)
+- `maintenance-case` -> `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd` (kit-generated path)
+- `incident-case` -> `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd` (kit-generated path)
 
 ## Source/Derived Role Examples
 

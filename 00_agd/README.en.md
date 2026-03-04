@@ -10,7 +10,7 @@ All AGD assets are managed under the `agd/` folder.
 - executables: `agd/agd.exe`, `agd/agd_en.exe`, `agd/agd_ko.exe`
 - docs: `agd/docs/*`
 - examples: `agd/examples/*`
-- working docs root: `agd/agd_docs/*`
+- working docs root: `00_agd/agd_docs/*`
 - setup entry: `agd/setup.cmd`
 - local hook: `agd/.githooks/pre-commit`
 - hook logic: `agd/scripts/git-hooks/pre-commit.ps1`
@@ -20,43 +20,41 @@ No `.go` source files are included in `agd/`.
 
 ## 2) One-command setup (minimal, no source tree)
 
-Single `cmd` line to fetch only `agd/` and run setup:
+Single `cmd` line to fetch only `00_agd/` into project root:
 
 ```cmd
-cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> <repo-folder> && cd /d <repo-folder> && git sparse-checkout init --no-cone && git sparse-checkout set /agd/ && git checkout && agd\setup.cmd"
+cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> .agd_tmp && git -C .agd_tmp sparse-checkout init --no-cone && git -C .agd_tmp sparse-checkout set /agd/ && git -C .agd_tmp checkout --quiet && xcopy .agd_tmp\agd 00_agd /E /I /Y >nul && rmdir /s /q .agd_tmp"
 ```
 
-If you already cloned the full repository:
+To apply hooks/validation setup after download:
 
 ```cmd
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipTemplates
 ```
-
-`-SlimCheckout` keeps only `agd/` in this repository clone.
 
 What setup does:
 
-- sets `git config core.hooksPath agd/.githooks`
-- validates `agd/agd_docs` and `agd/examples` (strict mode)
+- sets `git config core.hooksPath 00_agd/.githooks`
+- validates `00_agd/agd_docs` and `00_agd/examples` (strict mode)
 - installs CI workflow and PR template (backs up existing files before overwrite)
 
 Options:
 
 ```cmd
-agd\setup.cmd -SkipCheck
-agd\setup.cmd -SkipTemplates
-agd\setup.cmd -InstallCiTemplate
-agd\setup.cmd -InstallPrTemplate
-agd\setup.cmd -NoTemplateBackup
-agd\setup.cmd -SlimCheckout
+00_agd\setup.cmd -SkipCheck
+00_agd\setup.cmd -SkipTemplates
+00_agd\setup.cmd -InstallCiTemplate
+00_agd\setup.cmd -InstallPrTemplate
+00_agd\setup.cmd -NoTemplateBackup
+00_agd\setup.cmd -SlimCheckout
 ```
 
 ## 3) Daily usage
 
 ```cmd
-agd\agd_en.exe quick
-agd\agd_en.exe wizard
-agd\agd_en.exe check-all agd\agd_docs --strict
+00_agd\agd_en.exe quick
+00_agd\agd_en.exe wizard
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
 ```
 
 ## 4) Optional CI integration
@@ -64,7 +62,7 @@ agd\agd_en.exe check-all agd\agd_docs --strict
 Install template files into host repo:
 
 ```cmd
-agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
+00_agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
 ```
 
 This copies:
