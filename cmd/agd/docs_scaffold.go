@@ -42,7 +42,8 @@ Recommended practice:
 
 1) Keep one source doc per topic under 10_source.
 2) Keep derived docs under 20_derived and connect source_doc/source_sections.
-3) Move outdated docs to 90_archive instead of deleting immediately.
+3) In 20_derived/frontend, create one .agd file per page/screen.
+4) Move outdated docs to 90_archive instead of deleting immediately.
 
 Folder details:
 
@@ -53,7 +54,7 @@ Folder details:
 - 10_source/policy: rules, standards, release/approval policy source
 - 10_source/architecture: architecture decisions (ADR) and trade-offs
 
-- 20_derived/frontend: UI flow/spec docs derived from source logic
+- 20_derived/frontend: UI flow/spec docs derived from source logic (one page/screen per file)
 - 20_derived/qa: test plans/checklists derived from source requirements
 - 20_derived/ops: runbook/operations docs derived from service/policy
 
@@ -105,7 +106,8 @@ const docsScaffoldReadmeKO = `# AGD 문서 폴더 가이드
 
 1) 주제마다 10_source 아래에 기준 문서를 1개 유지합니다.
 2) 파생 문서는 20_derived 아래에 두고 source_doc/source_sections를 연결합니다.
-3) 오래된 문서는 바로 삭제하지 말고 90_archive로 이동합니다.
+3) 20_derived/frontend는 페이지(화면)별로 .agd 파일을 분리해 작성합니다.
+4) 오래된 문서는 바로 삭제하지 말고 90_archive로 이동합니다.
 
 폴더별 상세 설명:
 
@@ -116,7 +118,7 @@ const docsScaffoldReadmeKO = `# AGD 문서 폴더 가이드
 - 10_source/policy: 규칙, 표준, 승인/배포 정책을 관리하는 기준 문서
 - 10_source/architecture: 아키텍처 의사결정(ADR)과 트레이드오프 기록
 
-- 20_derived/frontend: source 로직에서 파생된 화면/UX 흐름 문서
+- 20_derived/frontend: source 로직에서 파생된 화면/UX 흐름 문서 (페이지/파일 단위 분리 작성 원칙)
 - 20_derived/qa: source 요구사항에서 파생된 테스트 계획/체크리스트
 - 20_derived/ops: 서비스/정책 기반으로 파생된 운영 runbook 문서
 
