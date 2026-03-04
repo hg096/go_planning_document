@@ -50,13 +50,9 @@ func run(args []string) int {
 	case "role-graph", "graph", "relation-graph":
 		return commandRoleGraphEasy(args[1:])
 	case "kit",
-		"starter-kit", "maintenance", "maintenance-kit",
-		"bridge-lite", "bridge", "bridge-kit",
-		"new-project", "new-project-kit",
-		"change-flow",
-		"incident-response", "incident", "incident-kit",
-		"incident-lifecycle",
-		"quality-gate":
+		"starter-kit", "maintenance",
+		"new-project",
+		"incident":
 		return commandKitEasy(append([]string{args[0]}, args[1:]...))
 	case "view":
 		return commandViewEasy(args[1:])
@@ -96,7 +92,7 @@ Usage:
   agd logic-log <file.agd> <SECTION-ID> --reason "<why>" --impact "<effect>"
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
-  agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]
+  agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive] [--scope all|maintenance|incident|maintenance-incident|exclude-maintenance-incident]
   agd kit <starter-kit|new-project|maintenance|incident> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd starter-kit|new-project|maintenance|incident <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]
@@ -126,7 +122,7 @@ Advanced:
   agd logic-log <file.agd> <SECTION-ID> --reason "<why>" --impact "<effect>"
   agd incident-tag <target.agd> <feature-tag> [source-doc.agd] [section-id] [--module "<name>"] --reason "<why>" --impact "<effect>"
   agd role-set <file.agd> <source|derived> [source-doc] [source-sections]
-  agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]
+  agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive] [--scope all|maintenance|incident|maintenance-incident|exclude-maintenance-incident]
   agd kit <starter-kit|new-project|maintenance|incident> <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd starter-kit|new-project|maintenance|incident <project-key> [--owner name] [--root dir] [--lang ko|en] [--feature-tag TAG] [--tag-source source.agd --tag-section SEC-ID] [--force] [--no-graph]
   agd view <file.agd> [out.md]

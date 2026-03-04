@@ -38,34 +38,11 @@ Success metrics are not document counts:
 - percentage of changes with recoverable rationale
 - consistency: humans and AI produce the same answer to the same question
 
-## 2. Build
+## 2. Quick Start
 
 Recommended Go version: `1.25.1`
 
-```cmd
-go build -o agd.exe ./cmd/agd
-```
-
-Build separate language defaults:
-
-```cmd
-go build -ldflags "-X main.defaultLang=en" -o agd_en.exe ./cmd/agd
-go build -ldflags "-X main.defaultLang=ko" -o agd_ko.exe ./cmd/agd
-```
-
-### One-Command Setup (Recommended: minimal user install)
-
-Use this single `cmd` line to download only `00_agd/` into your project root:
-
-```cmd
-cmd /c "git clone --depth 1 --filter=blob:none --no-checkout <repo-url> .agd_tmp && git -C .agd_tmp sparse-checkout init --no-cone && git -C .agd_tmp sparse-checkout set /agd/ && git -C .agd_tmp checkout --quiet && xcopy .agd_tmp\agd 00_agd /E /I /Y >nul && rmdir /s /q .agd_tmp"
-```
-
-To apply hooks/validation setup after download:
-
-```cmd
-00_agd\setup.cmd -SkipTemplates
-```
+### Recommended Setup (minimal user install)
 
 What it does:
 
@@ -73,22 +50,27 @@ What it does:
 - validates `00_agd/agd_docs` and `00_agd/examples` with strict checks
 - installs CI workflow and PR template (backs up existing files before overwrite)
 
-Useful options:
+For setup details, see the isolated package guide: [README.en.md](/D:/codePack/go/new_read/00_agd/README.en.md).
+
+Essential commands (restored):
 
 ```cmd
-00_agd\setup.cmd -SkipCheck
-00_agd\setup.cmd -SkipTemplates
-00_agd\setup.cmd -NoTemplateBackup
-00_agd\setup.cmd -SlimCheckout
+REM git: download only 00_agd into current project root
+cmd /c "git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git .a&&git -C .a sparse-checkout set agd&&git -C .a checkout -q&&xcopy .a\agd 00_agd /e /i /y>nul&&rd /s /q .a"
+
+REM build: generate executables
+go build -o 00_agd\agd.exe ./cmd/agd
+go build -ldflags "-X main.defaultLang=en" -o 00_agd\agd_en.exe ./cmd/agd
+go build -ldflags "-X main.defaultLang=ko" -o 00_agd\agd_ko.exe ./cmd/agd
+
+REM run exe
+00_agd\agd.exe
+REM or
+00_agd\agd.exe wizard
 ```
 
 ## 3. Easiest Start: Wizard
 
-```cmd
-agd.exe
-REM or
-agd.exe wizard
-```
 
 English wizard menu:
 
@@ -97,7 +79,7 @@ English wizard menu:
 Select document
 
 [1] Select document
-[2] Generate doc kit (starter/bridge/change/incident/quality)
+[2] Generate doc kit (starter/new-project/maintenance/error)
 [3] Validate whole docs tree
 [4] New document
 [5] Show source/derived relation graph
@@ -138,89 +120,28 @@ In wizard menu `4` (New document), the default type set is reduced to these 7 in
 - `handoff`
 - `policy`
 
-CLI creation (`agd.exe new`, `agd.exe init`) is limited to the same 7 integrated-first types. Split/legacy types are blocked.
+Document creation is focused on the same 7 integrated-first types.
 
 Path input is resolved against `00_agd\agd_docs` by default.
 When opening existing docs, filename-only input is searched across subfolders.
 If duplicate filenames exist under subfolders, use a relative path like `front/home`.
 `00_agd/agd_docs/README.md` is scaffold-generated in the selected language and includes the AI writing philosophy/operating guide.
 
-For new document creation (`agd new`, wizard top menu `4`), filename-only output is auto-routed by doc type:
+For new document creation (wizard top menu `4`), filename-only output is auto-routed by doc type:
 
 - `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
-- `delivery-plan` -> `00_agd\agd_docs\10_source\product\<file>.agd`
+- `delivery-plan` -> `00_agd\agd_docs\20_derived\frontend\<file>.agd`
 - `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`
 - `meeting` -> `00_agd\agd_docs\30_shared\meeting\<file>.agd`
 - `experiment` -> `00_agd\agd_docs\30_shared\experiment\<file>.agd`
 - `roadmap` -> `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
 - `handoff` -> `00_agd\agd_docs\30_shared\handoff\<file>.agd`
 
-To override, pass an explicit path.
-Example: `agd.exe new core-spec 10_source/product/checkout_v2`
-
-## 4. Common Commands
-
-```cmd
-agd.exe new core-spec core_spec_checkout "Checkout Core Spec" "product-team"
-agd.exe check core_spec_checkout
-agd.exe check-all
-agd.exe check-all --strict
-agd.exe check-all --include-archive
-agd.exe search core_spec_checkout payment
-agd.exe edit core_spec_checkout CORE-020 "Clarify must-have feature priorities" --reason "re-align feature priority" --impact "reduce priority interpretation mismatch"
-agd.exe add core_spec_checkout CORE-020 "- Add failure recovery flow" --reason "improve operational recovery guidance" --impact "faster recovery action during incidents"
-agd.exe section-add core_spec_checkout CORE-050 "Payment Failure Recovery" "Define recovery procedure" "RUN-001,LOG-002" "- Retry guidance" --reason "document missing recovery policy" --impact "consistent failure handling communication"
-agd.exe logic-log core_spec_checkout CORE-020 --reason "Applied retry branch update" --impact "lower drop rate on transient payment failures"
-agd.exe incident-tag checkout_incident_case FT-CHECKOUT service_logic_checkout_core [section-id] --reason "set issue root to exact feature section" --impact "AI can track the target section precisely"
-agd.exe kit starter-kit checkout
-agd.exe bridge-lite checkout --owner product-team
-agd.exe change-flow checkout --owner ops-team
-agd.exe incident-lifecycle checkout --feature-tag FT-CHECKOUT
-agd.exe quality-gate checkout --owner qa-team
-agd.exe kit starter-kit checkout --no-graph
-agd.exe role-graph
-agd.exe role-graph --format mermaid --out 00_agd\agd_docs\role_graph.mmd
-agd.exe view core_spec_checkout
-```
-
-`edit`/`add`/`section-add` require both `--reason` and `--impact`, and then automatically run `map-sync -> check`.
-
-Kit profile intent:
-
-- `starter-kit`: minimal source+derived baseline for first setup
-- `bridge-lite`: minimal AI bridge core set (`service-logic + core-spec + delivery-plan + runbook`)
-- `change-flow`: integrated maintenance + feature-change set (`maintenance-case + core-spec + delivery-plan + change-log`)
-- `incident-lifecycle`: incident response + follow-up set (`incident-case + runbook + postmortem`)
-- `quality-gate`: release quality gate set (`policy + qa-plan + runbook + delivery-plan`)
-- legacy aliases still work: `maintenance`/`new-project` -> `change-flow`, `incident-response` -> `incident-lifecycle`
-- manual `postmortem` type path: `00_agd/agd_docs/30_shared/postmortem/<file>.agd`
-- `incident-lifecycle` auto-injects the rooted trace block into the generated `incident-case` doc using `--feature-tag`.
-- `incident-case` default flow: `INC-001(tag issue) -> INC-010(capture bug) -> INC-020(quick RCA) -> INC-030(fix direction) -> INC-040(AI handoff) -> INC-050(AI result) -> INC-060(validate/close)`
-- If `--feature-tag` is omitted, an automatic tag is generated from the project key (example: `checkout` -> `FT-CHECKOUT`).
-- Close-state rule: `END__*_maintenance_case.agd` (maintenance) and `END__*_incident_case.agd` (errFix) are auto-excluded from scan/select/role-graph.
-
-`ai_planning_guide` content is now merged into `00_agd/agd_docs/README.md` instead of being auto-generated as a separate file.
-After kit creation, use `00_agd/agd_docs/README.md` as the policy anchor so AI output stays aligned with source/derived rules and rationale standards.
+You can also create documents by specifying an explicit target path.
+For page-by-page management, place `delivery-plan` docs under `20_derived\frontend` subfolders (for example, `checkout`, `home`).
 
 ## 5. Document Roles: source / derived
 
-```cmd
-agd.exe role-set service_overview source
-agd.exe role-set frontend_pages derived service_overview "SYS-020->FP-020,SYS-030=>FP-030"
-agd.exe role-set frontend_pages derived service_overview auto
-agd.exe role-set frontend_pages derived service_overview strict-auto
-agd.exe role-set frontend_pages derived service_overview smart-auto
-
-agd.exe map-suggest frontend_pages service_overview
-agd.exe map-suggest frontend_pages service_overview strict-auto
-agd.exe map-suggest frontend_pages service_overview smart-auto
-
-agd.exe starter-kit checkout
-agd.exe bridge-lite checkout
-agd.exe change-flow checkout
-agd.exe incident-lifecycle checkout --feature-tag FT-CHECKOUT
-agd.exe quality-gate checkout
-```
 
 `source_sections` mapping rules:
 
@@ -245,50 +166,16 @@ Recommended patterns:
 
 - Classify failures by mechanism, not by feature name.
 - After each incident-case (and postmortem if created), record source-doc feedback evidence before closure.
-- In weekly reviews, aggregate Top3 `agd.exe check` failure causes and assign actions.
+- In weekly reviews, aggregate Top3 document validation failure causes and assign actions.
 - Before release, keep `@change reason/impact` missing count at zero.
-- Full framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_en.md`
+- Full rule set: `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
 
 ### Service-Logic Changes: Doc-First Rule
 
 - Before service-code edits, update the service source doc (`10_source/service`) first.
 - Keep `@change reason/impact` complete before implementation.
-- After edits, run `agd.exe check`/`agd.exe check-all` to verify document consistency.
+- After edits, run document-wide validation to verify consistency.
 
-## 7. New Document Types (`agd new`)
-
-- `core-spec`: Unified core spec (PRD+logic+ADR+AI guide)
-- `delivery-plan`: Unified delivery plan (frontend+QA+release)
-- `meeting`: Meeting notes and decisions
-- `experiment`: Experiment and A/B test plan
-- `roadmap`: Quarter/half roadmap plan
-- `handoff`: Cross-team handoff document
-- `policy`: Policy and guideline document
-
-For `agd init --list`, Korean and English template names are available for the same 7 types:
-
-- Korean templates: `*-ko` (example: `core-spec-ko`)
-- English templates: `*-en` (example: `core-spec-en`)
-
-Template showcase indexes:
-
-- `examples/TEMPLATE_SHOWCASE_INDEX_ko.md`
-- `examples/TEMPLATE_SHOWCASE_INDEX_en.md`
-- `examples/README.md`
-
-Examples folder structure:
-
-- `examples/ko/10_source/*`: Korean source examples
-- `examples/ko/20_derived/*`: Korean derived examples
-- `examples/ko/30_shared/*`: Korean shared examples
-- `examples/en/10_source/*`: English source examples
-- `examples/en/20_derived/*`: English derived examples
-- `examples/en/30_shared/*`: English shared examples
-
-For single-case maintenance/incident flows, use kit-generated paths instead of fixed example files:
-
-- `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
-- `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd`
 
 ## 8. Enforced Ops Setup (Git Hook + CI)
 
@@ -297,11 +184,7 @@ Root-level hook/workflow files are not forced by default; install is template-ba
 
 ### 8-1) Local pre-commit hook
 
-1) Run package setup:
-
-```cmd
-00_agd\setup.cmd
-```
+1) Run the package setup script to enable local hooks.
 
 2) Hook files included in this repo:
 
@@ -320,14 +203,9 @@ Template location:
 
 - `agd/templates/agd-guard.yml`
 
-`00_agd\setup.cmd` installs this by default.
-To reinstall CI template only:
+This is installed during the default setup flow.
 
-```cmd
-00_agd\setup.cmd -InstallCiTemplate
-```
-
-This copies to `.github/workflows/agd-guard.yml`.
+The CI template is copied to `.github/workflows/agd-guard.yml`.
 
 ### 8-3) Pull request checklist
 
@@ -335,29 +213,19 @@ Template location:
 
 - `agd/templates/pull_request_template.md`
 
-`00_agd\setup.cmd` installs this by default.
-To reinstall PR template only:
+This is installed during the default setup flow.
 
-```cmd
-00_agd\setup.cmd -InstallPrTemplate
-```
-
-This copies to `.github/pull_request_template.md`.
+The PR template is copied to `.github/pull_request_template.md`.
 
 ## 9. References
 
 - Korean start guide: `README.md`
-- Korean template guide: `docs/AGD_TEMPLATE_GUIDE_ko.md`
-- English template guide: `docs/AGD_TEMPLATE_GUIDE_en.md`
-- Korean document structure guide: `docs/AGD_DOC_STRUCTURE_GUIDE_ko.md`
-- English document structure guide: `docs/AGD_DOC_STRUCTURE_GUIDE_en.md`
-- Korean failure analysis framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_ko.md`
-- English failure analysis framework: `docs/AGD_FAILURE_ANALYSIS_FRAMEWORK_en.md`
+- Korean AI execution guide: `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md`
+- English AI execution guide: `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
 - Docs root folder guide: `00_agd/agd_docs/README.md`
 - Isolated package guide (EN): `agd/README.en.md`
 - Isolated package guide (KO): `agd/README.md`
 - One-command bootstrap (cmd): `agd/setup.cmd`
 - Bootstrap script (PowerShell): `agd/scripts/setup.ps1`
 - Gate-enforced execution wrapper (cmd): `run-safe.cmd`
-- Spec (KR): `docs/AGD_SPEC_v0.1.md`
-- Spec (EN): `docs/AGD_SPEC_v0.1.en.md`
+

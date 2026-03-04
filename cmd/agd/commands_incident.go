@@ -238,6 +238,7 @@ func applyIncidentTagBySection(targetPath, sourcePath, featureTag, sectionID, mo
 		Reason: strings.TrimSpace(reason),
 		Impact: strings.TrimSpace(impact),
 	})
+	ensureDocPathMetadata(targetDoc, targetPath)
 
 	validationErrors := agd.Validate(targetDoc)
 	if len(validationErrors) > 0 {

@@ -281,6 +281,7 @@ func commandLogicLogEasy(args []string) int {
 		fmt.Fprintf(os.Stderr, text("logic-log error: section not found: %s\n", "logic-log error: section not found: %s\n"), sectionID)
 		return 1
 	}
+	ensureDocPathMetadata(doc, filePath)
 
 	change := &agd.Change{
 		ID:     nextChangeID(doc),
@@ -354,6 +355,7 @@ func addSectionWithMapUpdate(filePath, sectionID, title, summary, linksRaw, cont
 		ID:      sectionID,
 		Title:   title,
 		Summary: summary,
+		Path:    defaultSectionPath(strings.TrimSpace(doc.Meta["doc_base_path"]), sectionID),
 		Links:   splitCSV(linksRaw),
 		Content: strings.TrimSpace(content),
 	}
@@ -380,6 +382,7 @@ func addSectionWithMapUpdate(filePath, sectionID, title, summary, linksRaw, cont
 		Impact: strings.TrimSpace(impact),
 	}
 	doc.Changes = append(doc.Changes, change)
+	ensureDocPathMetadata(doc, filePath)
 
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {

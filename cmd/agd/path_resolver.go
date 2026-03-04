@@ -55,16 +55,12 @@ func normalizeDocTypeKey(kind string) string {
 	raw = strings.TrimSuffix(raw, "-ko")
 	raw = strings.TrimSuffix(raw, "-en")
 	switch raw {
+	case "prd", "service", "system", "service-logic", "adr", "guide", "ai", "ai-planning-guide", "ai-guide":
+		return "core-spec"
+	case "qa", "qaplan", "qa-plan", "frontend", "page-logic", "frontend-page", "runbook":
+		return "delivery-plan"
 	case "minutes":
 		return "meeting"
-	case "qa", "qaplan":
-		return "qa-plan"
-	case "service", "system":
-		return "service-logic"
-	case "frontend", "page-logic":
-		return "frontend-page"
-	case "guide", "ai", "ai-planning-guide", "ai-guide":
-		return "ai-guide"
 	case "incident", "incident-case", "incident-root", "incident-workspace":
 		return "incident-case"
 	case "maintenance", "maintenance-case", "maintenance-workspace":
@@ -73,8 +69,6 @@ func normalizeDocTypeKey(kind string) string {
 		return "core-spec"
 	case "delivery", "delivery-plan":
 		return "delivery-plan"
-	case "log", "change-log", "changelog":
-		return "change-log"
 	default:
 		return raw
 	}
@@ -82,19 +76,7 @@ func normalizeDocTypeKey(kind string) string {
 
 func defaultSubdirForDocType(kind string) string {
 	switch normalizeDocTypeKey(kind) {
-	case "prd":
-		return filepath.Join("10_source", "product")
-	case "service-logic":
-		return filepath.Join("10_source", "service")
 	case "policy":
-		return filepath.Join("10_source", "policy")
-	case "adr":
-		return filepath.Join("10_source", "architecture")
-	case "frontend-page":
-		return filepath.Join("20_derived", "frontend")
-	case "qa-plan":
-		return filepath.Join("20_derived", "qa")
-	case "ai-guide":
 		return filepath.Join("10_source", "policy")
 	case "incident-case":
 		return filepath.Join("30_shared", "errFix")
@@ -103,19 +85,13 @@ func defaultSubdirForDocType(kind string) string {
 	case "core-spec":
 		return filepath.Join("10_source", "product")
 	case "delivery-plan":
-		return filepath.Join("10_source", "product")
-	case "change-log":
-		return filepath.Join("30_shared", "roadmap")
-	case "runbook":
-		return filepath.Join("20_derived", "ops")
+		return filepath.Join("20_derived", "frontend")
 	case "meeting":
 		return filepath.Join("30_shared", "meeting")
 	case "handoff":
 		return filepath.Join("30_shared", "handoff")
 	case "roadmap":
 		return filepath.Join("30_shared", "roadmap")
-	case "postmortem":
-		return filepath.Join("30_shared", "postmortem")
 	case "experiment":
 		return filepath.Join("30_shared", "experiment")
 	default:

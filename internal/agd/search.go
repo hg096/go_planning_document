@@ -1,4 +1,4 @@
-﻿package agd
+package agd
 
 import "strings"
 
@@ -25,6 +25,9 @@ func Search(doc *Document, query string) []SearchHit {
 	for _, section := range doc.Sections {
 		if containsCI(section.ID, q) {
 			hits = append(hits, SearchHit{Kind: "section", ID: section.ID, Field: "id", Snippet: section.ID})
+		}
+		if containsCI(section.Path, q) {
+			hits = append(hits, SearchHit{Kind: "section", ID: section.ID, Field: "path", Snippet: section.Path})
 		}
 		if containsCI(section.Title, q) {
 			hits = append(hits, SearchHit{Kind: "section", ID: section.ID, Field: "title", Snippet: section.Title})

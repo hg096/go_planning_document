@@ -56,6 +56,44 @@ type unresolvedRoleLink struct {
 
 const kitProfileUsage = "starter-kit|new-project|maintenance|incident"
 
+type roleGraphScope string
+
+const (
+	roleGraphScopeAll                        roleGraphScope = "all"
+	roleGraphScopeMaintenanceOnly            roleGraphScope = "maintenance"
+	roleGraphScopeIncidentOnly               roleGraphScope = "incident"
+	roleGraphScopeMaintenanceIncidentOnly    roleGraphScope = "maintenance-incident"
+	roleGraphScopeExcludeMaintenanceIncident roleGraphScope = "exclude-maintenance-incident"
+)
+
+func roleGraphUsageText() string {
+	return text(
+		"usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive] [--scope all|maintenance|incident|maintenance-incident|exclude-maintenance-incident]",
+		"usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive] [--scope all|maintenance|incident|maintenance-incident|exclude-maintenance-incident]",
+	)
+}
+
+func parseRoleGraphScope(raw string) (roleGraphScope, bool) {
+	scope := strings.ToLower(strings.TrimSpace(raw))
+	scope = strings.ReplaceAll(scope, "_", "-")
+	scope = strings.ReplaceAll(scope, " ", "-")
+
+	switch scope {
+	case "", "all":
+		return roleGraphScopeAll, true
+	case "maintenance", "maint", "maintenance-only":
+		return roleGraphScopeMaintenanceOnly, true
+	case "incident", "error", "incident-only", "errfix":
+		return roleGraphScopeIncidentOnly, true
+	case "maintenance-incident", "maintenance+incident", "both":
+		return roleGraphScopeMaintenanceIncidentOnly, true
+	case "exclude-maintenance-incident", "exclude-maintenance+incident", "exclude-both":
+		return roleGraphScopeExcludeMaintenanceIncident, true
+	default:
+		return "", false
+	}
+}
+
 func commandKitEasy(args []string) int {
 	if len(args) == 0 {
 		fmt.Fprintln(os.Stderr, text(
@@ -77,24 +115,10 @@ func commandKitEasy(args []string) int {
 		profileRaw = "starter-kit"
 	case "new-project":
 		profileRaw = "new-project"
-	case "change-flow":
+	case "maintenance":
 		profileRaw = "maintenance"
-	case "incident-lifecycle":
+	case "incident":
 		profileRaw = "incident"
-	case "quality-gate":
-		profileRaw = "quality-gate"
-	case "maintenance-kit":
-		profileRaw = "maintenance"
-	case "new-project-kit":
-		profileRaw = "new-project"
-	case "incident-kit":
-		profileRaw = "incident"
-	case "change-flow-kit":
-		profileRaw = "maintenance"
-	case "incident-lifecycle-kit":
-		profileRaw = "incident"
-	case "quality-gate-kit":
-		profileRaw = "quality-gate"
 	case "kit":
 		if len(rest) == 0 {
 			fmt.Fprintln(os.Stderr, text(
@@ -412,7 +436,7 @@ func commandKitEasy(args []string) int {
 	}
 
 	if showGraph {
-		graphText, err := renderRoleGraph(root, false, "text")
+		graphText, err := renderRoleGraph(root, false, "text", roleGraphScopeAll)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "kit warning: cannot render role graph: %v\n", err)
 			return 0
@@ -431,14 +455,14 @@ func kitProjectScopedSubdir(profile, baseSubdir, projectKey string) string {
 		return base
 	}
 	prof := strings.ToLower(strings.TrimSpace(profile))
-	if prof == "starter-kit" || prof == "bridge-lite" || prof == "incident" || prof == "quality-gate" {
+	if prof == "starter-kit" || prof == "incident" {
 		return base
 	}
 	if prof == "new-project" {
 		if key == "" {
-			return filepath.Join("10_source", "product")
+			return base
 		}
-		return filepath.Join("10_source", "product", key)
+		return filepath.Join(base, key)
 	}
 	if prof == "maintenance" {
 		maintenanceBase := filepath.Join("30_shared", "maintenance")
@@ -459,20 +483,14 @@ func normalizeKitProfile(raw string) (string, bool) {
 	key = strings.ReplaceAll(key, " ", "-")
 
 	switch key {
-	case "starter-kit", "starter", "start", "bootstrap", "starterkit":
+	case "starter-kit":
 		return "starter-kit", true
-	case "new-project", "new", "new-project-kit", "project":
+	case "new-project":
 		return "new-project", true
-	case "bridge-lite", "bridge", "bridge-kit", "bridge-lite-kit", "lite-bridge", "minimal-kit", "minimal":
-		return "bridge-lite", true
-	case "change-flow", "change", "flow", "changeflow",
-		"maintenance", "maint", "maintenance-kit", "maintenance-single", "single-maintenance":
+	case "maintenance":
 		return "maintenance", true
-	case "incident-lifecycle", "incident-lifecycle-kit", "incident-lifecycle-flow",
-		"incident-response", "incident", "incident-kit", "error-response":
+	case "incident":
 		return "incident", true
-	case "quality-gate", "quality-gate-kit", "quality", "qualitygate", "release-gate":
-		return "quality-gate", true
 	default:
 		return "", false
 	}
@@ -849,6 +867,7 @@ func applyIncidentFeatureTagRooting(
 			Reason: reason,
 			Impact: impact,
 		})
+		ensureDocPathMetadata(doc, path)
 
 		validationErrors := agd.Validate(doc)
 		if len(validationErrors) > 0 {
@@ -956,6 +975,7 @@ func applyMaintenanceFeatureTagRooting(
 		Reason: reason,
 		Impact: impact,
 	})
+	ensureDocPathMetadata(doc, path)
 
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {
@@ -998,6 +1018,7 @@ func createDocFromTemplate(templateName, outPath, title, owner, version, date st
 	if len(parseErrs) > 0 {
 		return fmt.Errorf("template parse error: %s", strings.Join(parseErrs, "; "))
 	}
+	ensureDocPathMetadata(doc, outPath)
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {
 		return fmt.Errorf("template lint error: %s", strings.Join(validationErrors, "; "))
@@ -1010,7 +1031,7 @@ func createDocFromTemplate(templateName, outPath, title, owner, version, date st
 	if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
 		return fmt.Errorf("cannot create directory %s: %w", filepath.Dir(target), err)
 	}
-	if err := os.WriteFile(target, []byte(rendered), 0o644); err != nil {
+	if err := os.WriteFile(target, []byte(agd.Serialize(doc)), 0o644); err != nil {
 		return fmt.Errorf("write failed for %s: %w", target, err)
 	}
 	return nil
@@ -1064,6 +1085,7 @@ func applyRoleToDoc(filePath, role, sourcePath, sourceSections, author string) e
 		Reason: reason,
 		Impact: impact,
 	})
+	ensureDocPathMetadata(doc, filePath)
 
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {
@@ -1084,25 +1106,15 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 	switch profile {
 	case "starter-kit":
 		return []kitDocSpec{
-			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service_logic", TitleEN: "%s - Service Logic", TitleKO: "%s - Service Logic", Role: "source"},
-			{Key: "prd", DocType: "prd", Subdir: filepath.Join("10_source", "product"), FileSuffix: "prd", TitleEN: "%s - Product Requirements", TitleKO: "%s - Product Requirements", Role: "source"},
+			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Core Spec", TitleKO: "%s - Core Spec", Role: "source"},
 			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Release Policy", TitleKO: "%s - Release Policy", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - Delivery Plan", TitleKO: "%s - Delivery Plan", Role: "source"},
 			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "roadmap", TitleEN: "%s - Roadmap", TitleKO: "%s - Roadmap"},
-		}
-	case "bridge-lite":
-		return []kitDocSpec{
-			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service_logic", TitleEN: "%s - Bridge Lite Service Logic", TitleKO: "%s - Bridge Lite Service Logic", Role: "source"},
-			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Bridge Lite Core Spec", TitleKO: "%s - Bridge Lite Core Spec", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Bridge Lite Delivery Plan", TitleKO: "%s - Bridge Lite Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
-			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Bridge Lite Runbook", TitleKO: "%s - Bridge Lite Runbook", Role: "derived", SourceKey: "service", SourceSections: "SYS-050->RUN-020,SYS-060->RUN-001,SYS-070->RUN-040"},
 		}
 	case "new-project":
 		return []kitDocSpec{
 			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - New Project Core Spec", TitleKO: "%s - New Project Core Spec", Role: "source"},
-			{Key: "service", DocType: "service-logic", Subdir: filepath.Join("10_source", "product"), FileSuffix: "service_logic", TitleEN: "%s - New Project Service Logic", TitleKO: "%s - New Project Service Logic", Role: "source"},
 			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "product"), FileSuffix: "policy", TitleEN: "%s - New Project Policy", TitleKO: "%s - New Project Policy", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - New Project Delivery Plan", TitleKO: "%s - New Project Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "frontend"), FileSuffix: "delivery_plan", TitleEN: "%s - New Project Delivery Plan", TitleKO: "%s - New Project Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
 			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("10_source", "product"), FileSuffix: "roadmap", TitleEN: "%s - New Project Roadmap", TitleKO: "%s - New Project Roadmap"},
 		}
 	case "maintenance":
@@ -1113,13 +1125,6 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 		return []kitDocSpec{
 			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("30_shared", "errFix"), FileSuffix: "incident_case", TitleEN: "%s - Incident Case", TitleKO: "%s - Incident Case", Role: "source"},
 		}
-	case "quality-gate":
-		return []kitDocSpec{
-			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Quality Gate Policy", TitleKO: "%s - Quality Gate Policy", Role: "source"},
-			{Key: "qa", DocType: "qa-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "qa_plan", TitleEN: "%s - Quality Gate QA Plan", TitleKO: "%s - Quality Gate QA Plan", Role: "derived", SourceKey: "policy", SourceSections: "POL-010->QA-020,POL-030->QA-040"},
-			{Key: "runbook", DocType: "runbook", Subdir: filepath.Join("20_derived", "ops"), FileSuffix: "runbook", TitleEN: "%s - Quality Gate Runbook", TitleKO: "%s - Quality Gate Runbook", Role: "derived", SourceKey: "policy", SourceSections: "POL-020->RUN-010,POL-030->RUN-020"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "qa"), FileSuffix: "delivery_plan", TitleEN: "%s - Quality Gate Delivery Plan", TitleKO: "%s - Quality Gate Delivery Plan", Role: "derived", SourceKey: "policy", SourceSections: "POL-010->DEL-010,POL-030->DEL-020"},
-		}
 	default:
 		return nil
 	}
@@ -1129,6 +1134,7 @@ func commandRoleGraphEasy(args []string) int {
 	format := "text"
 	outPath := ""
 	includeArchive := false
+	scope := roleGraphScopeAll
 	rootProvided := false
 
 	for i := 0; i < len(args); i++ {
@@ -1138,29 +1144,38 @@ func commandRoleGraphEasy(args []string) int {
 			continue
 		case "--format":
 			if i+1 >= len(args) {
-				fmt.Fprintln(os.Stderr, text(
-					"usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]", "usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]",
-				))
+				fmt.Fprintln(os.Stderr, roleGraphUsageText())
 				return 2
 			}
 			format = strings.ToLower(strings.TrimSpace(args[i+1]))
 			i++
 		case "--out":
 			if i+1 >= len(args) {
-				fmt.Fprintln(os.Stderr, text(
-					"usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]", "usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]",
-				))
+				fmt.Fprintln(os.Stderr, roleGraphUsageText())
 				return 2
 			}
 			outPath = strings.TrimSpace(args[i+1])
 			i++
 		case "--include-archive":
 			includeArchive = true
+		case "--scope":
+			if i+1 >= len(args) {
+				fmt.Fprintln(os.Stderr, roleGraphUsageText())
+				return 2
+			}
+			parsed, ok := parseRoleGraphScope(args[i+1])
+			if !ok {
+				fmt.Fprintln(os.Stderr, text(
+					"role-graph error: --scope must be one of all|maintenance|incident|maintenance-incident|exclude-maintenance-incident",
+					"role-graph error: --scope must be one of all|maintenance|incident|maintenance-incident|exclude-maintenance-incident",
+				))
+				return 2
+			}
+			scope = parsed
+			i++
 		default:
 			if strings.HasPrefix(token, "-") || rootProvided {
-				fmt.Fprintln(os.Stderr, text(
-					"usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]", "usage: agd role-graph [root] [--format text|mermaid] [--out file] [--include-archive]",
-				))
+				fmt.Fprintln(os.Stderr, roleGraphUsageText())
 				return 2
 			}
 			root = token
@@ -1183,7 +1198,7 @@ func commandRoleGraphEasy(args []string) int {
 		}
 	}
 
-	output, err := renderRoleGraph(root, includeArchive, format)
+	output, err := renderRoleGraph(root, includeArchive, format, scope)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "role-graph error: %v\n", err)
 		return 1
@@ -1207,15 +1222,169 @@ func commandRoleGraphEasy(args []string) int {
 	return 0
 }
 
-func renderRoleGraph(root string, includeArchive bool, format string) (string, error) {
-	records, edges, unresolved, unassigned, parseFailures, loadFailures, err := collectRoleGraph(root, includeArchive)
+func renderRoleGraph(root string, includeArchive bool, format string, scope roleGraphScope) (string, error) {
+	records, edges, unresolved, unassigned, _, _, err := collectRoleGraph(root, includeArchive)
 	if err != nil {
 		return "", err
 	}
+	records, edges, unresolved, unassigned = applyRoleGraphScopeFilter(scope, records, edges, unresolved, unassigned)
+	parseFailures, loadFailures := buildRoleGraphFailureSummaries(records)
 	if format == "mermaid" {
 		return formatRoleGraphMermaid(root, records, edges, unresolved, parseFailures, loadFailures), nil
 	}
 	return formatRoleGraphText(root, records, edges, unresolved, unassigned, parseFailures, loadFailures), nil
+}
+
+func roleGraphClassifyRel(rel string) (maintenance bool, incident bool) {
+	norm := strings.ToLower(filepath.ToSlash(filepath.Clean(strings.TrimSpace(rel))))
+	norm = strings.TrimPrefix(norm, "./")
+	maintenance = norm == "30_shared/maintenance" || strings.HasPrefix(norm, "30_shared/maintenance/")
+	incident = norm == "30_shared/errfix" || strings.HasPrefix(norm, "30_shared/errfix/")
+	return maintenance, incident
+}
+
+func roleGraphIsFocusedScope(scope roleGraphScope) bool {
+	switch scope {
+	case roleGraphScopeMaintenanceOnly, roleGraphScopeIncidentOnly, roleGraphScopeMaintenanceIncidentOnly:
+		return true
+	default:
+		return false
+	}
+}
+
+func roleGraphMatchPrimary(scope roleGraphScope, rel string) bool {
+	isMaintenance, isIncident := roleGraphClassifyRel(rel)
+	switch scope {
+	case roleGraphScopeAll:
+		return true
+	case roleGraphScopeMaintenanceOnly:
+		return isMaintenance
+	case roleGraphScopeIncidentOnly:
+		return isIncident
+	case roleGraphScopeMaintenanceIncidentOnly:
+		return isMaintenance || isIncident
+	case roleGraphScopeExcludeMaintenanceIncident:
+		return !(isMaintenance || isIncident)
+	default:
+		return true
+	}
+}
+
+func applyRoleGraphScopeFilter(
+	scope roleGraphScope,
+	records map[string]roleGraphRecord,
+	edges []roleGraphEdge,
+	unresolved []unresolvedRoleLink,
+	unassigned []string,
+) (
+	map[string]roleGraphRecord,
+	[]roleGraphEdge,
+	[]unresolvedRoleLink,
+	[]string,
+) {
+	if scope == roleGraphScopeAll {
+		return records, edges, unresolved, unassigned
+	}
+
+	primarySet := make(map[string]struct{})
+	for path, rec := range records {
+		if roleGraphMatchPrimary(scope, rec.Rel) {
+			primarySet[path] = struct{}{}
+		}
+	}
+
+	includeSet := make(map[string]struct{}, len(primarySet))
+	for path := range primarySet {
+		includeSet[path] = struct{}{}
+	}
+
+	focused := roleGraphIsFocusedScope(scope)
+	if focused {
+		for _, edge := range edges {
+			_, sourcePrimary := primarySet[edge.SourcePath]
+			_, derivedPrimary := primarySet[edge.DerivedPath]
+			if !sourcePrimary && !derivedPrimary {
+				continue
+			}
+			includeSet[edge.SourcePath] = struct{}{}
+			includeSet[edge.DerivedPath] = struct{}{}
+		}
+	}
+
+	filteredRecords := make(map[string]roleGraphRecord, len(includeSet))
+	for path := range includeSet {
+		if rec, ok := records[path]; ok {
+			filteredRecords[path] = rec
+		}
+	}
+
+	filteredEdges := make([]roleGraphEdge, 0, len(edges))
+	for _, edge := range edges {
+		_, sourceIncluded := filteredRecords[edge.SourcePath]
+		_, derivedIncluded := filteredRecords[edge.DerivedPath]
+		if !sourceIncluded || !derivedIncluded {
+			continue
+		}
+		if focused {
+			_, sourcePrimary := primarySet[edge.SourcePath]
+			_, derivedPrimary := primarySet[edge.DerivedPath]
+			if !sourcePrimary && !derivedPrimary {
+				continue
+			}
+		}
+		filteredEdges = append(filteredEdges, edge)
+	}
+
+	filteredUnresolved := make([]unresolvedRoleLink, 0, len(unresolved))
+	for _, item := range unresolved {
+		if _, ok := filteredRecords[item.DerivedPath]; !ok {
+			continue
+		}
+		if focused {
+			if _, primary := primarySet[item.DerivedPath]; !primary {
+				continue
+			}
+		}
+		filteredUnresolved = append(filteredUnresolved, item)
+	}
+
+	filteredUnassigned := make([]string, 0, len(unassigned))
+	for _, path := range unassigned {
+		if _, ok := filteredRecords[path]; !ok {
+			continue
+		}
+		if focused {
+			if _, primary := primarySet[path]; !primary {
+				continue
+			}
+		}
+		filteredUnassigned = append(filteredUnassigned, path)
+	}
+
+	return filteredRecords, filteredEdges, filteredUnresolved, filteredUnassigned
+}
+
+func buildRoleGraphFailureSummaries(records map[string]roleGraphRecord) ([]string, []string) {
+	paths := make([]string, 0, len(records))
+	for path := range records {
+		paths = append(paths, path)
+	}
+	sort.Slice(paths, func(i, j int) bool {
+		return strings.ToLower(paths[i]) < strings.ToLower(paths[j])
+	})
+
+	parseFailures := make([]string, 0)
+	loadFailures := make([]string, 0)
+	for _, path := range paths {
+		rec := records[path]
+		if rec.LoadError != "" {
+			loadFailures = append(loadFailures, fmt.Sprintf("%s: %s", rec.Rel, rec.LoadError))
+		}
+		if len(rec.ParseErrors) > 0 {
+			parseFailures = append(parseFailures, fmt.Sprintf("%s: %s", rec.Rel, strings.Join(rec.ParseErrors, "; ")))
+		}
+	}
+	return parseFailures, loadFailures
 }
 
 func collectRoleGraph(root string, includeArchive bool) (

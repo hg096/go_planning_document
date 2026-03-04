@@ -1,4 +1,4 @@
-﻿package agd
+package agd
 
 import (
 	"fmt"
@@ -37,6 +37,9 @@ func ToMarkdown(doc *Document) string {
 		for _, section := range doc.Sections {
 			sb.WriteString(fmt.Sprintf("### %s - %s\n\n", section.ID, section.Title))
 			sb.WriteString(fmt.Sprintf("**Summary**: %s\n\n", section.Summary))
+			if strings.TrimSpace(section.Path) != "" {
+				sb.WriteString(fmt.Sprintf("**Path**: `%s`\n\n", strings.TrimSpace(section.Path)))
+			}
 			if len(section.Links) > 0 {
 				sb.WriteString(fmt.Sprintf("**Links**: %s\n\n", strings.Join(section.Links, ", ")))
 			}

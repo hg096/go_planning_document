@@ -4,16 +4,10 @@ import "testing"
 
 func TestNormalizeKitProfile(t *testing.T) {
 	cases := map[string]string{
-		"starter-kit":        "starter-kit",
-		"new-project":        "new-project",
-		"bridge-lite":        "bridge-lite",
-		"change-flow":        "maintenance",
-		"maintenance":        "maintenance",
-		"incident-lifecycle": "incident",
-		"quality-gate":       "quality-gate",
-		"bridge":             "bridge-lite",
-		"minimal":            "bridge-lite",
-		"incident-response":  "incident",
+		"starter-kit": "starter-kit",
+		"new-project": "new-project",
+		"maintenance": "maintenance",
+		"incident":    "incident",
 	}
 
 	for input, want := range cases {
@@ -28,5 +22,37 @@ func TestNormalizeKitProfile(t *testing.T) {
 
 	if got, ok := normalizeKitProfile("not-a-profile"); ok || got != "" {
 		t.Fatalf("invalid profile should fail normalization, got=%q ok=%v", got, ok)
+	}
+
+	removedAliases := []string{
+		"starter",
+		"change-flow",
+		"incident-lifecycle",
+		"incident-response",
+		"maintenance-kit",
+		"new-project-kit",
+		"incident-kit",
+		"bridge-lite",
+		"quality-gate",
+	}
+	for _, alias := range removedAliases {
+		if got, ok := normalizeKitProfile(alias); ok || got != "" {
+			t.Fatalf("alias should be removed: %s got=%q ok=%v", alias, got, ok)
+		}
+	}
+}
+
+func TestNormalizeKitProfileAcceptsWhitespaceAndUnderscore(t *testing.T) {
+	cases := map[string]string{
+		" starter-kit ": "starter-kit",
+		"new_project":   "new-project",
+		"maintenance ":  "maintenance",
+		" INCIDENT ":    "incident",
+	}
+	for in, want := range cases {
+		got, ok := normalizeKitProfile(in)
+		if !ok || got != want {
+			t.Fatalf("normalization mismatch input=%q got=%q ok=%v want=%q", in, got, ok, want)
+		}
 	}
 }

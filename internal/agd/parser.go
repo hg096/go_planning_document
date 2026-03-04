@@ -147,6 +147,9 @@ func Serialize(doc *Document) string {
 		sb.WriteString(fmt.Sprintf("@section %s\n", strings.TrimSpace(section.ID)))
 		sb.WriteString(fmt.Sprintf("title: %s\n", strings.TrimSpace(section.Title)))
 		sb.WriteString(fmt.Sprintf("summary: %s\n", strings.TrimSpace(section.Summary)))
+		if strings.TrimSpace(section.Path) != "" {
+			sb.WriteString(fmt.Sprintf("path: %s\n", strings.TrimSpace(section.Path)))
+		}
 		sb.WriteString(fmt.Sprintf("links: %s\n", strings.Join(section.Links, ", ")))
 		sb.WriteString("content:\n")
 		sb.WriteString("<<<\n")
@@ -231,11 +234,23 @@ func parseSectionBlock(doc *Document, b *block) []string {
 		ID:      sectionID,
 		Title:   fields["title"],
 		Summary: fields["summary"],
+		Path:    resolveSectionPathField(fields),
 		Links:   parseCSV(fields["links"]),
 		Content: content,
 	}
 	doc.Sections = append(doc.Sections, section)
 	return errors
+}
+
+func resolveSectionPathField(fields map[string]string) string {
+	if fields == nil {
+		return ""
+	}
+	path := strings.TrimSpace(fields["path"])
+	if path != "" {
+		return path
+	}
+	return strings.TrimSpace(fields["section_path"])
 }
 
 func parseChangeBlock(doc *Document, b *block) []string {

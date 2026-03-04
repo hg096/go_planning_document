@@ -117,6 +117,7 @@ func commandMapSyncEasy(args []string) int {
 		Reason: strings.TrimSpace(reason),
 		Impact: strings.TrimSpace(impact),
 	})
+	ensureDocPathMetadata(doc, filePath)
 
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {

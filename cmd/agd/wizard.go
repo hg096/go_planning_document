@@ -473,6 +473,21 @@ func wizardRoleGraph(reader *bufio.Reader) int {
 	if strings.TrimSpace(formatInput) == "0" {
 		return 0
 	}
+	fmt.Println(text("Scope filter:", "범위 필터:"))
+	fmt.Println(text("  [1] all                           - show all docs", "  [1] 전체                          - 전체 문서 표시"))
+	fmt.Println(text("  [2] maintenance only              - maintenance docs + linked nodes", "  [2] 유지보수만                   - 유지보수 문서 + 연결 노드"))
+	fmt.Println(text("  [3] incident only                 - incident docs + linked nodes", "  [3] 오류만                       - 오류 문서 + 연결 노드"))
+	fmt.Println(text("  [4] maintenance + incident only   - both groups + linked nodes", "  [4] 유지보수 + 오류만            - 두 그룹 + 연결 노드"))
+	fmt.Println(text("  [5] exclude maintenance/incident  - hide both groups", "  [5] 유지보수/오류 제외           - 두 그룹 제외"))
+	fmt.Println(text("  [0] back", "  [0] 뒤로가기"))
+	scopeInput, err := promptOptional(reader, text("Scope (Enter=1)", "범위 (Enter=1)"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
+		return 1
+	}
+	if strings.TrimSpace(scopeInput) == "0" {
+		return 0
+	}
 	includeArchiveAnswer, err := promptOptional(reader, text("Include 90_archive? (y/N)", "Include 90_archive? (y/N)"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
@@ -495,12 +510,35 @@ func wizardRoleGraph(reader *bufio.Reader) int {
 		return 2
 	}
 
-	args := make([]string, 0, 7)
+	scope := roleGraphScopeAll
+	switch strings.ToLower(strings.TrimSpace(scopeInput)) {
+	case "", "1", "all":
+		scope = roleGraphScopeAll
+	case "2", "maintenance", "maint":
+		scope = roleGraphScopeMaintenanceOnly
+	case "3", "incident", "error", "errfix":
+		scope = roleGraphScopeIncidentOnly
+	case "4", "maintenance-incident", "maintenance+incident", "both":
+		scope = roleGraphScopeMaintenanceIncidentOnly
+	case "5", "exclude", "exclude-maintenance-incident", "exclude-both":
+		scope = roleGraphScopeExcludeMaintenanceIncident
+	default:
+		fmt.Println(text(
+			"Invalid scope. Use 1-5.",
+			"잘못된 범위입니다. 1-5를 사용하세요.",
+		))
+		return 2
+	}
+
+	args := make([]string, 0, 9)
 	if strings.TrimSpace(root) != "" {
 		args = append(args, strings.TrimSpace(root))
 	}
 	if format != "text" {
 		args = append(args, "--format", format)
+	}
+	if scope != roleGraphScopeAll {
+		args = append(args, "--scope", string(scope))
 	}
 	if isYesInput(includeArchiveAnswer) {
 		args = append(args, "--include-archive")
@@ -1156,6 +1194,7 @@ func collectIncidentSectionCandidates(root string) ([]incidentSectionCandidate, 
 	}{
 		{domain: "service", rel: filepath.Join("10_source", "service")},
 		{domain: "frontend", rel: filepath.Join("20_derived", "frontend")},
+		{domain: "source", rel: filepath.Join("10_source", "product")},
 	}
 
 	out := make([]incidentSectionCandidate, 0)

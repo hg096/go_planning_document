@@ -168,6 +168,7 @@ func commandRoleSetEasy(args []string) int {
 		Impact: impact,
 	}
 	doc.Changes = append(doc.Changes, change)
+	ensureDocPathMetadata(doc, filePath)
 
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {

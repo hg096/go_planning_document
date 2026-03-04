@@ -162,6 +162,7 @@ func commandPatch(args []string) int {
 	if strings.TrimSpace(*outPath) != "" {
 		outputPath = *outPath
 	}
+	ensureDocPathMetadata(doc, outputPath)
 
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {
@@ -302,6 +303,9 @@ func commandInit(args []string) int {
 		}
 		return 1
 	}
+	target := strings.TrimSpace(*outPath)
+	ensureDocPathMetadata(doc, target)
+
 	validationErrors := agd.Validate(doc)
 	if len(validationErrors) > 0 {
 		for _, e := range validationErrors {
@@ -310,7 +314,6 @@ func commandInit(args []string) int {
 		return 1
 	}
 
-	target := strings.TrimSpace(*outPath)
 	if _, err := os.Stat(target); err == nil && !*force {
 		fmt.Fprintf(os.Stderr, "init error: %s already exists (use --force to overwrite)\n", target)
 		return 1
@@ -324,7 +327,7 @@ func commandInit(args []string) int {
 		}
 	}
 
-	if err := os.WriteFile(target, []byte(rendered), 0o644); err != nil {
+	if err := os.WriteFile(target, []byte(agd.Serialize(doc)), 0o644); err != nil {
 		fmt.Fprintf(os.Stderr, "init error: write failed: %v\n", err)
 		return 1
 	}
@@ -353,32 +356,22 @@ func easyTypeToTemplate(kind string) (string, bool) {
 	}
 
 	switch raw {
-	case "prd":
-		return "prd-" + lang, true
-	case "runbook":
-		return "runbook-" + lang, true
-	case "postmortem":
-		return "postmortem-" + lang, true
+	case "prd", "adr", "guide", "ai-guide", "ai-planning-guide", "aiguide":
+		return "core-spec-" + lang, true
 	case "roadmap":
 		return "roadmap-" + lang, true
 	case "handoff":
 		return "handoff-" + lang, true
 	case "meeting", "minutes":
 		return "meeting-" + lang, true
-	case "adr":
-		return "adr-" + lang, true
 	case "policy":
 		return "policy-" + lang, true
 	case "experiment":
 		return "experiment-" + lang, true
-	case "qa", "qa-plan", "qaplan":
-		return "qa-plan-" + lang, true
 	case "service", "system", "service-logic":
-		return "service-logic-" + lang, true
-	case "frontend", "frontend-page", "page-logic":
-		return "frontend-page-" + lang, true
-	case "guide", "ai-guide", "ai-planning-guide", "aiguide":
-		return "ai-guide-" + lang, true
+		return "core-spec-" + lang, true
+	case "frontend", "frontend-page", "page-logic", "qa", "qa-plan", "qaplan", "runbook":
+		return "delivery-plan-" + lang, true
 	case "incident", "incident-case", "incident-root", "incident-workspace":
 		return "incident-case-" + lang, true
 	case "maintenance", "maintenance-case", "maintenance-workspace":
@@ -387,8 +380,6 @@ func easyTypeToTemplate(kind string) (string, bool) {
 		return "core-spec-" + lang, true
 	case "delivery", "delivery-plan":
 		return "delivery-plan-" + lang, true
-	case "log", "change-log", "changelog":
-		return "change-log-" + lang, true
 	default:
 		return "", false
 	}

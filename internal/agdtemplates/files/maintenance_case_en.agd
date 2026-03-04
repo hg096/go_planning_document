@@ -1,9 +1,11 @@
-﻿@meta
+@meta
 title: {{TITLE}}
 version: {{VERSION}}
 owner: {{OWNER}}
+doc_base_path:
 
 @map
+- MNT-000 | Input Guide | Quick rules for what to fill in this document
 - MNT-001 | Scope and Target Tagging | Pin feature tag and target sections before editing
 - MNT-010 | Baseline Snapshot | Capture current behavior, constraints, and known risks
 - MNT-020 | Change Plan | Define patch plan, rollback plan, and validation scope
@@ -11,6 +13,32 @@ owner: {{OWNER}}
 - MNT-040 | AI Work Result Summary | Record what AI changed and why
 - MNT-050 | Validation Checklist | Confirm functional, regression, and observability checks
 - MNT-060 | Release Decision | Decide release/hold and list follow-up actions
+
+@section MNT-000
+title: Input Guide
+summary: Minimum input rules for consistent writing by humans and AI
+links: GUIDE-INPUT
+content:
+<<<
+[Required input]
+1) Fill every blank after -, 1), and : with concrete content.
+2) Use specific numbers, dates, owners, and evidence whenever possible.
+3) If unknown, do not leave blank; write TBD (needs confirmation).
+
+[AI request contract]
+- target_docs: actual file path
+- target_sections: section IDs or section paths
+- goal: why this change is needed (1-2 sentences)
+- constraints: scope/forbidden constraints
+- done: validation-based completion criteria
+
+[AI output contract]
+- Changed files / Changed sections / Reason / Impact / Risks / Validation
+
+[Done checklist]
+- Are @map rows and @section IDs aligned?
+- For edits, is @change reason/impact recorded?
+>>>
 
 @section MNT-001
 title: Scope and Target Tagging

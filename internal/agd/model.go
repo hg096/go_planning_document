@@ -1,4 +1,4 @@
-﻿package agd
+package agd
 
 import "strings"
 
@@ -19,6 +19,7 @@ type Section struct {
 	ID      string
 	Title   string
 	Summary string
+	Path    string
 	Links   []string
 	Content string
 }
@@ -49,7 +50,16 @@ func NewDocument() *Document {
 }
 
 func (d *Document) SectionByID(id string) *Section {
-	needle := normalizeID(id)
+	raw := strings.TrimSpace(id)
+	if isSectionPathRef(raw) {
+		needlePath := normalizeSectionPath(raw)
+		for _, section := range d.Sections {
+			if normalizeSectionPath(section.Path) == needlePath {
+				return section
+			}
+		}
+	}
+	needle := normalizeID(raw)
 	for _, section := range d.Sections {
 		if normalizeID(section.ID) == needle {
 			return section
@@ -70,4 +80,19 @@ func (d *Document) MapByID(id string) *MapEntry {
 
 func normalizeID(id string) string {
 	return strings.ToUpper(strings.TrimSpace(id))
+}
+
+func isSectionPathRef(value string) bool {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" {
+		return false
+	}
+	return strings.Contains(trimmed, "#") || strings.Contains(trimmed, "/") || strings.Contains(trimmed, `\`)
+}
+
+func normalizeSectionPath(path string) string {
+	normalized := strings.TrimSpace(path)
+	normalized = strings.ReplaceAll(normalized, `\`, "/")
+	normalized = strings.TrimPrefix(normalized, "./")
+	return strings.ToLower(normalized)
 }

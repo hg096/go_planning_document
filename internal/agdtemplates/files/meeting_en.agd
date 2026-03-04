@@ -1,14 +1,42 @@
-﻿@meta
+@meta
 title: {{TITLE}}
 version: {{VERSION}}
 owner: {{OWNER}}
+doc_base_path:
 
 @map
+- MTG-000 | Input Guide | Quick rules for what to fill in this document
 - MTG-001 | Agenda and Purpose | Define meeting goals and agenda
 - MTG-010 | Discussion Summary | Summarize key discussion points
 - MTG-020 | Decisions | Record final decisions and rationale
 - MTG-030 | Action Items | Define owner and due date per action
 - MTG-040 | Risks and Parking Lot | Track unresolved risks and deferred topics
+
+@section MTG-000
+title: Input Guide
+summary: Minimum input rules for consistent writing by humans and AI
+links: GUIDE-INPUT
+content:
+<<<
+[Required input]
+1) Fill every blank after -, 1), and : with concrete content.
+2) Use specific numbers, dates, owners, and evidence whenever possible.
+3) If unknown, do not leave blank; write TBD (needs confirmation).
+
+[AI request contract]
+- target_docs: actual file path
+- target_sections: section IDs or section paths
+- goal: why this change is needed (1-2 sentences)
+- constraints: scope/forbidden constraints
+- done: validation-based completion criteria
+
+[AI output contract]
+- Changed files / Changed sections / Reason / Impact / Risks / Validation
+
+[Done checklist]
+- Are @map rows and @section IDs aligned?
+- For edits, is @change reason/impact recorded?
+>>>
 
 @section MTG-001
 title: Agenda and Purpose
