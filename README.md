@@ -49,30 +49,58 @@ AGD의 답은 "완전한 문서 1개"를 만드는 것이 아니라, **충돌을
 
 ## 2. 5분 시작
 
-### 1) 설치/세팅
+### 1) 설치/세팅 (루트 README 기준)
 
-- 권장 Go 버전은 `1.25.1`입니다.
-- 프로젝트 루트에는 `00_agd/` 폴더만 배치해 사용하세요.
-- 초기 세팅 시 setup 스크립트로 훅 경로, 문서 검증, 템플릿 설치를 한 번에 맞추는 것을 권장합니다.
-- 세부 세팅 절차는 격리형 패키지 가이드([README.md](/D:/codePack/go/new_read/00_agd/README.md))를 참고하세요.
-
-필수 커맨드:
+- 권장 Go 버전: `1.25.1`
+- 프로젝트 루트에는 `00_agd/`만 배치해 사용
+- 아래 순서대로 실행하면 훅/검증/CI 템플릿까지 운영 준비 완료
 
 ```cmd
-REM git: 현재 프로젝트 루트에 00_agd 폴더만 내려받기
+REM 1) 현재 프로젝트 루트에 00_agd 폴더만 내려받기
 cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
-"
 
-REM build: 실행 파일 생성
+REM 2) 로컬 운영 세팅(훅/검증 적용)
+00_agd\setup.cmd
+
+REM 3) 훅 경로 확인
+git config --get core.hooksPath
+
+REM 4) 기본 검증
+00_agd\agd_en.exe code-plan-check --mode auto
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
+
+REM 5) CI/PR 템플릿 설치(선택)
+00_agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
+```
+
+기대값:
+
+```txt
+git config --get core.hooksPath
+00_agd/.githooks
+```
+
+추가 빌드가 필요할 때만:
+
+```cmd
 go build -o 00_agd\agd.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=en" -o 00_agd\agd_en.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=ko" -o 00_agd\agd_ko.exe ./cmd/agd
-
-REM exe 실행
-00_agd\agd.exe
-REM 또는
-00_agd\agd.exe wizard
 ```
+
+실행 예시:
+
+```cmd
+00_agd\agd_en.exe
+REM 또는
+00_agd\agd_ko.exe
+```
+
+강제 운영 권장:
+
+- 로컬 훅은 `--no-verify` 우회 가능
+- 최종 강제는 GitHub Required check(`AGD Guard`)로 설정
+- 상세 패키지 설명: [README.md](/D:/codePack/go/new_read/00_agd/README.md)
 
 ### 2) 가장 쉬운 시작: 질문형 모드
 
@@ -188,6 +216,7 @@ REM 또는
 - `auto`: 추천 매핑(`->`) 자동 생성
 - `strict-auto`: 추천 매핑을 엄격 매핑(`=>`)으로 자동 생성
 - `smart-auto`: 엄격 매핑을 시도하되, 제목/요약 불일치 항목은 `->`로 자동 완화
+
 ### 원칙 5) 주간 운영 루틴 만들기
 
 추천 루틴:
@@ -252,47 +281,38 @@ REM 또는
 
 ## 8. 바로 열어볼 예시 문서
 
-`examples` 폴더는 아래 구조로 정리되어 있습니다.
+예시는 `00_agd/examples` 아래에 최신 9종 템플릿 기준으로 정리되어 있습니다.
 
-- `examples/ko/10_source/*`: 한국어 기준(source) 예시
-- `examples/ko/20_derived/*`: 한국어 파생(derived) 예시
-- `examples/ko/30_shared/*`: 한국어 공유(shared) 예시
-- `examples/en/10_source/*`: 영어 기준(source) 예시
-- `examples/en/20_derived/*`: 영어 파생(derived) 예시
-- `examples/en/30_shared/*`: 영어 공유(shared) 예시
+- `00_agd/examples/ko/10_source/*`
+- `00_agd/examples/ko/20_derived/*`
+- `00_agd/examples/ko/30_shared/*`
+- `00_agd/examples/en/10_source/*`
+- `00_agd/examples/en/20_derived/*`
+- `00_agd/examples/en/30_shared/*`
 
-한국어 source 예시:
+파일명 규칙:
 
-- `examples/ko/10_source/product/prd_subscription_checkout_ko.agd`
-- `examples/ko/10_source/service/service_logic_checkout_core_ko.agd`
-- `examples/ko/10_source/policy/policy_release_gate_ko.agd`
-- `examples/ko/10_source/architecture/adr_checkout_retry_policy_ko.agd`
+- `project_docType_lang`
+- 예: `checkout_core_spec_ko.agd`, `checkout_delivery_plan_en.agd`
 
-한국어 derived/shared 예시:
+대표 예시:
 
-- `examples/ko/20_derived/frontend/frontend_page_checkout_ko.agd`
-- `examples/ko/20_derived/qa/qa_plan_checkout_v2_ko.agd`
-- `examples/ko/20_derived/ops/runbook_payment_incident_ko.agd`
-- `examples/ko/30_shared/roadmap/roadmap_ai_doc_platform_ko.agd`
-- `examples/ko/30_shared/postmortem/postmortem_api_timeout_ko.agd`
-- `examples/ko/30_shared/handoff/handoff_backend_frontend_ko.agd`
-- `examples/ko/30_shared/meeting/meeting_checkout_weekly_ko.agd`
-- `examples/ko/30_shared/experiment/experiment_oneclick_checkout_ko.agd`
+- `00_agd/examples/ko/10_source/product/checkout_core_spec_ko.agd`
+- `00_agd/examples/ko/20_derived/frontend/checkout_delivery_plan_ko.agd`
+- `00_agd/examples/ko/30_shared/maintenance/checkout_maintenance_case_ko.agd`
+- `00_agd/examples/ko/30_shared/errFix/checkout_incident_case_ko.agd`
+- `00_agd/examples/en/10_source/product/checkout_core_spec_en.agd`
+- `00_agd/examples/en/20_derived/frontend/checkout_delivery_plan_en.agd`
 
-유지보수/장애 단일 케이스는 examples 고정 파일 대신 킷 생성 경로를 사용합니다.
+인덱스:
 
-- `00_agd/agd_docs/30_shared/maintenance/<project>_maintenance_case.agd`
-- `00_agd/agd_docs/30_shared/errFix/<project>_incident_case.agd`
-
-템플릿별 활용 예시 인덱스:
-
-- `examples/TEMPLATE_SHOWCASE_INDEX_ko.md`
-- `examples/TEMPLATE_SHOWCASE_INDEX_en.md`
-- `examples/README.md`
+- `00_agd/examples/TEMPLATE_SHOWCASE_INDEX_ko.md`
+- `00_agd/examples/TEMPLATE_SHOWCASE_INDEX_en.md`
+- `00_agd/examples/README.md`
 
 ## 9. 운영 강제 세팅 (Git Hook + CI)
 
-기존 프로젝트와 충돌을 줄이기 위해 AGD는 `agd/` 폴더 안에서만 동작하도록 분리합니다.
+기존 프로젝트와 충돌을 줄이기 위해 AGD는 `00_agd/` 폴더 안에서만 동작하도록 분리합니다.
 호스트 프로젝트 루트에는 훅/워크플로를 직접 고정 생성하지 않고, 필요 시 템플릿 설치 방식으로 적용합니다.
 
 ### 9-1) 로컬 pre-commit 훅 설정
@@ -301,12 +321,12 @@ REM 또는
 
 2) 저장소 포함 훅 파일:
 
-- `agd/.githooks/pre-commit`
-- `agd/scripts/git-hooks/pre-commit.ps1`
+- `00_agd/.githooks/pre-commit`
+- `00_agd/scripts/git-hooks/pre-commit.ps1`
 
 3) 커밋 시 자동 강제 규칙:
 
-- `agd/` 하위에서 변경된 `.agd` 파일만 검사
+- `00_agd/` 하위에서 변경된 `.agd` 파일만 검사
 - `00_agd\agd_docs` 전체 strict 검증
 - `00_agd\examples` 변경 시 examples strict 검증
 
@@ -314,7 +334,7 @@ REM 또는
 
 기본 제공 위치(템플릿):
 
-- `agd/templates/agd-guard.yml`
+- `00_agd/templates/agd-guard.yml`
 
 기본 세팅 시 자동 설치됩니다.
 
@@ -324,7 +344,7 @@ CI 템플릿은 `.github/workflows/agd-guard.yml`로 복사됩니다.
 
 기본 제공 위치(템플릿):
 
-- `agd/templates/pull_request_template.md`
+- `00_agd/templates/pull_request_template.md`
 
 기본 세팅 시 자동 설치됩니다.
 
@@ -336,9 +356,9 @@ PR 템플릿은 `.github/pull_request_template.md`로 복사됩니다.
 - AI Execution Guide (English): `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
 - Start Guide (English): `README.en.md`
 - 문서 루트 구조 가이드: `00_agd/agd_docs/README.md`
-- 격리형 패키지 가이드: `agd/README.md`
-- 원클릭 부트스트랩 스크립트: `agd/setup.cmd`
-- 부트스트랩 스크립트(PowerShell): `agd/scripts/setup.ps1`
+- 격리형 패키지 가이드: `00_agd/README.md`
+- 원클릭 부트스트랩 스크립트: `00_agd/setup.cmd`
+- 부트스트랩 스크립트(PowerShell): `00_agd/scripts/setup.ps1`
 - 게이트 강제 실행 래퍼(cmd): `run-safe.cmd`
 - 코어 로직: `internal/agd/*`
 - 템플릿 소스: `internal/agdtemplates/*`

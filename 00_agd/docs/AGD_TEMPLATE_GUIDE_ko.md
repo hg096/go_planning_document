@@ -1,77 +1,109 @@
 ﻿# AGD AI 실행 가이드 (KO, Token-Light)
 
-이 문서는 AI가 `00_agd/agd_docs`만 읽고 빠르게 기획 문서를 작성/수정하기 위한 최소 실행 규약입니다.
+이 문서는 AI가 `00_agd/agd_docs`만 읽고, 문서 누락 없이 빠르게 작성/수정하기 위한 최소 운영 규약입니다.
 
 ## 1) 작업 범위
 
-- 읽기/쓰기 기본 루트: `00_agd/agd_docs`
+- 읽기/쓰기 루트: `00_agd/agd_docs`
 - 우선 읽기 순서:
   1. `10_source/*`
   2. `20_derived/*`
   3. `30_shared/*`
-- `END__*` 문서는 기본적으로 제외합니다.
+- `END__*` 문서는 기본 제외
 
-## 2) 입력 규약 (AI에 반드시 제공)
+## 2) AI 입력 계약 (필수)
+
+아래 5개가 없으면 수정하지 않습니다.
 
 - `target_docs`: 대상 문서 경로/이름
-- `target_sections`: 대상 섹션 ID 목록 (예: `CORE-020`, `SYS-070`)
-- `goal`: 이번 수정 목적 1~2문장
+- `target_sections`: 대상 섹션 ID 또는 section path 목록
+- `goal`: 변경 목적 1~2문장
 - `constraints`: 금지사항/범위 제한
 - `done`: 완료 기준(검증 조건)
-- 문서 메타: `@meta.doc_base_path` 유지 (초기값은 빈값)
-- 섹션 메타: 각 `@section`에 `path:` 유지 (예: `10_source/product/core_spec.agd#CORE-020`)
 
-## 3) 실행 순서 (고정)
+## 3) 경로 규칙 (중요)
 
-1. `source` 문서 기준선 확인
-2. 수정 대상 섹션 확정
-3. `@section` 내용 수정
+- 기본 루트는 항상 `00_agd/agd_docs`
+- `@meta.doc_base_path` 초기값은 빈값 유지
+- `doc_base_path`는 "실제 소스 코드 경로를 명시할 때만" 채움
+- 자동 상대경로 변환/자동 채움 금지
+- `@section.path`가 있으면 `doc_base_path`보다 우선 사용
+- section path 권장 형식:
+  - `src/.../file.ext#SEC-ID`
+  - `backend/.../handler.go#CORE-020`
+
+## 4) 실행 순서 (고정 루프)
+
+1. 기준 `source` 문서 확인
+2. 대상 섹션(`target_sections`) 확정
+3. `@section` 수정
 4. `@change`에 `reason` + `impact` 기록
-5. `@map`과 `@section` 정합성 확인
-6. `check` 또는 `check-all` 통과 확인
+5. `@map`/`@section` 정합성 확인
+6. 검증 실행 (`check` 또는 `check-all`)
+7. 실패 시 원인/수정 후 재검증
 
-## 4) 필수 규칙
+## 5) 필수 규칙
 
-- 같은 주제의 기준 문서는 `source` 1개만 유지
-- 파생 문서는 `authority: derived` + `source_doc` + `source_sections` 필수
+- 같은 주제의 기준 문서는 `source` 1개 유지
+- 파생 문서는 `authority: derived`, `source_doc`, `source_sections` 필수
 - 모든 변경은 `@change(reason/impact)` 필수
 - `@map`과 `@section` 불일치 상태로 종료 금지
-- source 기준과 충돌 시 source 우선
-- `target_sections`가 없으면 수정 금지
-- `10_source` 기준이 없거나 충돌하면 질문 1개 후 대기
-- `check`/`check-all` 실패 상태에서는 완료 보고 금지
+- source와 충돌 시 source 우선
+- `target_sections` 누락 시 수정 금지
+- `check`/`check-all` 실패 상태에서 완료 보고 금지
 - 새 파일 생성은 명시 지시가 있을 때만 허용
-- 섹션 참조 입력이 `path`와 `ID` 모두 가능할 때는 `path`를 우선 사용
-- `doc_base_path`는 실제 기준 source 경로를 명시할 때만 채움 (자동 상대경로 금지)
 
-## 5) AI 출력 형식 (권장)
+## 6) 유지보수/오류 문서 규칙
 
-아래 6줄 형식으로만 출력하면 됩니다.
+- 유지보수 문서:
+  - `maintenance_feature_tag`, `maintenance_source_doc`, `maintenance_source_section`
+  - `[MAINTENANCE-ROOT-TAG]...[/MAINTENANCE-ROOT-TAG]`
+- 오류 문서:
+  - `incident_feature_tag`, `incident_source_doc`, `incident_source_section`
+  - `[INCIDENT-PROBLEM-TAG]...[/INCIDENT-PROBLEM-TAG]`
+
+## 7) 코드 변경 연계 검증 (권장 기본)
+
+문서 누락 방지를 위해 수정 후 아래를 기본 실행합니다.
+
+```cmd
+00_agd\agd_en.exe code-plan-check --mode auto
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
+```
+
+강화 모드(문서 매칭 누락도 실패 처리):
+
+```cmd
+00_agd\agd_en.exe code-plan-check --mode auto --strict-mapping
+```
+
+## 8) 빠른 명령 최소 세트
+
+```cmd
+00_agd\agd_en.exe check <file.agd>
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
+00_agd\agd_en.exe map-sync <file.agd> --reason "..." --impact "..."
+00_agd\agd_en.exe role-set <file.agd> source
+00_agd\agd_en.exe role-set <file.agd> derived <source-doc> "<source_sections>"
+00_agd\agd_en.exe role-graph 00_agd\agd_docs --scope all
+```
+
+## 9) AI 출력 형식 (권장, 6줄 고정)
 
 ```txt
 Changed files: <경로1>, <경로2>
 Changed sections: <SEC-ID>, <SEC-ID>
 Reason: <핵심 변경 이유>
 Impact: <영향/후속 조치>
-Validation: <check 결과 요약>
+Validation: <check/code-plan-check 결과 요약>
 Risks: <없음|요약>
 ```
 
-## 6) 빠른 명령 최소 세트
+## 10) 자주 실패하는 패턴 (즉시 점검)
 
-```cmd
-agd.exe check <file.agd>
-agd.exe check-all
-agd.exe map-sync <file.agd> --reason "..." --impact "..."
-agd.exe role-set <file.agd> source
-agd.exe role-set <file.agd> derived <source-doc> "<source_sections>"
-agd.exe role-graph --scope all
-```
-
-## 7) 관계 그래프 범위 필터
-
-- `all`: 전체
-- `maintenance`: 유지보수만(연결 노드 포함)
-- `incident`: 오류만(연결 노드 포함)
-- `maintenance-incident`: 유지보수+오류만
-- `exclude-maintenance-incident`: 유지보수/오류 제외
+- `@change`에 `impact` 누락
+- `derived`인데 `source_doc/source_sections` 누락
+- `target_sections` 없이 광범위 수정
+- `@map` 항목과 `@section` ID 불일치
+- `doc_base_path`를 자동 추정값으로 채움
+- 검증 실패 상태에서 완료 보고

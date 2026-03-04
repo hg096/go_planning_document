@@ -42,32 +42,55 @@ Success metrics are not document counts:
 
 Recommended Go version: `1.25.1`
 
-### Recommended Setup (minimal user install)
+### Setup (root README first)
 
-What it does:
-
-- sets `git config core.hooksPath 00_agd/.githooks`
-- validates `00_agd/agd_docs` and `00_agd/examples` with strict checks
-- installs CI workflow and PR template (backs up existing files before overwrite)
-
-For setup details, see the isolated package guide: [README.en.md](/D:/codePack/go/new_read/00_agd/README.en.md).
-
-Essential commands (restored):
+Use this sequence in project root:
 
 ```cmd
-REM git: download only 00_agd into current project root
+REM 1) download only 00_agd into current project root
 cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
 
-REM build: generate executables
+REM 2) local setup (hooks + baseline checks)
+00_agd\setup.cmd
+
+REM 3) verify hooks path
+git config --get core.hooksPath
+
+REM 4) baseline validation
+00_agd\agd_en.exe code-plan-check --mode auto
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
+
+REM 5) install CI/PR templates (optional)
+00_agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
+```
+
+Expected hooks path:
+
+```txt
+00_agd/.githooks
+```
+
+Build only when needed:
+
+```cmd
 go build -o 00_agd\agd.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=en" -o 00_agd\agd_en.exe ./cmd/agd
 go build -ldflags "-X main.defaultLang=ko" -o 00_agd\agd_ko.exe ./cmd/agd
-
-REM run exe
-00_agd\agd.exe
-REM or
-00_agd\agd.exe wizard
 ```
+
+Run:
+
+```cmd
+00_agd\agd_en.exe
+REM or
+00_agd\agd_ko.exe
+```
+
+Enforcement note:
+
+- local hooks can be bypassed with `--no-verify`
+- final enforcement should be Required CI check (`AGD Guard`)
+- package details: [README.en.md](/D:/codePack/go/new_read/00_agd/README.en.md)
 
 ## 3. Easiest Start: Wizard
 
@@ -179,7 +202,7 @@ Recommended patterns:
 
 ## 8. Enforced Ops Setup (Git Hook + CI)
 
-To avoid conflicts with ongoing host projects, AGD is isolated under `agd/` and managed from there.
+To avoid conflicts with ongoing host projects, AGD is isolated under `00_agd/` and managed from there.
 Root-level hook/workflow files are not forced by default; install is template-based.
 
 ### 8-1) Local pre-commit hook
@@ -188,12 +211,12 @@ Root-level hook/workflow files are not forced by default; install is template-ba
 
 2) Hook files included in this repo:
 
-- `agd/.githooks/pre-commit`
-- `agd/scripts/git-hooks/pre-commit.ps1`
+- `00_agd/.githooks/pre-commit`
+- `00_agd/scripts/git-hooks/pre-commit.ps1`
 
 3) Enforced checks at commit time:
 
-- Checks only staged `.agd` changes under `agd/`
+- Checks only staged `.agd` changes under `00_agd/`
 - Runs strict tree validation for `00_agd\agd_docs`
 - Runs strict validation for `00_agd\examples` when examples changed
 
@@ -201,7 +224,7 @@ Root-level hook/workflow files are not forced by default; install is template-ba
 
 Template location:
 
-- `agd/templates/agd-guard.yml`
+- `00_agd/templates/agd-guard.yml`
 
 This is installed during the default setup flow.
 
@@ -211,7 +234,7 @@ The CI template is copied to `.github/workflows/agd-guard.yml`.
 
 Template location:
 
-- `agd/templates/pull_request_template.md`
+- `00_agd/templates/pull_request_template.md`
 
 This is installed during the default setup flow.
 
@@ -223,9 +246,9 @@ The PR template is copied to `.github/pull_request_template.md`.
 - Korean AI execution guide: `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md`
 - English AI execution guide: `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
 - Docs root folder guide: `00_agd/agd_docs/README.md`
-- Isolated package guide (EN): `agd/README.en.md`
-- Isolated package guide (KO): `agd/README.md`
-- One-command bootstrap (cmd): `agd/setup.cmd`
-- Bootstrap script (PowerShell): `agd/scripts/setup.ps1`
+- Isolated package guide (EN): `00_agd/README.en.md`
+- Isolated package guide (KO): `00_agd/README.md`
+- One-command bootstrap (cmd): `00_agd/setup.cmd`
+- Bootstrap script (PowerShell): `00_agd/scripts/setup.ps1`
 - Gate-enforced execution wrapper (cmd): `run-safe.cmd`
 
