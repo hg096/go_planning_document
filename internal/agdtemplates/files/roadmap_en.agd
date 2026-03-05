@@ -16,6 +16,7 @@ doc_base_path:
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: Input Guide
 title: Vision
 {
 	summary: Align teams around a clear direction
+	path:
 	links: VISION-001
 	content:
 	<<<
@@ -62,6 +64,7 @@ title: Vision
 title: Quarterly Goals
 {
 	summary: Define measurable goals per quarter
+	path:
 	links: OKR-001
 	content:
 	<<<
@@ -83,6 +86,7 @@ title: Quarterly Goals
 title: Execution Plan
 {
 	summary: Track delivery across product, platform, and operations
+	path:
 	links: PLAN-001
 	content:
 	<<<
@@ -104,6 +108,7 @@ title: Execution Plan
 title: Metrics
 {
 	summary: Track outcome and quality in one view
+	path:
 	links: KPI-BOARD-001
 	content:
 	<<<
@@ -122,6 +127,7 @@ title: Metrics
 title: Risk Mitigation
 {
 	summary: Define mitigation owner and plan before risk materializes
+	path:
 	links: RISK-REGISTER-001
 	content:
 	<<<

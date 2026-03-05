@@ -3,7 +3,7 @@ title: checkout - Incident Case
 version: 0.1
 owner: 
 authority: source
-doc_base_path: 
+doc_base_path:
 incident_feature_tag: FT-CHECKOUT
 incident_mode: feature-root-trace
 incident_source_doc: 00_agd\examples\en\10_source\product\checkout_core_spec_en.agd
@@ -24,6 +24,7 @@ incident_trace_root: FT-CHECKOUT -> INC-001 -> INC-010 -> INC-020 -> INC-030 -> 
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -52,6 +53,7 @@ title: Input Guide
 title: Problem Section Tagging
 {
 	summary: Lock the incident to a feature tag and section ID before deep investigation
+	path:
 	links: INCIDENT-TAG-001
 	content:
 	<<<
@@ -92,6 +94,7 @@ title: Problem Section Tagging
 title: Bug Situation Capture
 {
 	summary: Capture repro path and signal evidence quickly
+	path:
 	links: INCIDENT-REPRO-001
 	content:
 	<<<
@@ -110,6 +113,7 @@ title: Bug Situation Capture
 title: Fast Root-Cause Analysis
 {
 	summary: Narrow down hypotheses with evidence and counter-evidence
+	path:
 	links: INCIDENT-RCA-001
 	content:
 	<<<
@@ -128,6 +132,7 @@ title: Fast Root-Cause Analysis
 title: Improvement Direction
 {
 	summary: Separate short-term mitigation and long-term fix choices
+	path:
 	links: INCIDENT-FIX-001
 	content:
 	<<<
@@ -146,6 +151,7 @@ title: Improvement Direction
 title: AI Work Handoff Request
 {
 	summary: Package a prompt that AI can execute without ambiguity
+	path:
 	links: INCIDENT-AI-HANDOFF-001
 	content:
 	<<<
@@ -164,6 +170,7 @@ title: AI Work Handoff Request
 title: AI Work Result Summary
 {
 	summary: Summarize AI output so humans can review quickly
+	path:
 	links: INCIDENT-AI-RESULT-001
 	content:
 	<<<
@@ -181,6 +188,7 @@ title: AI Work Result Summary
 title: Validation and Closure Decision
 {
 	summary: Verify outcome and decide close/follow-up
+	path:
 	links: INCIDENT-CLOSE-001
 	content:
 	<<<

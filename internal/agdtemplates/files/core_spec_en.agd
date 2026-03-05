@@ -15,6 +15,7 @@ doc_base_path:
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -43,6 +44,7 @@ title: Input Guide
 title: Problem and Goal
 {
 	summary: Lock objective and done criteria with measurable metrics
+	path:
 	links: PRODUCT-CORE-001
 	content:
 	<<<
@@ -64,6 +66,7 @@ title: Problem and Goal
 title: Core User/Service Flow
 {
 	summary: Keep user scenario and backend flow in one coherent path
+	path:
 	links: FLOW-CORE-001
 	content:
 	<<<
@@ -84,6 +87,7 @@ title: Core User/Service Flow
 title: Technical Decisions and Constraints
 {
 	summary: Record high-cost technical decisions and hard constraints
+	path:
 	links: ADR-CORE-001
 	content:
 	<<<
@@ -103,6 +107,7 @@ title: Technical Decisions and Constraints
 title: AI Work Rules and Approval Gate
 {
 	summary: Define mandatory AI request fields and approval checks
+	path:
 	links: AIGATE-CORE-001
 	content:
 	<<<

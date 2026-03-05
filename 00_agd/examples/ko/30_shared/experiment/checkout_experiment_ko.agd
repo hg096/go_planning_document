@@ -2,7 +2,7 @@
 title: 체크아웃 실험 계획
 version: 0.1
 owner: ai-agent
-doc_base_path: 
+doc_base_path:
 
 @map
 - EXP-000 | 작성 가이드 | 이 문서에서 무엇을 입력해야 하는지 빠르게 확인한다
@@ -16,6 +16,7 @@ doc_base_path:
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: 작성 가이드
 title: 실험 가설
 {
 	summary: 문제 원인 가설과 기대 개선 효과를 문장으로 명시한다
+	path:
 	links: HYP-001
 	content:
 	<<<
@@ -62,6 +64,7 @@ title: 실험 가설
 title: 실험 설계
 {
 	summary: 실험군/대조군과 변수 통제 방법을 정의한다
+	path:
 	links: EXP-DESIGN-001
 	content:
 	<<<
@@ -83,6 +86,7 @@ title: 실험 설계
 title: 측정 지표
 {
 	summary: 핵심 지표와 최소 성공 기준을 숫자로 명시한다
+	path:
 	links: KPI-EXP-001
 	content:
 	<<<
@@ -100,6 +104,7 @@ title: 측정 지표
 title: 실행 계획
 {
 	summary: 실행 단계와 리스크 대응, 롤백 기준을 준비한다
+	path:
 	links: ROLLBACK-EXP-001
 	content:
 	<<<
@@ -117,6 +122,7 @@ title: 실행 계획
 title: 결과 및 결론
 {
 	summary: 결과 해석과 다음 액션을 명확히 기록한다
+	path:
 	links: REPORT-EXP-001
 	content:
 	<<<

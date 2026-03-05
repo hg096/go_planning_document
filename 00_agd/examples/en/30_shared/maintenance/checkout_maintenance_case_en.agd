@@ -3,7 +3,7 @@ title: checkout - Maintenance Case
 version: 0.1
 owner: 
 authority: source
-doc_base_path: 
+doc_base_path:
 maintenance_feature_tag: FT-CHECKOUT
 maintenance_mode: single-file-rooted
 maintenance_source_doc: 00_agd\examples\en\10_source\product\checkout_core_spec_en.agd
@@ -23,6 +23,7 @@ maintenance_source_section: CORE-010
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -51,6 +52,7 @@ title: Input Guide
 title: Scope and Target Tagging
 {
 	summary: Lock maintenance scope to explicit feature/section targets
+	path:
 	links: MAINT-TAG-001
 	content:
 	<<<
@@ -77,6 +79,7 @@ title: Scope and Target Tagging
 title: Baseline Snapshot
 {
 	summary: Capture current behavior and constraints before changes
+	path:
 	links: MAINT-BASELINE-001
 	content:
 	<<<
@@ -95,6 +98,7 @@ title: Baseline Snapshot
 title: Change Plan
 {
 	summary: Plan implementation, risk, and rollback before execution
+	path:
 	links: MAINT-PLAN-001
 	content:
 	<<<
@@ -113,6 +117,7 @@ title: Change Plan
 title: AI Work Request
 {
 	summary: Provide exact instructions for safe AI execution
+	path:
 	links: MAINT-AI-HANDOFF-001
 	content:
 	<<<
@@ -131,6 +136,7 @@ title: AI Work Request
 title: AI Work Result Summary
 {
 	summary: Summarize AI output so human review is fast
+	path:
 	links: MAINT-AI-RESULT-001
 	content:
 	<<<
@@ -148,6 +154,7 @@ title: AI Work Result Summary
 title: Validation Checklist
 {
 	summary: Verify maintenance outcome and regression surface
+	path:
 	links: MAINT-VALIDATE-001
 	content:
 	<<<
@@ -166,6 +173,7 @@ title: Validation Checklist
 title: Release Decision
 {
 	summary: Decide release or hold with explicit follow-up
+	path:
 	links: MAINT-RELEASE-001
 	content:
 	<<<

@@ -2,7 +2,7 @@
 title: 체크아웃 인수인계
 version: 0.1
 owner: ai-agent
-doc_base_path: 
+doc_base_path:
 
 @map
 - HO-000 | 작성 가이드 | 이 문서에서 무엇을 입력해야 하는지 빠르게 확인한다
@@ -16,6 +16,7 @@ doc_base_path:
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: 작성 가이드
 title: 범위 확정
 {
 	summary: 포함/제외 범위를 선명하게 정의해 일정 리스크를 줄인다
+	path:
 	links: SPRINT-001
 	content:
 	<<<
@@ -62,6 +64,7 @@ title: 범위 확정
 title: API 계약
 {
 	summary: 필수 필드와 오류 코드를 합의해 연동 혼선을 줄인다
+	path:
 	links: OPENAPI-001
 	content:
 	<<<
@@ -84,6 +87,7 @@ title: API 계약
 title: 상태 전이
 {
 	summary: 클라이언트 상태 전이와 재시도 규칙을 명확히 기술한다
+	path:
 	links: FE-STATE-001
 	content:
 	<<<
@@ -103,6 +107,7 @@ title: 상태 전이
 title: 테스트 기준
 {
 	summary: 릴리즈 전 필수 검증 항목과 품질 기준을 체크한다
+	path:
 	links: TESTPLAN-001
 	content:
 	<<<
@@ -121,6 +126,7 @@ title: 테스트 기준
 title: 오픈 이슈
 {
 	summary: 블로커와 담당자를 명시해 릴리즈 리스크를 통제한다
+	path:
 	links: ISSUE-BOARD-001
 	content:
 	<<<

@@ -3,7 +3,7 @@ title: 체크아웃 전달 계획
 version: 0.1
 owner: ai-agent
 authority: derived
-doc_base_path: 
+doc_base_path:
 source_doc: ..\..\10_source\product\checkout_core_spec_ko.agd
 source_sections: CORE-010->DEL-001,CORE-030->DEL-020
 
@@ -17,6 +17,7 @@ source_sections: CORE-010->DEL-001,CORE-030->DEL-020
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -45,6 +46,7 @@ title: 작성 가이드
 title: 프론트 구현 계획
 {
 	summary: 핵심 화면 동작과 구현 범위를 명확히 정의한다
+	path:
 	links: DELIVERY-FE-001
 	content:
 	<<<
@@ -64,6 +66,7 @@ title: 프론트 구현 계획
 title: QA 검증 계획
 {
 	summary: 기능/회귀 검증 항목과 테스트 증거를 표준화한다
+	path:
 	links: DELIVERY-QA-001
 	content:
 	<<<
@@ -85,6 +88,7 @@ title: QA 검증 계획
 title: 배포 실행 체크
 {
 	summary: 배포/롤백 판단 기준을 사전에 고정한다
+	path:
 	links: DELIVERY-REL-001
 	content:
 	<<<

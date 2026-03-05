@@ -24,7 +24,9 @@
 ## 3) 경로 규칙 (중요)
 
 - 기본 루트는 항상 `00_agd/agd_docs`
+- 템플릿/예제 문서는 기본적으로 `@meta.doc_base_path`와 각 `@section.path` 키를 포함
 - `@meta.doc_base_path` 초기값은 빈값 유지
+- 템플릿/예제의 `@section.path` 기본값은 빈값 유지
 - `doc_base_path`는 "실제 소스 코드 경로를 명시할 때만" 채움
 - 자동 상대경로 변환/자동 채움 금지
 - `@section.path`가 있으면 `doc_base_path`보다 우선 사용

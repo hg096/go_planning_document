@@ -2,7 +2,7 @@
 title: Checkout Experiment
 version: 0.1
 owner: ai-agent
-doc_base_path: 
+doc_base_path:
 
 @map
 - EXP-000 | Input Guide | Quick rules for what to fill in this document
@@ -16,6 +16,7 @@ doc_base_path:
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: Input Guide
 title: Hypothesis
 {
 	summary: State a falsifiable hypothesis tied to business outcomes
+	path:
 	links: HYP-001
 	content:
 	<<<
@@ -62,6 +64,7 @@ title: Hypothesis
 title: Experiment Design
 {
 	summary: Define treatment/control and control variables clearly
+	path:
 	links: EXP-DESIGN-001
 	content:
 	<<<
@@ -83,6 +86,7 @@ title: Experiment Design
 title: Metrics
 {
 	summary: Define primary and guardrail metrics with numeric criteria
+	path:
 	links: KPI-EXP-001
 	content:
 	<<<
@@ -104,6 +108,7 @@ title: Metrics
 title: Execution Plan
 {
 	summary: Define rollout steps and rollback conditions
+	path:
 	links: ROLLBACK-EXP-001
 	content:
 	<<<
@@ -121,6 +126,7 @@ title: Execution Plan
 title: Results and Conclusion
 {
 	summary: Capture outcomes and decision with evidence
+	path:
 	links: REPORT-EXP-001
 	content:
 	<<<

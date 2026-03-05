@@ -15,6 +15,7 @@ doc_base_path:
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -43,6 +44,7 @@ title: 작성 가이드
 title: 문제와 목표
 {
 	summary: 문서의 목적과 완료 기준을 수치로 고정한다
+	path:
 	links: PRODUCT-CORE-001
 	content:
 	<<<
@@ -64,6 +66,7 @@ title: 문제와 목표
 title: 사용자/서비스 핵심 흐름
 {
 	summary: 사용자 시나리오와 시스템 처리 흐름을 한 문서로 통합한다
+	path:
 	links: FLOW-CORE-001
 	content:
 	<<<
@@ -84,6 +87,7 @@ title: 사용자/서비스 핵심 흐름
 title: 기술 결정과 제약
 {
 	summary: 변경 비용이 큰 기술 결정과 제약을 명시한다
+	path:
 	links: ADR-CORE-001
 	content:
 	<<<
@@ -103,6 +107,7 @@ title: 기술 결정과 제약
 title: AI 작업 규칙과 승인 게이트
 {
 	summary: AI 작업 입력 조건과 승인 기준을 명확히 한다
+	path:
 	links: AIGATE-CORE-001
 	content:
 	<<<

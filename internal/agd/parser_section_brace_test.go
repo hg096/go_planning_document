@@ -65,6 +65,9 @@ func TestSerializeSectionUsesBraceWrapper(t *testing.T) {
 	if !strings.Contains(out, "@section SEC-001\ntitle: Guide\n{\n\tsummary: Brace output\n") {
 		t.Fatalf("serialized output missing brace section header:\n%s", out)
 	}
+	if !strings.Contains(out, "\tpath:\n") {
+		t.Fatalf("serialized output must include empty path field:\n%s", out)
+	}
 	if !strings.Contains(out, "\tlinks: GUIDE-INPUT\n\tcontent:\n\t<<<\n\tline-a\n\tline-b\n\t>>>\n}\n") {
 		t.Fatalf("serialized output missing brace content block:\n%s", out)
 	}

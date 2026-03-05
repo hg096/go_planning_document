@@ -50,8 +50,8 @@ Use this sequence in project root:
 REM 1) download only 00_agd into current project root
 cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
 
-REM 1-1) preserve current 00_agd/agd_docs and download the rest into project root
-cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && (if not exist "00_agd" mkdir "00_agd") && robocopy "!T!\00_agd" "00_agd" /E /XD "agd_docs" /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul) & set EC=!ERRORLEVEL! & if !EC! LSS 8 set EC=0 & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
+REM 1-1) preserve current 00_agd/agd_docs, 00_agd/policy and download the rest into project root
+cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && (if not exist "00_agd" mkdir "00_agd") && robocopy "!T!\00_agd" "00_agd" /E /XD "!T!\00_agd\agd_docs" "!T!\00_agd\policy" /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul) & set EC=!ERRORLEVEL! & if !EC! LSS 8 set EC=0 & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
 
 REM 2) local setup (hooks + baseline checks)
 00_agd\setup.cmd

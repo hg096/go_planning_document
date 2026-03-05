@@ -49,6 +49,9 @@ func assertSectionBraceWrapper(t *testing.T, raw string) {
 	t.Helper()
 
 	normalized := strings.ReplaceAll(raw, "\r\n", "\n")
+	if !strings.Contains(normalized, "\ndoc_base_path:") && !strings.HasPrefix(normalized, "doc_base_path:") {
+		t.Fatalf("template must include @meta doc_base_path key")
+	}
 	lines := strings.Split(normalized, "\n")
 
 	sectionCount := 0
@@ -82,6 +85,10 @@ func assertSectionBraceWrapper(t *testing.T, raw string) {
 		// Rule 2: each section block must include a closing "}" before next block header.
 		hasClose := false
 		inContentBody := false
+		sawSummary := false
+		sawPath := false
+		sawLinks := false
+		sawContent := false
 		for k := legacyIdx + 1; k < len(lines); k++ {
 			lineRaw := lines[k]
 			lineTrim := strings.TrimSpace(lines[k])
@@ -110,6 +117,30 @@ func assertSectionBraceWrapper(t *testing.T, raw string) {
 			}
 
 			if isSectionFieldOrFence(lineTrim) {
+				if strings.HasPrefix(lineTrim, "summary:") {
+					if sawPath || sawLinks || sawContent {
+						t.Fatalf("section field order invalid: summary must come first (line=%d)", k+1)
+					}
+					sawSummary = true
+				}
+				if strings.HasPrefix(lineTrim, "path:") {
+					if !sawSummary || sawLinks || sawContent {
+						t.Fatalf("section field order invalid: path must be after summary and before links/content (line=%d)", k+1)
+					}
+					sawPath = true
+				}
+				if strings.HasPrefix(lineTrim, "links:") {
+					if !sawSummary || !sawPath || sawContent {
+						t.Fatalf("section field order invalid: links must be after summary/path and before content (line=%d)", k+1)
+					}
+					sawLinks = true
+				}
+				if lineTrim == "content:" {
+					if !sawSummary || !sawPath || !sawLinks {
+						t.Fatalf("section field order invalid: content must be after summary/path/links (line=%d)", k+1)
+					}
+					sawContent = true
+				}
 				assertTabbedSectionLine(t, lineRaw, lineTrim, k+1)
 				if lineTrim == "<<<" {
 					inContentBody = true
@@ -118,6 +149,9 @@ func assertSectionBraceWrapper(t *testing.T, raw string) {
 		}
 		if !hasClose {
 			t.Fatalf("section brace wrapper closing '}' missing: section header line=%d", i+1)
+		}
+		if !sawPath {
+			t.Fatalf("section must include path field: section header line=%d", i+1)
 		}
 	}
 

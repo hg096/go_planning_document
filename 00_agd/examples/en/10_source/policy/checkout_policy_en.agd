@@ -3,7 +3,7 @@ title: Checkout Policy
 version: 0.1
 owner: ai-agent
 authority: source
-doc_base_path: 
+doc_base_path:
 
 @map
 - POL-000 | Input Guide | Quick rules for what to fill in this document
@@ -17,6 +17,7 @@ doc_base_path:
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -45,6 +46,7 @@ title: Input Guide
 title: Purpose and Scope
 {
 	summary: Clarify why this policy exists and where it applies
+	path:
 	links: POLICY-SCOPE-001
 	content:
 	<<<
@@ -61,6 +63,7 @@ title: Purpose and Scope
 title: Core Principles
 {
 	summary: Define baseline principles that guide enforcement
+	path:
 	links: POLICY-PRINCIPLE-001
 	content:
 	<<<
@@ -74,6 +77,7 @@ title: Core Principles
 title: Roles and Responsibilities
 {
 	summary: Separate approval, execution, and audit responsibilities
+	path:
 	links: RACI-001
 	content:
 	<<<
@@ -88,6 +92,7 @@ title: Roles and Responsibilities
 title: Exception and Approval Process
 {
 	summary: Define when exceptions are allowed and how they are controlled
+	path:
 	links: APPROVAL-001
 	content:
 	<<<
@@ -107,6 +112,7 @@ title: Exception and Approval Process
 title: Review and Revision Cadence
 {
 	summary: Define policy review cadence and revision trigger
+	path:
 	links: AUDIT-001
 	content:
 	<<<

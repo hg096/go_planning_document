@@ -14,6 +14,7 @@ doc_base_path:
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -42,6 +43,7 @@ title: Input Guide
 title: Frontend Implementation Plan
 {
 	summary: Make UI behavior and implementation scope explicit
+	path:
 	links: DELIVERY-FE-001
 	content:
 	<<<
@@ -61,6 +63,7 @@ title: Frontend Implementation Plan
 title: QA Validation Plan
 {
 	summary: Standardize test scenarios and quality evidence
+	path:
 	links: DELIVERY-QA-001
 	content:
 	<<<
@@ -82,6 +85,7 @@ title: QA Validation Plan
 title: Release Execution Checklist
 {
 	summary: Lock release and rollback criteria before execution
+	path:
 	links: DELIVERY-REL-001
 	content:
 	<<<

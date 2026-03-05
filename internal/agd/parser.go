@@ -148,8 +148,11 @@ func Serialize(doc *Document) string {
 		sb.WriteString(fmt.Sprintf("title: %s\n", strings.TrimSpace(section.Title)))
 		sb.WriteString("{\n")
 		sb.WriteString(fmt.Sprintf("\tsummary: %s\n", strings.TrimSpace(section.Summary)))
-		if strings.TrimSpace(section.Path) != "" {
-			sb.WriteString(fmt.Sprintf("\tpath: %s\n", strings.TrimSpace(section.Path)))
+		path := strings.TrimSpace(section.Path)
+		if path == "" {
+			sb.WriteString("\tpath:\n")
+		} else {
+			sb.WriteString(fmt.Sprintf("\tpath: %s\n", path))
 		}
 		sb.WriteString(fmt.Sprintf("\tlinks: %s\n", strings.Join(section.Links, ", ")))
 		sb.WriteString("\tcontent:\n")

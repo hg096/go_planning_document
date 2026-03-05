@@ -3,7 +3,7 @@ title: checkout - Maintenance Case
 version: 0.1
 owner: 
 authority: source
-doc_base_path: 
+doc_base_path:
 maintenance_feature_tag: FT-CHECKOUT
 maintenance_mode: single-file-rooted
 maintenance_source_doc: 00_agd\examples\ko\10_source\product\checkout_core_spec_ko.agd
@@ -23,6 +23,7 @@ maintenance_source_section: CORE-010
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -51,6 +52,7 @@ title: 작성 가이드
 title: 범위/대상 태깅
 {
 	summary: 유지보수 범위를 기능 태그와 섹션 ID로 명확히 고정한다
+	path:
 	links: MAINT-TAG-001
 	content:
 	<<<
@@ -77,6 +79,7 @@ title: 범위/대상 태깅
 title: 기준선 스냅샷
 {
 	summary: 변경 전에 현재 동작과 제약을 기준선으로 남긴다
+	path:
 	links: MAINT-BASELINE-001
 	content:
 	<<<
@@ -95,6 +98,7 @@ title: 기준선 스냅샷
 title: 변경 계획
 {
 	summary: 실행 전 구현 계획, 위험, 롤백 전략을 확정한다
+	path:
 	links: MAINT-PLAN-001
 	content:
 	<<<
@@ -113,6 +117,7 @@ title: 변경 계획
 title: AI 작업 요청
 {
 	summary: AI에게 전달할 요청을 명확한 실행 항목으로 작성한다
+	path:
 	links: MAINT-AI-HANDOFF-001
 	content:
 	<<<
@@ -131,6 +136,7 @@ title: AI 작업 요청
 title: AI 작업 결과 요약
 {
 	summary: AI 실행 결과를 사람이 빠르게 검토할 수 있게 정리한다
+	path:
 	links: MAINT-AI-RESULT-001
 	content:
 	<<<
@@ -148,6 +154,7 @@ title: AI 작업 결과 요약
 title: 검증 체크리스트
 {
 	summary: 유지보수 결과와 회귀 영향 범위를 검증한다
+	path:
 	links: MAINT-VALIDATE-001
 	content:
 	<<<
@@ -166,6 +173,7 @@ title: 검증 체크리스트
 title: 배포 판단
 {
 	summary: 배포 또는 보류를 결정하고 후속 작업을 확정한다
+	path:
 	links: MAINT-RELEASE-001
 	content:
 	<<<

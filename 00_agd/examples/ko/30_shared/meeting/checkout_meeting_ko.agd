@@ -2,7 +2,7 @@
 title: 체크아웃 주간 회의
 version: 0.1
 owner: ai-agent
-doc_base_path: 
+doc_base_path:
 
 @map
 - MTG-000 | 작성 가이드 | 이 문서에서 무엇을 입력해야 하는지 빠르게 확인한다
@@ -16,6 +16,7 @@ doc_base_path:
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: 작성 가이드
 title: 회의 목적과 안건
 {
 	summary: 회의 목적과 우선순위 안건을 명확히 정의한다
+	path:
 	links: CAL-001
 	content:
 	<<<
@@ -61,6 +63,7 @@ title: 회의 목적과 안건
 title: 논의 요약
 {
 	summary: 안건별 쟁점과 결론 후보를 간단히 남긴다
+	path:
 	links: NOTE-001
 	content:
 	<<<
@@ -78,6 +81,7 @@ title: 논의 요약
 title: 결정 사항
 {
 	summary: 의사결정 결과와 선택 이유를 남겨 추후 혼선을 줄인다
+	path:
 	links: DECISION-LOG
 	content:
 	<<<
@@ -92,6 +96,7 @@ title: 결정 사항
 title: 액션 아이템
 {
 	summary: 담당자와 마감일이 포함된 후속 작업을 정리한다
+	path:
 	links: TASK-BOARD-001
 	content:
 	<<<
@@ -108,6 +113,7 @@ title: 액션 아이템
 title: 리스크 및 보류
 {
 	summary: 미해결 이슈와 후속 검토 항목을 추적한다
+	path:
 	links: RISK-001
 	content:
 	<<<

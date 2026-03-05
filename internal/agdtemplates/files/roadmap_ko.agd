@@ -16,6 +16,7 @@ doc_base_path:
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: 작성 가이드
 title: 비전
 {
 	summary: 팀이 같은 방향으로 움직이기 위한 기준을 명확히 한다
+	path:
 	links: VISION-001
 	content:
 	<<<
@@ -62,6 +64,7 @@ title: 비전
 title: 분기 목표
 {
 	summary: 각 분기에서 달성해야 할 결과를 정량 기준과 함께 설정한다
+	path:
 	links: OKR-001
 	content:
 	<<<
@@ -83,6 +86,7 @@ title: 분기 목표
 title: 실행 계획
 {
 	summary: 기능, 인프라, 운영 축으로 실행 항목을 나눠 관리한다
+	path:
 	links: PLAN-001
 	content:
 	<<<
@@ -104,6 +108,7 @@ title: 실행 계획
 title: 지표 관리
 {
 	summary: 성과와 품질을 함께 보는 지표 체계를 유지한다
+	path:
 	links: KPI-BOARD-001
 	content:
 	<<<
@@ -122,6 +127,7 @@ title: 지표 관리
 title: 리스크 대응
 {
 	summary: 주요 리스크를 사전에 정의하고 대응 전략을 연결한다
+	path:
 	links: RISK-REGISTER-001
 	content:
 	<<<

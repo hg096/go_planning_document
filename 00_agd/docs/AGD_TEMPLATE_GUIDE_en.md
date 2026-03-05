@@ -24,7 +24,9 @@ Do not mutate if any of the following is missing.
 ## 3) Path Rules (Critical)
 
 - Always use `00_agd/agd_docs` as the base root
+- Template/example docs include `@meta.doc_base_path` and each `@section.path` key by default
 - Keep initial `@meta.doc_base_path` empty
+- Keep default `@section.path` empty in template/example docs
 - Fill `doc_base_path` only when an actual source code path is explicitly known
 - No auto-relative path conversion and no auto-fill
 - If `@section.path` exists, it takes precedence over `doc_base_path`

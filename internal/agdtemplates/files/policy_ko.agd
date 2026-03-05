@@ -16,6 +16,7 @@ doc_base_path:
 title: 작성 가이드
 {
 	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: 작성 가이드
 title: 목적과 적용 범위
 {
 	summary: 정책의 의도와 적용 시스템 및 대상을 명확히 한다
+	path:
 	links: POLICY-SCOPE-001
 	content:
 	<<<
@@ -60,6 +62,7 @@ title: 목적과 적용 범위
 title: 핵심 원칙
 {
 	summary: 정책 집행 시 우선되는 원칙을 정의한다
+	path:
 	links: POLICY-PRINCIPLE-001
 	content:
 	<<<
@@ -73,6 +76,7 @@ title: 핵심 원칙
 title: 역할과 책임
 {
 	summary: 정책 준수와 승인, 감사 책임을 명확히 구분한다
+	path:
 	links: RACI-001
 	content:
 	<<<
@@ -87,6 +91,7 @@ title: 역할과 책임
 title: 예외와 승인 절차
 {
 	summary: 예외 조건과 승인 단계, 보완 통제를 정의한다
+	path:
 	links: APPROVAL-001
 	content:
 	<<<
@@ -106,6 +111,7 @@ title: 예외와 승인 절차
 title: 점검과 개정 주기
 {
 	summary: 정책 준수 점검 방법과 개정 트리거를 명시한다
+	path:
 	links: AUDIT-001
 	content:
 	<<<

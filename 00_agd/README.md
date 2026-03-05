@@ -87,7 +87,7 @@ done: 어떤 검증 결과가 나오면 완료인지
 
 `00_agd/` 폴더에는 `.go` 소스 파일을 포함하지 않습니다.
 
-## 6) 핵심 로직 수정 주의 (Soft Guard)
+## 4) 핵심 로직 수정 주의 (Soft Guard)
 
 핵심 경로 정책 파일:
 - `00_agd/policy/core_logic_paths.txt`
@@ -103,7 +103,7 @@ done: 어떤 검증 결과가 나오면 완료인지
 - 대화형에서는 `Continue commit? (y/N)` 확인
 - 비대화형(CI)은 경고만 출력하고 진행
 
-## 7) 코드 기획 검증 (Code Plan Check)
+## 5) 코드 기획 검증 (Code Plan Check)
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto

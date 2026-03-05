@@ -1,126 +1,109 @@
 # AGD Package (Isolated Mode)
 
 For Korean, see `00_agd/README.md`.
+For installation and setup steps, see root [README.md](../README.md).
 
-This package is designed to be dropped into an existing repository with minimal conflict.
-All AGD assets are managed under the `00_agd/` folder.
+This package is designed to isolate AI document operations under `00_agd/` while minimizing conflicts with existing repositories.
 
-## 1) What is inside
+## 0) AI Operation Cycle (Core)
 
-- executables: `00_agd/agd.exe`, `00_agd/agd_en.exe`, `00_agd/agd_ko.exe`
-- docs: `00_agd/docs/*`
-- examples: `00_agd/examples/*`
-- working docs root: `00_agd/agd_docs/*`
-- setup entry: `00_agd/setup.cmd`
-- local hook: `00_agd/.githooks/pre-commit`
-- hook logic: `00_agd/scripts/git-hooks/pre-commit.ps1`
-- optional CI/PR templates: `00_agd/templates/*`
+Repeat steps 1-7 below to run AI workflows consistently without document gaps.
 
-No `.go` source files are included in `00_agd/`.
+1. Normalize request
+- Fix the 5 AI input fields first.
+- `target_docs`, `target_sections`, `goal`, `constraints`, `done`
 
-## 2) One-command setup (minimal, no source tree)
+2. Check baseline
+- Read source docs under `00_agd/agd_docs/10_source/*` first.
+- Check whether multiple source docs exist for the same topic.
 
-Single `cmd` line to fetch only `00_agd/` into project root:
+3. Edit by section scope
+- Edit only the specified `target_sections`.
+- Create new files only when explicitly requested.
 
-```cmd
-cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
-```
+4. Record change trace
+- Add `@change(reason/impact)` for every change.
+- Keep tag metadata/blocks for maintenance and incident docs.
 
-To apply hooks/validation after download:
+5. Sync consistency
+- Verify `@map` and `@section` IDs are aligned.
+- Run `map-sync` when needed.
 
-```cmd
-00_agd\setup.cmd
-```
+6. Run validation
+- default: `code-plan-check --mode auto`
+- required: `check-all 00_agd/agd_docs --strict`
 
-What setup does:
+7. Approve and merge
+- review local hook warnings before commit
+- final enforcement should rely on CI (`AGD Guard`) required check
 
-- sets `git config core.hooksPath 00_agd/.githooks`
-- validates `00_agd/agd_docs` and `00_agd/examples` (strict mode)
-- installs CI workflow and PR template (backs up existing files before overwrite)
+Failure branch rules:
+- If `check-all` fails: fix document consistency and re-validate.
+- If `code-plan-check` fails: reinforce `doc_base_path`/`section.path` or tags/`@change`, then re-validate.
 
-Options:
+Detailed guide:
+- `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
 
-```cmd
-00_agd\setup.cmd -SkipCheck
-00_agd\setup.cmd -SkipTemplates
-00_agd\setup.cmd -InstallCiTemplate
-00_agd\setup.cmd -InstallPrTemplate
-00_agd\setup.cmd -NoTemplateBackup
-00_agd\setup.cmd -SlimCheckout
-```
-
-## 2-1) Enforcement Setup (Local + CI)
-
-Use the following flow to make document checks operationally strict.
-
-1. Run setup
-
-```cmd
-00_agd\setup.cmd
-```
-
-2. Verify hooks path (`core.hooksPath`)
-
-```cmd
-git config --get core.hooksPath
-```
-
-Expected:
+## 1) AI Request Template (Copy/Paste)
 
 ```txt
-00_agd/.githooks
+target_docs: 00_agd/agd_docs/...
+target_sections: CORE-020, DEL-010
+goal: state the change objective in 1-2 sentences
+constraints: forbidden scope or limits
+done: completion criteria
 ```
 
-3. Run local baseline checks
+## 2) Daily Operation Routine (Recommended)
+
+Before starting work:
+
+```cmd
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
+```
+
+After edits:
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto
 00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
 ```
 
-4. Install CI templates
+Check relations:
 
 ```cmd
-00_agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
+00_agd\agd_en.exe role-graph 00_agd\agd_docs --scope all
 ```
 
-Then verify `.github/workflows/agd-guard.yml` uses real paths:
+## 3) Included Components
 
-- expected: `./00_agd/agd_en.exe`, `00_agd/agd_docs`, `00_agd/examples`
-- if the workflow still uses `./agd/...`, replace it with `./00_agd/...`
+- executables: `00_agd/agd.exe`, `00_agd/agd_en.exe`, `00_agd/agd_ko.exe`
+- docs: `00_agd/docs/*`
+- examples: `00_agd/examples/*`
+- working docs root: `00_agd/agd_docs/*`
+- local hook: `00_agd/.githooks/pre-commit`
+- hook logic: `00_agd/scripts/git-hooks/pre-commit.ps1`
+- optional templates (CI/PR): `00_agd/templates/*`
 
-5. Enable branch protection
+No `.go` source files are included in the `00_agd/` folder.
 
-- protect `main`
-- add `AGD Guard` to Required status checks
+## 4) Core Logic Change Notice (Soft Guard)
 
-Enforcement note:
-
-- local hooks can be bypassed via `git commit --no-verify`
-- final enforcement must rely on Required CI checks
-
-## 2-2) Core Logic Change Notice (Soft Guard)
-
-Core logic policy file:
-
+Core path policy file:
 - `00_agd/policy/core_logic_paths.txt`
 
-Path format rules:
-
-- repo-root relative paths
+Rules:
+- repository-root relative paths
 - `#` comments allowed
 - empty lines ignored
-- both `/` and `\` separators accepted (normalized by hook)
+- both `/` and `\` are accepted (normalized by the hook)
 
 Commit hook behavior:
+- If staged files match policy paths, a warning is printed.
+- In interactive terminals, it asks `Continue commit? (y/N)`.
+- In non-interactive environments (CI), it prints warning only and continues.
 
-- If staged files match policy paths, it prints a warning banner and matched file list.
-- In interactive terminals, it asks `Continue commit? (y/N)` and proceeds only on `y/yes`.
-- In non-interactive environments (CI/automation), it prints warning only and does not block.
-
-## 2-3) Code Planning Validation (Code Plan Check)
-
-Use this command to detect code-change vs planning-doc gaps.
+## 5) Code Plan Validation (Code Plan Check)
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto
@@ -130,23 +113,19 @@ Use this command to detect code-change vs planning-doc gaps.
 ```
 
 Behavior summary:
-
-- Collect changed code files (`auto`: git first, then cache fallback).
-- Check overlap against AGD doc `doc_base_path` and `section.path`.
-- Matched docs pass only when either maintenance/incident tag exists or `@change` is updated.
-- If relation policy (`A#SEC <-> B#SEC`) exists, bidirectional service/frontend linked docs are additionally checked for `@change` updates.
-- On failure, it prints remediation steps and exits with code `1`.
+- Collect changed code files (`auto`: git first, cache fallback on failure).
+- Check overlap between code paths and AGD `doc_base_path`/`section.path`.
+- A matched doc passes when either maintenance/incident tags exist or `@change` is updated.
+- If relation policy (`A#SEC <-> B#SEC`) exists, linked service/frontend docs are additionally checked for `@change` updates in both directions.
 
 Policy/cache paths:
-
-- scope policy: `00_agd/policy/code_plan_scope.txt`
-- relation policy: `00_agd/policy/code_plan_relations.txt`
-- local cache: `00_agd/.cache/code_plan_validation.json`
+- `00_agd/policy/code_plan_scope.txt`
+- `00_agd/policy/code_plan_relations.txt`
+- `00_agd/.cache/code_plan_validation.json`
 
 Relation policy syntax:
-
 - `<left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>`
-- one relation per line
+- write one relation per line
 - for multiple relations, add multiple lines
 - for 1:N, repeat the left endpoint; for N:1, repeat the right endpoint
 - comma-separated multi-endpoint syntax in one line is not supported
@@ -154,49 +133,14 @@ Relation policy syntax:
 - example (1:N):
   - `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010`
   - `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-020`
+- default is WARN; `--strict-relation` upgrades it to FAIL
 
-Scope policy format:
-
-- `ext:.vue` (add extension)
-- `include:src/generated/` (force include path)
-- `exclude:vendor/` (exclude path)
-
-Optional strict mode:
+Strict options:
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto --strict-mapping
 00_agd\agd_en.exe code-plan-check --mode auto --strict-relation
 ```
 
-- Use `--strict-mapping` only when you want unmatched doc mapping to fail immediately.
-- Use `--strict-relation` when missing linked-doc updates must fail.
-- pre-commit runs relation strict mode with staged-only source:
-  `code-plan-check --mode git --git-source staged --strict-relation`.
-
-## 3) Daily usage
-
-```cmd
-00_agd\agd_en.exe quick
-00_agd\agd_en.exe wizard
-00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
-```
-
-## 4) Optional CI integration
-
-Install template files into host repo:
-
-```cmd
-00_agd\setup.cmd -InstallCiTemplate -InstallPrTemplate
-```
-
-This copies:
-
-- `00_agd/templates/agd-guard.yml` -> `.github/workflows/agd-guard.yml`
-- `00_agd/templates/pull_request_template.md` -> `.github/pull_request_template.md`
-
-Verification checklist:
-
-- `.github/workflows/agd-guard.yml` uses `00_agd` paths.
-- `AGD Guard` appears in PR checks.
-- branch protection marks `AGD Guard` as required.
-
+Hook enforcement behavior:
+- pre-commit runs `code-plan-check --mode git --git-source staged --strict-relation` first to block missing linked-doc updates.

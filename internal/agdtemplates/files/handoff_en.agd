@@ -16,6 +16,7 @@ doc_base_path:
 title: Input Guide
 {
 	summary: Minimum input rules for consistent writing by humans and AI
+	path:
 	links: GUIDE-INPUT
 	content:
 	<<<
@@ -44,6 +45,7 @@ title: Input Guide
 title: Scope Agreement
 {
 	summary: Clarify scope early to reduce schedule risk
+	path:
 	links: SPRINT-001
 	content:
 	<<<
@@ -62,6 +64,7 @@ title: Scope Agreement
 title: API Contract
 {
 	summary: Align required fields and error semantics across teams
+	path:
 	links: OPENAPI-001
 	content:
 	<<<
@@ -84,6 +87,7 @@ title: API Contract
 title: State Transitions
 {
 	summary: Keep FE and BE state interpretation aligned
+	path:
 	links: FE-STATE-001
 	content:
 	<<<
@@ -103,6 +107,7 @@ title: State Transitions
 title: Test Criteria
 {
 	summary: Define release-blocking test criteria
+	path:
 	links: TESTPLAN-001
 	content:
 	<<<
@@ -121,6 +126,7 @@ title: Test Criteria
 title: Open Issues
 {
 	summary: Keep owner and status for each unresolved blocker
+	path:
 	links: ISSUE-BOARD-001
 	content:
 	<<<
