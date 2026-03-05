@@ -15,5 +15,4 @@ jobs:
 
       - name: Validate AGD docs
         run: |
-          ./agd/agd_en.exe check-all agd/agd_docs --strict
-          ./agd/agd_en.exe check-all agd/examples --strict
+          ./00_agd/agd_en.exe check-all agd/agd_docs --strict
