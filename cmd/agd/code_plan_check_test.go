@@ -161,3 +161,110 @@ func TestIsCodePlanChangeUpdated(t *testing.T) {
 		t.Fatalf("different digest should be updated")
 	}
 }
+
+func TestParseCodePlanGitSource(t *testing.T) {
+	if got, ok := parseCodePlanGitSource("worktree"); !ok || got != codePlanGitSourceWorktree {
+		t.Fatalf("worktree parse failed: got=%q ok=%t", got, ok)
+	}
+	if got, ok := parseCodePlanGitSource("staged"); !ok || got != codePlanGitSourceStaged {
+		t.Fatalf("staged parse failed: got=%q ok=%t", got, ok)
+	}
+	if _, ok := parseCodePlanGitSource("bad"); ok {
+		t.Fatalf("invalid git source should fail")
+	}
+}
+
+func TestParseCodePlanRelationPolicyLines(t *testing.T) {
+	policy := codePlanRelationPolicy{}
+	warnings := parseCodePlanRelationPolicyLines([]string{
+		"# comment",
+		"",
+		"00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010",
+		"invalid line",
+		"00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd",
+	}, &policy)
+
+	if len(policy.Rules) != 1 {
+		t.Fatalf("rules=%d want=1", len(policy.Rules))
+	}
+	if policy.Rules[0].Left.SectionID != "SYS-020" {
+		t.Fatalf("left section=%q", policy.Rules[0].Left.SectionID)
+	}
+	if policy.Rules[0].Right.SectionID != "FP-010" {
+		t.Fatalf("right section=%q", policy.Rules[0].Right.SectionID)
+	}
+	if len(warnings) != 2 {
+		t.Fatalf("warnings=%d want=2", len(warnings))
+	}
+}
+
+func TestEvaluateCodePlanRelationsPassAndFail(t *testing.T) {
+	docA := codePlanDocInfo{
+		RelPath:      "00_agd/agd_docs/10_source/service/checkout_service.agd",
+		SectionIDs:   map[string]bool{"SYS-020": true},
+		ChangeDigest: "aaa",
+	}
+	docB := codePlanDocInfo{
+		RelPath:      "00_agd/agd_docs/20_derived/frontend/checkout_page.agd",
+		SectionIDs:   map[string]bool{"FP-010": true},
+		ChangeDigest: "bbb",
+	}
+	policy := codePlanRelationPolicy{
+		Rules: []codePlanRelationRule{
+			{
+				Left: codePlanRelationEndpoint{
+					DocPath:   docA.RelPath,
+					DocKey:    codePlanPathKey(docA.RelPath),
+					SectionID: "SYS-020",
+				},
+				Right: codePlanRelationEndpoint{
+					DocPath:   docB.RelPath,
+					DocKey:    codePlanPathKey(docB.RelPath),
+					SectionID: "FP-010",
+				},
+			},
+		},
+	}
+
+	results := []codePlanFileResult{
+		{
+			ChangedPath: "src/service/checkout.go",
+			MatchedDocs: []codePlanDocResult{
+				{
+					DocPath: docA.RelPath,
+					DocKey:  codePlanPathKey(docA.RelPath),
+					Passed:  true,
+				},
+			},
+		},
+	}
+
+	cacheSame := &codePlanCache{
+		DocSnapshot: map[string]codePlanDocSnapshot{
+			codePlanPathKey(docB.RelPath): {ChangeDigest: "bbb"},
+		},
+	}
+	failItems := evaluateCodePlanRelations(results, []codePlanDocInfo{docA, docB}, policy, cacheSame)
+	if len(failItems) != 1 {
+		t.Fatalf("failItems=%d want=1", len(failItems))
+	}
+	if failItems[0].Passed {
+		t.Fatalf("expected fail when linked doc has no digest change")
+	}
+
+	cacheDiff := &codePlanCache{
+		DocSnapshot: map[string]codePlanDocSnapshot{
+			codePlanPathKey(docB.RelPath): {ChangeDigest: "old"},
+		},
+	}
+	passItems := evaluateCodePlanRelations(results, []codePlanDocInfo{docA, docB}, policy, cacheDiff)
+	if len(passItems) != 1 {
+		t.Fatalf("passItems=%d want=1", len(passItems))
+	}
+	if !passItems[0].Passed {
+		t.Fatalf("expected pass when linked doc digest changes")
+	}
+	if !passItems[0].ChangeUpdated {
+		t.Fatalf("expected changeUpdated=true")
+	}
+}

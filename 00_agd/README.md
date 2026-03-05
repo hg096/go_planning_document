@@ -109,19 +109,38 @@ done: 어떤 검증 결과가 나오면 완료인지
 00_agd\agd_en.exe code-plan-check --mode auto
 00_agd\agd_en.exe code-plan-check --mode git
 00_agd\agd_en.exe code-plan-check --mode cache
+00_agd\agd_en.exe code-plan-check --mode git --git-source staged --strict-relation
 ```
 
 동작 요약:
 - 변경 코드 파일 수집 (`auto`: git 우선, 실패 시 cache fallback)
 - `doc_base_path`/`section.path`와 코드 경로 겹침 검사
 - 매칭 문서는 `유지보수/오류 tag` 또는 `@change 업데이트` 중 하나 충족 시 통과
+- 연관 정책(`A#SEC <-> B#SEC`)이 있으면 서비스↔프론트 양방향 연관 문서의 `@change` 갱신 여부를 추가 검사
 
 정책/캐시 경로:
 - `00_agd/policy/code_plan_scope.txt`
+- `00_agd/policy/code_plan_relations.txt`
 - `00_agd/.cache/code_plan_validation.json`
+
+연관 정책 문법:
+- `<left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>`
+- 한 줄에는 관계 1개만 작성
+- 여러 관계는 줄을 나눠 반복 작성
+- 1:N은 왼쪽 endpoint를 반복, N:1은 오른쪽 endpoint를 반복
+- 한 줄에서 `,`로 여러 endpoint를 나열하는 형식은 지원하지 않음
+- 예: `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010`
+- 예(1:N):
+  - `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010`
+  - `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-020`
+- 기본은 WARN, `--strict-relation` 사용 시 FAIL
 
 강화 옵션:
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto --strict-mapping
+00_agd\agd_en.exe code-plan-check --mode auto --strict-relation
 ```
+
+훅 강제 동작:
+- pre-commit은 `code-plan-check --mode git --git-source staged --strict-relation`을 먼저 실행해 연관 문서 누락을 차단

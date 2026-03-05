@@ -105,6 +105,7 @@ func wizardDocActionLoop(reader *bufio.Reader, selectedDoc *string) int {
 		fmt.Println(text("[5] Check document", "[5] Check document"))
 		fmt.Println(text("[6] Export to markdown", "[6] Export to markdown"))
 		fmt.Println(text("[7] Set source/derived role", "[7] Set source/derived role"))
+		fmt.Println(text("[8] Section relation lookup", "[8] 섹션 연관 검색"))
 		fmt.Println(text("[0] Back", "[0] 뒤로가기"))
 
 		choice, err := promptRequired(reader, text("Select", "Select"))
@@ -142,10 +143,14 @@ func wizardDocActionLoop(reader *bufio.Reader, selectedDoc *string) int {
 			if code := wizardRoleSetOnDoc(reader, filePath); code != 0 {
 				fmt.Printf("failed (code=%d)\n", code)
 			}
+		case "8":
+			if code := wizardSectionRelationOnDoc(reader, filePath); code != 0 {
+				fmt.Printf("failed (code=%d)\n", code)
+			}
 		case "0":
 			return 0
 		default:
-			fmt.Println(text("Invalid choice. Use 0-7.", "Invalid choice. Use 0-7."))
+			fmt.Println(text("Invalid choice. Use 0-8.", "잘못된 선택입니다. 0-8을 사용하세요."))
 		}
 	}
 }
@@ -359,12 +364,21 @@ func wizardCodePlanCheck(reader *bufio.Reader) int {
 		return 2
 	}
 
-	args := make([]string, 0, 4)
+	relationStrictAnswer, err := promptOptional(reader, text("Relation strict? (y/N)", "연관 strict 적용? (y/N)"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
+		return 1
+	}
+
+	args := make([]string, 0, 6)
 	if strings.TrimSpace(root) != "" {
 		args = append(args, strings.TrimSpace(root))
 	}
 	if mode != codePlanModeAuto {
 		args = append(args, "--mode", string(mode))
+	}
+	if isYesInput(relationStrictAnswer) {
+		args = append(args, "--strict-relation")
 	}
 	return commandCodePlanCheckEasy(args)
 }

@@ -127,10 +127,6 @@ $examplesPattern = '^' + [regex]::Escape($packageName) + '/examples/.*\.agd$'
 $agdChanged = @($staged | Where-Object { $_ -match $pkgPattern })
 $examplesChanged = @($staged | Where-Object { $_ -match $examplesPattern })
 
-if ($agdChanged.Count -eq 0) {
-    exit 0
-}
-
 $agdBin = $null
 $agdEnPath = Join-Path $repoRoot "$packageName\agd_en.exe"
 $agdDefaultPath = Join-Path $repoRoot "$packageName\agd.exe"
@@ -150,6 +146,18 @@ $agdDocsRel = "$packageName\agd_docs"
 $examplesRel = "$packageName\examples"
 $agdDocsPath = Join-Path $repoRoot $agdDocsRel
 $examplesPath = Join-Path $repoRoot $examplesRel
+
+if ($staged.Count -gt 0 -and (Test-Path $agdDocsPath)) {
+    Write-Host "[AGD hook] running code-plan-check (relation strict, staged)..."
+    & $agdBin code-plan-check $agdDocsRel --mode git --git-source staged --strict-relation
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+    }
+}
+
+if ($agdChanged.Count -eq 0) {
+    exit 0
+}
 
 if (Test-Path $agdDocsPath) {
     Write-Host "[AGD hook] validating $agdDocsRel tree..."

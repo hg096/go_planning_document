@@ -71,10 +71,34 @@ After mutation, run both commands to prevent doc omissions.
 00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
 ```
 
-Strict mode (fail on unmatched mapping too):
+Relation policy (bidirectional service/frontend section mapping):
+
+- file: `00_agd/policy/code_plan_relations.txt`
+- syntax: `<left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>`
+- one relation per line
+- for multiple relations, add multiple lines
+- for 1:N, repeat the left endpoint on each line
+- for N:1, repeat the right endpoint on each line
+- comma-separated multi-endpoint syntax in a single line is not supported
+- linked docs pass only when `@change` is updated
+
+Examples:
+
+```txt
+# 1:N (one service section -> multiple frontend sections)
+00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010
+00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-020
+
+# N:1 (multiple frontend/service sections -> one target section)
+00_agd/agd_docs/10_source/service/payment_service.agd#SYS-040 <-> 00_agd/agd_docs/20_derived/frontend/payment_page.agd#FP-030
+00_agd/agd_docs/10_source/service/refund_service.agd#SYS-050 <-> 00_agd/agd_docs/20_derived/frontend/payment_page.agd#FP-030
+```
+
+Strict modes:
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto --strict-mapping
+00_agd\agd_en.exe code-plan-check --mode auto --strict-relation
 ```
 
 ## 8) Minimal Command Set

@@ -44,6 +44,7 @@ func commandHelp(_ []string) int {
    agd code-plan-check
    agd code-plan-check --mode git
    agd code-plan-check --mode cache
+   agd code-plan-check --mode git --git-source staged --strict-relation
 
 11) Interactive mode:
     agd wizard
@@ -86,6 +87,7 @@ func commandHelp(_ []string) int {
    agd code-plan-check
    agd code-plan-check --mode git
    agd code-plan-check --mode cache
+   agd code-plan-check --mode git --git-source staged --strict-relation
 
 11) 대화형 모드:
     agd wizard

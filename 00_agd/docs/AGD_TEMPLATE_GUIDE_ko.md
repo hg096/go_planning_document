@@ -71,10 +71,34 @@
 00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
 ```
 
-강화 모드(문서 매칭 누락도 실패 처리):
+연관 정책(서비스↔프론트 양방향 섹션 매핑):
+
+- 파일: `00_agd/policy/code_plan_relations.txt`
+- 문법: `<left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>`
+- 한 줄에는 관계 1개만 작성합니다.
+- 여러 관계는 줄을 나눠 여러 줄로 작성합니다.
+- 1:N 관계는 왼쪽 endpoint를 각 줄에 반복합니다.
+- N:1 관계는 오른쪽 endpoint를 각 줄에 반복합니다.
+- `,`(콤마)로 한 줄에 여러 endpoint를 묶는 형식은 지원하지 않습니다.
+- 연관 문서는 `@change` 갱신이 있어야 통과
+
+예시:
+
+```txt
+# 1:N (서비스 섹션 1개 -> 프론트 섹션 여러 개)
+00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010
+00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-020
+
+# N:1 (프론트 섹션 여러 개 -> 서비스 섹션 1개)
+00_agd/agd_docs/10_source/service/payment_service.agd#SYS-040 <-> 00_agd/agd_docs/20_derived/frontend/payment_page.agd#FP-030
+00_agd/agd_docs/10_source/service/refund_service.agd#SYS-050 <-> 00_agd/agd_docs/20_derived/frontend/payment_page.agd#FP-030
+```
+
+강화 모드:
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto --strict-mapping
+00_agd\agd_en.exe code-plan-check --mode auto --strict-relation
 ```
 
 ## 8) 빠른 명령 최소 세트

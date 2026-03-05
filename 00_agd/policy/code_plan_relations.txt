@@ -1,0 +1,94 @@
+# code-plan relation policy (repo-root relative)
+# 코드 기획 연관 정책 (저장소 루트 상대 경로)
+#
+# parser note:
+# 파서 참고:
+# - blank lines and lines starting with # are ignored
+# - only relation lines are parsed
+# - 빈 줄과 # 주석 라인은 무시됩니다.
+# - 실제 연관 라인만 파싱됩니다.
+#
+# relation line syntax:
+# <left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>
+# 연관 라인 문법:
+# <left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>
+#
+# -----------------------------------------------------------------------------
+# [WRITE RULES]
+# [작성 규칙]
+# -----------------------------------------------------------------------------
+# 1) one relation per line (no comma-separated endpoints)
+# 2) for multiple relations, repeat lines
+#    - 1:N => repeat left endpoint
+#    - N:1 => repeat right endpoint
+# 3) use repo-root relative paths
+# 4) both / and \ are allowed, but / is recommended for consistency
+# 5) section id should be explicit and stable (ex: SYS-020, FP-010)
+#
+# 1) 한 줄에는 연관 1개만 작성합니다(콤마로 다중 endpoint 나열 금지)
+# 2) 여러 연관은 줄을 반복해 작성합니다
+#    - 1:N => 왼쪽 endpoint 반복
+#    - N:1 => 오른쪽 endpoint 반복
+# 3) 저장소 루트 기준 상대 경로를 사용합니다
+# 4) /, \ 모두 허용하지만 일관성을 위해 / 권장
+# 5) section id는 명시적이고 안정적인 값을 사용합니다 (예: SYS-020, FP-010)
+#
+# -----------------------------------------------------------------------------
+# [ORDERING RULES]  (strongly recommended for large files)
+# [정렬 규칙] (대용량 파일에서 강력 권장)
+# -----------------------------------------------------------------------------
+# sort by:
+#   (a) left doc path
+#   (b) left section id
+#   (c) right doc path
+#   (d) right section id
+# 아래 순서로 정렬합니다:
+#   (a) left 문서 경로
+#   (b) left 섹션 ID
+#   (c) right 문서 경로
+#   (d) right 섹션 ID
+#
+# keep this file grouped by domain/project:
+#   [GROUP] checkout
+#   [GROUP] payment
+#   [GROUP] order
+# 파일은 도메인/프로젝트 단위 그룹으로 유지합니다:
+#   [GROUP] checkout
+#   [GROUP] payment
+#   [GROUP] order
+#
+# -----------------------------------------------------------------------------
+# [TEMPLATE]
+# [템플릿]
+# -----------------------------------------------------------------------------
+# [GROUP] <domain-or-project>
+# [DESC]  <optional one-line intent>
+# <left-doc>#<LEFT-SEC> <-> <right-doc>#<RIGHT-SEC>
+#
+# [GROUP] <도메인-또는-프로젝트>
+# [DESC]  <선택: 한 줄 설명>
+# <left-doc>#<LEFT-SEC> <-> <right-doc>#<RIGHT-SEC>
+#
+# -----------------------------------------------------------------------------
+# [EXAMPLES]
+# [예시]
+# -----------------------------------------------------------------------------
+# [GROUP] checkout
+# [DESC] service core flow -> frontend page flow
+# 00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010
+# 00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-020
+#
+# [GROUP] payment
+# [DESC] shared frontend section linked by multiple service sections
+# 00_agd/agd_docs/10_source/service/payment_service.agd#SYS-040 <-> 00_agd/agd_docs/20_derived/frontend/payment_page.agd#FP-030
+# 00_agd/agd_docs/10_source/service/refund_service.agd#SYS-050 <-> 00_agd/agd_docs/20_derived/frontend/payment_page.agd#FP-030
+#
+# -----------------------------------------------------------------------------
+# [ACTIVE RELATIONS]
+# [실사용 연관 규칙]
+# -----------------------------------------------------------------------------
+# add real relation lines under this section.
+# 실제 연관 라인은 이 섹션 아래에 추가합니다.
+# example:
+# 00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010
+

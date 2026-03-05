@@ -1,7 +1,19 @@
-# One path/glob per line (repo-root relative)
-# Purpose: warning-first core logic review before agent edits.
+# Core logic protected path list
+# 핵심 로직 보호 경로 목록
+#
+# [EN] One path or glob per line (repo-root relative).
+# [KO] 한 줄에 하나의 경로 또는 glob 패턴을 작성합니다(저장소 루트 상대 경로).
+#
+# [EN] Purpose: warning-first core logic review before agent edits.
+# [KO] 목적: 에이전트 수정 전에 핵심 로직 파일을 경고 우선으로 검토합니다.
+#
+# [EN] Rules:
+# [KO] 규칙:
+# [EN] - Blank lines and # comments are ignored.
+# [KO] - 빈 줄과 # 주석은 무시됩니다.
+# [EN] - Folder paths may end with / (hook treats as wildcard).
+# [KO] - 폴더 경로는 / 로 끝낼 수 있으며, 훅에서 wildcard로 처리합니다.
 
 
 00_agd/scripts/setup.ps1
 00_agd/scripts/git-hooks/pre-commit.ps1
-

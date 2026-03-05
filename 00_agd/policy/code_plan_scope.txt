@@ -1,13 +1,26 @@
 # code-plan-check scope policy
-# - repo-root relative paths
-# - blank lines and # comments are ignored
+# 코드 기획 검증 범위 정책
 #
-# Add extra code extensions:
+# [EN] repo-root relative paths
+# [KO] 저장소 루트 기준 상대 경로를 사용합니다.
+#
+# [EN] blank lines and # comments are ignored
+# [KO] 빈 줄과 # 주석 라인은 무시됩니다.
+#
+# -----------------------------------------------------------------------------
+# [EN] Add extra code extensions:
+# [KO] 추가 코드 확장자 포함:
+# -----------------------------------------------------------------------------
 # ext:.vue
 #
-# Force include path prefix:
+# -----------------------------------------------------------------------------
+# [EN] Force include path prefix:
+# [KO] 강제 포함 경로(prefix):
+# -----------------------------------------------------------------------------
 # include:src/generated/
 #
-# Exclude path prefix:
+# -----------------------------------------------------------------------------
+# [EN] Exclude path prefix:
+# [KO] 제외 경로(prefix):
+# -----------------------------------------------------------------------------
 # exclude:vendor/
-

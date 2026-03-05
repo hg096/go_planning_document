@@ -20,6 +20,7 @@ import (
 var (
 	codePlanDefaultCacheRelPath       = filepath.Join("00_agd", ".cache", "code_plan_validation.json")
 	codePlanDefaultScopePolicyRelPath = filepath.Join("00_agd", "policy", "code_plan_scope.txt")
+	codePlanDefaultRelationPolicyPath = filepath.Join("00_agd", "policy", "code_plan_relations.txt")
 )
 
 type codePlanMode string
@@ -28,6 +29,13 @@ const (
 	codePlanModeAuto  codePlanMode = "auto"
 	codePlanModeGit   codePlanMode = "git"
 	codePlanModeCache codePlanMode = "cache"
+)
+
+type codePlanGitSource string
+
+const (
+	codePlanGitSourceWorktree codePlanGitSource = "worktree"
+	codePlanGitSourceStaged   codePlanGitSource = "staged"
 )
 
 type codePlanScopePolicy struct {
@@ -40,6 +48,7 @@ type codePlanDocInfo struct {
 	AbsPath          string
 	RelPath          string
 	RefPaths         []string
+	SectionIDs       map[string]bool
 	HasTag           bool
 	ChangeDigest     string
 	LatestChangeID   string
@@ -53,6 +62,7 @@ type codePlanDocIssue struct {
 
 type codePlanDocResult struct {
 	DocPath       string
+	DocKey        string
 	HasTag        bool
 	ChangeUpdated bool
 	Passed        bool
@@ -69,19 +79,51 @@ type codePlanGitStatusEntry struct {
 	Path   string
 }
 
+type codePlanRelationPolicy struct {
+	Rules []codePlanRelationRule
+}
+
+type codePlanRelationRule struct {
+	LineNo int
+	Raw    string
+	Left   codePlanRelationEndpoint
+	Right  codePlanRelationEndpoint
+}
+
+type codePlanRelationEndpoint struct {
+	Raw       string
+	DocPath   string
+	DocKey    string
+	SectionID string
+}
+
+type codePlanRelationResult struct {
+	ChangedPath    string
+	TriggerDocPath string
+	TriggerSection string
+	RequiredDoc    string
+	RequiredSec    string
+	ChangeUpdated  bool
+	Passed         bool
+	Message        string
+}
+
 func printCodePlanCheckUsage() {
 	fmt.Fprintln(os.Stderr, text(
-		"usage: agd code-plan-check [root] [--mode auto|git|cache] [--cache <file>] [--scope-policy <file>] [--strict-mapping]",
-		"usage: agd code-plan-check [root] [--mode auto|git|cache] [--cache <file>] [--scope-policy <file>] [--strict-mapping]",
+		"usage: agd code-plan-check [root] [--mode auto|git|cache] [--git-source staged|worktree] [--cache <file>] [--scope-policy <file>] [--relation-policy <file>] [--strict-mapping] [--strict-relation]",
+		"usage: agd code-plan-check [root] [--mode auto|git|cache] [--git-source staged|worktree] [--cache <file>] [--scope-policy <file>] [--relation-policy <file>] [--strict-mapping] [--strict-relation]",
 	))
 }
 
 func commandCodePlanCheckEasy(args []string) int {
 	root := docsRootDir
 	mode := codePlanModeAuto
+	gitSource := codePlanGitSourceWorktree
 	cachePathInput := codePlanDefaultCacheRelPath
 	scopePolicyInput := codePlanDefaultScopePolicyRelPath
+	relationPolicyInput := codePlanDefaultRelationPolicyPath
 	strictMapping := false
+	strictRelation := false
 	rootProvided := false
 
 	for i := 0; i < len(args); i++ {
@@ -104,6 +146,21 @@ func commandCodePlanCheckEasy(args []string) int {
 			}
 			mode = parsed
 			i++
+		case "--git-source":
+			if i+1 >= len(args) {
+				printCodePlanCheckUsage()
+				return 2
+			}
+			parsed, ok := parseCodePlanGitSource(args[i+1])
+			if !ok {
+				fmt.Fprintln(os.Stderr, text(
+					"code-plan-check error: --git-source must be staged|worktree",
+					"code-plan-check error: --git-source must be staged|worktree",
+				))
+				return 2
+			}
+			gitSource = parsed
+			i++
 		case "--cache":
 			if i+1 >= len(args) {
 				printCodePlanCheckUsage()
@@ -118,8 +175,17 @@ func commandCodePlanCheckEasy(args []string) int {
 			}
 			scopePolicyInput = strings.TrimSpace(args[i+1])
 			i++
+		case "--relation-policy":
+			if i+1 >= len(args) {
+				printCodePlanCheckUsage()
+				return 2
+			}
+			relationPolicyInput = strings.TrimSpace(args[i+1])
+			i++
 		case "--strict-mapping":
 			strictMapping = true
+		case "--strict-relation":
+			strictRelation = true
 		default:
 			if strings.HasPrefix(token, "-") || rootProvided {
 				printCodePlanCheckUsage()
@@ -141,6 +207,7 @@ func commandCodePlanCheckEasy(args []string) int {
 	scanRoot := resolveCodePlanPath(repoRoot, root)
 	cachePath := resolveCodePlanPath(repoRoot, cachePathInput)
 	scopePolicyPath := resolveCodePlanPath(repoRoot, scopePolicyInput)
+	relationPolicyPath := resolveCodePlanPath(repoRoot, relationPolicyInput)
 
 	scopePolicy, scopeWarnings, err := loadCodePlanScopePolicy(scopePolicyPath)
 	if err != nil {
@@ -154,7 +221,7 @@ func commandCodePlanCheckEasy(args []string) int {
 		return 1
 	}
 
-	changedFiles, modeUsed, modeWarning, err := collectChangedCodeFiles(repoRoot, mode, scopePolicy, cache)
+	changedFiles, modeUsed, modeWarning, err := collectChangedCodeFiles(repoRoot, mode, gitSource, scopePolicy, cache)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "code-plan-check failed: %v\n", err)
 		return 1
@@ -166,7 +233,18 @@ func commandCodePlanCheckEasy(args []string) int {
 		return 1
 	}
 
+	relationPolicy, relationWarnings, relationEnabled, err := loadCodePlanRelationPolicy(relationPolicyPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "code-plan-check failed: %v\n", err)
+		return 1
+	}
+
 	results := evaluateCodePlanCheck(changedFiles, docs, cache)
+	relationResults := make([]codePlanRelationResult, 0)
+	if relationEnabled {
+		relationResults = evaluateCodePlanRelations(results, docs, relationPolicy, cache)
+	}
+
 	failed := 0
 	missingDoc := 0
 	warned := 0
@@ -187,10 +265,35 @@ func commandCodePlanCheckEasy(args []string) int {
 		}
 	}
 
+	relationWarned := 0
+	relationFailed := 0
+	for _, relation := range relationResults {
+		if relation.Passed {
+			continue
+		}
+		if strictRelation {
+			relationFailed++
+		} else {
+			relationWarned++
+		}
+	}
+
+	relationByChanged := make(map[string][]codePlanRelationResult)
+	for _, relation := range relationResults {
+		key := codePlanNormalizeRelPath(relation.ChangedPath)
+		relationByChanged[key] = append(relationByChanged[key], relation)
+	}
+
 	fmt.Println(text("CODE PLAN VALIDATION", "코드 기획 검증"))
 	fmt.Printf(text("Docs root: %s\n", "문서 루트: %s\n"), codePlanDisplayPath(repoRoot, scanRoot))
 	fmt.Printf(text("Mode: requested=%s, used=%s\n", "모드: 요청=%s, 사용=%s\n"), mode, modeUsed)
+	fmt.Printf(text("Git source: %s\n", "Git 소스: %s\n"), gitSource)
 	fmt.Printf(text("Scope policy: %s\n", "범위 정책: %s\n"), codePlanDisplayPath(repoRoot, scopePolicyPath))
+	if relationEnabled {
+		fmt.Printf(text("Relation policy: %s (enabled)\n", "연관 정책: %s (활성)\n"), codePlanDisplayPath(repoRoot, relationPolicyPath))
+	} else {
+		fmt.Printf(text("Relation policy: %s (disabled: file not found)\n", "연관 정책: %s (비활성: 파일 없음)\n"), codePlanDisplayPath(repoRoot, relationPolicyPath))
+	}
 	fmt.Printf(text("Cache path: %s\n", "캐시 경로: %s\n"), codePlanDisplayPath(repoRoot, cachePath))
 	fmt.Printf(text("Changed code files (in scope): %d\n", "변경 코드 파일(범위 적용): %d\n"), len(changedFiles))
 
@@ -198,6 +301,9 @@ func commandCodePlanCheckEasy(args []string) int {
 		fmt.Printf(text("Mode note: %s\n", "모드 참고: %s\n"), strings.TrimSpace(modeWarning))
 	}
 	for _, warning := range scopeWarnings {
+		fmt.Printf("WARN: %s\n", warning)
+	}
+	for _, warning := range relationWarnings {
 		fmt.Printf("WARN: %s\n", warning)
 	}
 	for _, issue := range docIssues {
@@ -239,16 +345,47 @@ func commandCodePlanCheckEasy(args []string) int {
 					boolToken(docResult.ChangeUpdated),
 				)
 			}
+			if relationEnabled {
+				relItems := relationByChanged[codePlanNormalizeRelPath(item.ChangedPath)]
+				if len(relItems) == 0 {
+					fmt.Println(text(
+						"  RELATION: no relation-policy match",
+						"  RELATION: 연관 정책 매칭 없음",
+					))
+				} else {
+					for _, relation := range relItems {
+						status := "PASS"
+						if !relation.Passed {
+							if strictRelation {
+								status = "FAIL"
+							} else {
+								status = "WARN"
+							}
+						}
+						fmt.Printf("  RELATION %s: %s#%s -> %s#%s (changeUpdated=%s)\n",
+							status,
+							relation.TriggerDocPath,
+							relation.TriggerSection,
+							relation.RequiredDoc,
+							relation.RequiredSec,
+							boolToken(relation.ChangeUpdated),
+						)
+						if strings.TrimSpace(relation.Message) != "" {
+							fmt.Printf("    note: %s\n", strings.TrimSpace(relation.Message))
+						}
+					}
+				}
+			}
 		}
 	}
 
 	fmt.Println("")
 	fmt.Printf(text(
-		"Summary: changed=%d, docs=%d, warned=%d, failed=%d, missing-doc=%d\n",
-		"요약: 변경=%d, 문서=%d, 경고=%d, 실패=%d, 문서미매칭=%d\n",
-	), len(changedFiles), len(docs), warned, failed, missingDoc)
+		"Summary: changed=%d, docs=%d, warned=%d, failed=%d, missing-doc=%d, relation-checked=%d, relation-warned=%d, relation-failed=%d\n",
+		"요약: 변경=%d, 문서=%d, 경고=%d, 실패=%d, 문서미매칭=%d, 연관검사=%d, 연관경고=%d, 연관실패=%d\n",
+	), len(changedFiles), len(docs), warned, failed, missingDoc, len(relationResults), relationWarned, relationFailed)
 
-	if failed > 0 {
+	if failed > 0 || relationFailed > 0 {
 		fmt.Println(text("Fix guide:", "수정 가이드:"))
 		fmt.Println(text(
 			"1) Set meta.doc_base_path and/or section.path to overlap changed code paths.",
@@ -261,6 +398,10 @@ func commandCodePlanCheckEasy(args []string) int {
 		fmt.Println(text(
 			"3) Record @change with reason/impact (ex: agd logic-log <doc> <SEC-ID> --reason \"...\" --impact \"...\").",
 			"3) @change(reason/impact)를 기록하세요 (예: agd logic-log <doc> <SEC-ID> --reason \"...\" --impact \"...\").",
+		))
+		fmt.Println(text(
+			"4) For relation-policy matches, update required linked docs and append @change there.",
+			"4) 연관 정책에 매칭된 반대편 문서도 갱신하고 해당 문서에 @change를 기록하세요.",
 		))
 		return 1
 	}
@@ -299,6 +440,17 @@ func parseCodePlanMode(raw string) (codePlanMode, bool) {
 	}
 }
 
+func parseCodePlanGitSource(raw string) (codePlanGitSource, bool) {
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "", "worktree", "1":
+		return codePlanGitSourceWorktree, true
+	case "staged", "2":
+		return codePlanGitSourceStaged, true
+	default:
+		return "", false
+	}
+}
+
 func detectCodePlanRepoRoot() string {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -328,16 +480,16 @@ func resolveCodePlanPath(repoRoot, value string) string {
 	return filepath.Clean(filepath.Join(repoRoot, raw))
 }
 
-func collectChangedCodeFiles(repoRoot string, mode codePlanMode, scope codePlanScopePolicy, cache *codePlanCache) ([]string, codePlanMode, string, error) {
+func collectChangedCodeFiles(repoRoot string, mode codePlanMode, gitSource codePlanGitSource, scope codePlanScopePolicy, cache *codePlanCache) ([]string, codePlanMode, string, error) {
 	switch mode {
 	case codePlanModeGit:
-		files, err := collectChangedCodeFilesFromGit(repoRoot, scope)
+		files, err := collectChangedCodeFilesFromGit(repoRoot, scope, gitSource)
 		return files, codePlanModeGit, "", err
 	case codePlanModeCache:
 		files, err := collectChangedCodeFilesFromCache(repoRoot, scope, cache)
 		return files, codePlanModeCache, "", err
 	default:
-		files, err := collectChangedCodeFilesFromGit(repoRoot, scope)
+		files, err := collectChangedCodeFilesFromGit(repoRoot, scope, gitSource)
 		if err == nil {
 			return files, codePlanModeGit, "", nil
 		}
@@ -352,22 +504,11 @@ func collectChangedCodeFiles(repoRoot string, mode codePlanMode, scope codePlanS
 	}
 }
 
-func collectChangedCodeFilesFromGit(repoRoot string, scope codePlanScopePolicy) ([]string, error) {
-	cmd := exec.Command("git", "status", "--porcelain", "-z", "--untracked-files=all")
-	cmd.Dir = repoRoot
-	out, err := cmd.Output()
+func collectChangedCodeFilesFromGit(repoRoot string, scope codePlanScopePolicy, gitSource codePlanGitSource) ([]string, error) {
+	entries, err := collectGitStatusEntries(repoRoot, gitSource)
 	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
-			stderr := strings.TrimSpace(string(exitErr.Stderr))
-			if stderr == "" {
-				stderr = strings.TrimSpace(exitErr.Error())
-			}
-			return nil, fmt.Errorf("git status failed: %s", stderr)
-		}
-		return nil, fmt.Errorf("git status failed: %v", err)
+		return nil, err
 	}
-
-	entries := parseGitStatusPorcelainZ(out)
 	seen := make(map[string]struct{})
 	for _, entry := range entries {
 		status := strings.TrimSpace(entry.Status)
@@ -384,6 +525,58 @@ func collectChangedCodeFilesFromGit(repoRoot string, scope codePlanScopePolicy) 
 		seen[rel] = struct{}{}
 	}
 	return codePlanSortedKeys(seen), nil
+}
+
+func collectGitStatusEntries(repoRoot string, gitSource codePlanGitSource) ([]codePlanGitStatusEntry, error) {
+	source := gitSource
+	if source == "" {
+		source = codePlanGitSourceWorktree
+	}
+
+	var cmd *exec.Cmd
+	switch source {
+	case codePlanGitSourceStaged:
+		cmd = exec.Command("git", "diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR")
+	default:
+		cmd = exec.Command("git", "status", "--porcelain", "-z", "--untracked-files=all")
+	}
+	cmd.Dir = repoRoot
+	out, err := cmd.Output()
+	if err != nil {
+		cmdName := "git status"
+		if source == codePlanGitSourceStaged {
+			cmdName = "git diff --cached"
+		}
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			stderr := strings.TrimSpace(string(exitErr.Stderr))
+			if stderr == "" {
+				stderr = strings.TrimSpace(exitErr.Error())
+			}
+			return nil, fmt.Errorf("%s failed: %s", cmdName, stderr)
+		}
+		return nil, fmt.Errorf("%s failed: %v", cmdName, err)
+	}
+
+	if source == codePlanGitSourceStaged {
+		return parseGitNameOnlyZ(out), nil
+	}
+	return parseGitStatusPorcelainZ(out), nil
+}
+
+func parseGitNameOnlyZ(raw []byte) []codePlanGitStatusEntry {
+	parts := bytes.Split(raw, []byte{0})
+	out := make([]codePlanGitStatusEntry, 0, len(parts))
+	for _, chunk := range parts {
+		path := strings.TrimSpace(string(chunk))
+		if path == "" {
+			continue
+		}
+		out = append(out, codePlanGitStatusEntry{
+			Status: "M ",
+			Path:   path,
+		})
+	}
+	return out
 }
 
 func collectChangedCodeFilesFromCache(repoRoot string, scope codePlanScopePolicy, cache *codePlanCache) ([]string, error) {
@@ -511,6 +704,89 @@ func parseCodePlanScopePolicyLines(lines []string, policy *codePlanScopePolicy) 
 	sort.Strings(policy.IncludePrefixes)
 	sort.Strings(policy.ExcludePrefixes)
 	return warnings
+}
+
+func loadCodePlanRelationPolicy(path string) (codePlanRelationPolicy, []string, bool, error) {
+	policy := codePlanRelationPolicy{
+		Rules: make([]codePlanRelationRule, 0),
+	}
+	target := strings.TrimSpace(path)
+	if target == "" {
+		return policy, nil, false, nil
+	}
+	raw, err := os.ReadFile(target)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return policy, nil, false, nil
+		}
+		return policy, nil, false, fmt.Errorf("cannot read relation policy: %w", err)
+	}
+	lines := strings.Split(strings.ReplaceAll(string(raw), "\r\n", "\n"), "\n")
+	warnings := parseCodePlanRelationPolicyLines(lines, &policy)
+	return policy, warnings, true, nil
+}
+
+func parseCodePlanRelationPolicyLines(lines []string, policy *codePlanRelationPolicy) []string {
+	if policy == nil {
+		return nil
+	}
+	if policy.Rules == nil {
+		policy.Rules = make([]codePlanRelationRule, 0)
+	}
+	warnings := make([]string, 0)
+	for idx, rawLine := range lines {
+		line := strings.TrimSpace(rawLine)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "<->", 2)
+		if len(parts) != 2 {
+			warnings = append(warnings, fmt.Sprintf("relation policy line %d: missing <-> separator", idx+1))
+			continue
+		}
+		left, leftErr := parseCodePlanRelationEndpoint(strings.TrimSpace(parts[0]))
+		if leftErr != nil {
+			warnings = append(warnings, fmt.Sprintf("relation policy line %d: %v", idx+1, leftErr))
+			continue
+		}
+		right, rightErr := parseCodePlanRelationEndpoint(strings.TrimSpace(parts[1]))
+		if rightErr != nil {
+			warnings = append(warnings, fmt.Sprintf("relation policy line %d: %v", idx+1, rightErr))
+			continue
+		}
+		policy.Rules = append(policy.Rules, codePlanRelationRule{
+			LineNo: idx + 1,
+			Raw:    line,
+			Left:   left,
+			Right:  right,
+		})
+	}
+	return warnings
+}
+
+func parseCodePlanRelationEndpoint(raw string) (codePlanRelationEndpoint, error) {
+	value := strings.TrimSpace(raw)
+	if value == "" {
+		return codePlanRelationEndpoint{}, fmt.Errorf("empty endpoint")
+	}
+	idx := strings.LastIndex(value, "#")
+	if idx <= 0 || idx >= len(value)-1 {
+		return codePlanRelationEndpoint{}, fmt.Errorf("endpoint must be <doc.agd>#<SECTION-ID> (got %s)", value)
+	}
+	docPath := codePlanNormalizeRelPath(value[:idx])
+	sectionID := strings.ToUpper(strings.TrimSpace(value[idx+1:]))
+	if docPath == "" || sectionID == "" {
+		return codePlanRelationEndpoint{}, fmt.Errorf("endpoint must include both doc path and section id (got %s)", value)
+	}
+	if !strings.EqualFold(filepath.Ext(docPath), ".agd") {
+		return codePlanRelationEndpoint{}, fmt.Errorf("endpoint doc path should end with .agd (got %s)", value)
+	}
+	return codePlanRelationEndpoint{
+		Raw:       value,
+		DocPath:   docPath,
+		DocKey:    codePlanPathKey(docPath),
+		SectionID: sectionID,
+	}, nil
 }
 
 func defaultCodePlanAllowedExt() map[string]bool {
@@ -650,6 +926,7 @@ func collectCodePlanDocs(scanRoot, repoRoot string) ([]codePlanDocInfo, []codePl
 			AbsPath:          absPath,
 			RelPath:          relPath,
 			RefPaths:         collectDocReferencePaths(doc, absPath, repoRoot),
+			SectionIDs:       collectDocSectionIDs(doc),
 			HasTag:           hasCodePlanTag(doc),
 			ChangeDigest:     changeDigest,
 			LatestChangeID:   latestID,
@@ -661,6 +938,24 @@ func collectCodePlanDocs(scanRoot, repoRoot string) ([]codePlanDocInfo, []codePl
 		return strings.ToLower(docs[i].RelPath) < strings.ToLower(docs[j].RelPath)
 	})
 	return docs, issues, nil
+}
+
+func collectDocSectionIDs(doc *agd.Document) map[string]bool {
+	sections := make(map[string]bool)
+	if doc == nil {
+		return sections
+	}
+	for _, section := range doc.Sections {
+		if section == nil {
+			continue
+		}
+		id := strings.ToUpper(strings.TrimSpace(section.ID))
+		if id == "" {
+			continue
+		}
+		sections[id] = true
+	}
+	return sections
 }
 
 func collectDocReferencePaths(doc *agd.Document, docAbsPath, repoRoot string) []string {
@@ -817,6 +1112,7 @@ func evaluateCodePlanCheck(changedFiles []string, docs []codePlanDocInfo, cache 
 			passed := doc.HasTag || changeUpdated
 			item.MatchedDocs = append(item.MatchedDocs, codePlanDocResult{
 				DocPath:       doc.RelPath,
+				DocKey:        codePlanPathKey(doc.RelPath),
 				HasTag:        doc.HasTag,
 				ChangeUpdated: changeUpdated,
 				Passed:        passed,
@@ -831,6 +1127,125 @@ func evaluateCodePlanCheck(changedFiles []string, docs []codePlanDocInfo, cache 
 		results = append(results, item)
 	}
 	return results
+}
+
+func evaluateCodePlanRelations(results []codePlanFileResult, docs []codePlanDocInfo, policy codePlanRelationPolicy, cache *codePlanCache) []codePlanRelationResult {
+	if len(policy.Rules) == 0 || len(results) == 0 {
+		return []codePlanRelationResult{}
+	}
+	today := time.Now().Format("2006-01-02")
+	docsByKey := make(map[string]codePlanDocInfo, len(docs))
+	for _, doc := range docs {
+		key := codePlanPathKey(doc.RelPath)
+		if key == "" {
+			continue
+		}
+		docsByKey[key] = doc
+	}
+
+	seen := make(map[string]codePlanRelationResult)
+	addResult := func(item codePlanRelationResult) {
+		key := strings.Join([]string{
+			codePlanPathKey(item.ChangedPath),
+			codePlanPathKey(item.TriggerDocPath),
+			strings.ToUpper(strings.TrimSpace(item.TriggerSection)),
+			codePlanPathKey(item.RequiredDoc),
+			strings.ToUpper(strings.TrimSpace(item.RequiredSec)),
+		}, "|")
+		prev, ok := seen[key]
+		if !ok {
+			seen[key] = item
+			return
+		}
+		if prev.Passed && !item.Passed {
+			seen[key] = item
+		}
+	}
+
+	for _, changedItem := range results {
+		for _, matchedDoc := range changedItem.MatchedDocs {
+			triggerDoc, ok := docsByKey[matchedDoc.DocKey]
+			if !ok {
+				continue
+			}
+			for _, rule := range policy.Rules {
+				switch matchedDoc.DocKey {
+				case rule.Left.DocKey:
+					addResult(evaluateCodePlanRelationPair(changedItem.ChangedPath, triggerDoc, rule.Left, rule.Right, docsByKey, cache, today))
+				case rule.Right.DocKey:
+					addResult(evaluateCodePlanRelationPair(changedItem.ChangedPath, triggerDoc, rule.Right, rule.Left, docsByKey, cache, today))
+				}
+			}
+		}
+	}
+
+	out := make([]codePlanRelationResult, 0, len(seen))
+	for _, item := range seen {
+		out = append(out, item)
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if strings.ToLower(out[i].ChangedPath) != strings.ToLower(out[j].ChangedPath) {
+			return strings.ToLower(out[i].ChangedPath) < strings.ToLower(out[j].ChangedPath)
+		}
+		if strings.ToLower(out[i].TriggerDocPath) != strings.ToLower(out[j].TriggerDocPath) {
+			return strings.ToLower(out[i].TriggerDocPath) < strings.ToLower(out[j].TriggerDocPath)
+		}
+		if strings.ToUpper(out[i].TriggerSection) != strings.ToUpper(out[j].TriggerSection) {
+			return strings.ToUpper(out[i].TriggerSection) < strings.ToUpper(out[j].TriggerSection)
+		}
+		if strings.ToLower(out[i].RequiredDoc) != strings.ToLower(out[j].RequiredDoc) {
+			return strings.ToLower(out[i].RequiredDoc) < strings.ToLower(out[j].RequiredDoc)
+		}
+		return strings.ToUpper(out[i].RequiredSec) < strings.ToUpper(out[j].RequiredSec)
+	})
+	return out
+}
+
+func evaluateCodePlanRelationPair(changedPath string, triggerDoc codePlanDocInfo, triggerEndpoint, requiredEndpoint codePlanRelationEndpoint, docsByKey map[string]codePlanDocInfo, cache *codePlanCache, today string) codePlanRelationResult {
+	base := codePlanRelationResult{
+		ChangedPath:    changedPath,
+		TriggerDocPath: triggerDoc.RelPath,
+		TriggerSection: triggerEndpoint.SectionID,
+		RequiredDoc:    requiredEndpoint.DocPath,
+		RequiredSec:    requiredEndpoint.SectionID,
+		ChangeUpdated:  false,
+		Passed:         false,
+	}
+
+	if !docHasSectionID(triggerDoc, triggerEndpoint.SectionID) {
+		base.Message = "trigger endpoint section not found in matched doc"
+		return base
+	}
+
+	requiredDoc, ok := docsByKey[requiredEndpoint.DocKey]
+	if !ok {
+		base.Message = "required endpoint doc not found"
+		return base
+	}
+	base.RequiredDoc = requiredDoc.RelPath
+
+	if !docHasSectionID(requiredDoc, requiredEndpoint.SectionID) {
+		base.Message = "required endpoint section not found"
+		return base
+	}
+
+	base.ChangeUpdated = isCodePlanChangeUpdated(requiredDoc, cache, today)
+	base.Passed = base.ChangeUpdated
+	if !base.Passed {
+		base.Message = "required linked doc has no @change update"
+	}
+	return base
+}
+
+func docHasSectionID(doc codePlanDocInfo, sectionID string) bool {
+	needle := strings.ToUpper(strings.TrimSpace(sectionID))
+	if needle == "" {
+		return false
+	}
+	if len(doc.SectionIDs) == 0 {
+		return false
+	}
+	return doc.SectionIDs[needle]
 }
 
 func docOverlapsChangedPath(changedPath string, refs []string) bool {

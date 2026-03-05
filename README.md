@@ -84,7 +84,9 @@ git config --get core.hooksPath
 
 ```cmd
 go build -o 00_agd\agd.exe ./cmd/agd
+
 go build -ldflags "-X main.defaultLang=en" -o 00_agd\agd_en.exe ./cmd/agd
+
 go build -ldflags "-X main.defaultLang=ko" -o 00_agd\agd_ko.exe ./cmd/agd
 ```
 

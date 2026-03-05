@@ -126,6 +126,7 @@ Use this command to detect code-change vs planning-doc gaps.
 00_agd\agd_en.exe code-plan-check --mode auto
 00_agd\agd_en.exe code-plan-check --mode git
 00_agd\agd_en.exe code-plan-check --mode cache
+00_agd\agd_en.exe code-plan-check --mode git --git-source staged --strict-relation
 ```
 
 Behavior summary:
@@ -133,12 +134,26 @@ Behavior summary:
 - Collect changed code files (`auto`: git first, then cache fallback).
 - Check overlap against AGD doc `doc_base_path` and `section.path`.
 - Matched docs pass only when either maintenance/incident tag exists or `@change` is updated.
+- If relation policy (`A#SEC <-> B#SEC`) exists, bidirectional service/frontend linked docs are additionally checked for `@change` updates.
 - On failure, it prints remediation steps and exits with code `1`.
 
 Policy/cache paths:
 
 - scope policy: `00_agd/policy/code_plan_scope.txt`
+- relation policy: `00_agd/policy/code_plan_relations.txt`
 - local cache: `00_agd/.cache/code_plan_validation.json`
+
+Relation policy syntax:
+
+- `<left-doc.agd>#<SECTION-ID> <-> <right-doc.agd>#<SECTION-ID>`
+- one relation per line
+- for multiple relations, add multiple lines
+- for 1:N, repeat the left endpoint; for N:1, repeat the right endpoint
+- comma-separated multi-endpoint syntax in one line is not supported
+- example: `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010`
+- example (1:N):
+  - `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-010`
+  - `00_agd/agd_docs/10_source/service/checkout_service.agd#SYS-020 <-> 00_agd/agd_docs/20_derived/frontend/checkout_page.agd#FP-020`
 
 Scope policy format:
 
@@ -150,9 +165,13 @@ Optional strict mode:
 
 ```cmd
 00_agd\agd_en.exe code-plan-check --mode auto --strict-mapping
+00_agd\agd_en.exe code-plan-check --mode auto --strict-relation
 ```
 
 - Use `--strict-mapping` only when you want unmatched doc mapping to fail immediately.
+- Use `--strict-relation` when missing linked-doc updates must fail.
+- pre-commit runs relation strict mode with staged-only source:
+  `code-plan-check --mode git --git-source staged --strict-relation`.
 
 ## 3) Daily usage
 
