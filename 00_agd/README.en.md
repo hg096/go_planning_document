@@ -144,3 +144,89 @@ Strict options:
 
 Hook enforcement behavior:
 - pre-commit runs `code-plan-check --mode git --git-source staged --strict-relation` first to block missing linked-doc updates.
+
+## 6) agd_docs README Merge (No-Omission Integration)
+
+The following section integrates the former `00_agd/agd_docs/README.md` operational content without omission.
+
+### 6-1) Folder Structure
+
+- `00_inbox`: temporary draft and pre-triage notes
+- `10_source/*`: source-of-truth documents
+- `20_derived/*`: derived documents linked to source docs
+- `30_shared/*`: shared planning/collaboration docs
+- `90_archive`: archived documents
+
+### 6-2) Recommended Placement by Topic
+
+- `10_source/product`: product scope and success criteria
+- `10_source/service`: service/backend logic baseline
+- `10_source/policy`: rules/standards/approval/release policy
+- `10_source/architecture`: ADR/trade-off records
+
+- `20_derived/frontend`: page-level implementation/validation/release docs
+- `20_derived/qa`: regression/permission/recovery test docs
+- `20_derived/ops`: operations runbook docs
+
+- `30_shared/meeting`: decision/action logs
+- `30_shared/handoff`: release handoff package
+- `30_shared/roadmap`: milestones/priorities
+- `30_shared/postmortem`: incident retrospectives
+- `30_shared/experiment`: experiment records
+- `30_shared/maintenance`: single-flow maintenance workspace
+- `30_shared/errFix`: single-flow incident/bug workspace
+
+### 6-3) Guide-First Operation
+
+1) Read `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md` or `AGD_TEMPLATE_GUIDE_en.md` first.
+2) For service topics, keep `10_source/service` as the single authoritative flow.
+3) Link derived docs from the source baseline.
+4) When service source changes, sync linked derived/source_sections in the same change set.
+5) Always record `@change(reason/impact)`.
+6) Do not report completion before passing 3 validations + blind reconstruction test.
+
+### 6-4) Minimal Command Set
+
+```cmd
+00_agd\agd_en.exe check-all 00_agd\agd_docs --strict
+00_agd\agd_en.exe role-graph 00_agd\agd_docs --scope all
+00_agd\agd_en.exe code-plan-check --mode auto --strict-relation
+```
+
+### 6-5) Blind Reconstruction Test
+
+- input: only `10_source/service` document(s) (no code reference)
+- output: domain pseudo-implementation (call order, DTO, failure branches, state transitions)
+- pass criteria: 0 missing required blocks + 0 mapping mismatch
+
+### 6-6) Quality Rubric (9/10)
+
+- rubric score must be 9 or higher
+- structural consistency point is mandatory
+- deduction criteria:
+  - fewer than 10 domain pseudo-code steps
+  - missing error-code/HTTP mapping in failure branches
+  - missing DTO type/required/validation constraints
+
+### 6-7) Document Style Rules (Example Alignment)
+
+Reference examples: `00_agd/examples/ko/*`
+
+- Use block-style `@section { ... }` as the standard.
+- Keep block key order as `summary -> links -> path -> content`.
+- Keep tab (`\t`) indentation for `content` body lines.
+- Style changes must preserve semantics (format-only normalization).
+
+### 6-8) General Quality Standards
+
+- source docs: executable contract quality
+- derived docs: traceable via source sections and `source_sections`
+- shared docs: preserve decision context needed for operations/collaboration
+- keep `@map`/`@section`/`@change` consistent
+
+### 6-9) END__ Close Rules
+
+- maintenance close docs: `30_shared/maintenance/END__*_maintenance_case.agd`
+- incident close docs: `30_shared/errFix/END__*_incident_case.agd`
+- `END__*` docs are excluded from default scan/select/role-graph flows
+- remove the `END__` prefix to reopen

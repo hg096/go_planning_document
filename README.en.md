@@ -152,7 +152,7 @@ Document creation is focused on the same 8 types.
 Path input is resolved against `00_agd\agd_docs` by default.
 When opening existing docs, filename-only input is searched across subfolders.
 If duplicate filenames exist under subfolders, use a relative path like `front/home`.
-`00_agd/agd_docs/README.md` is scaffold-generated in the selected language and includes the AI writing philosophy/operating guide.
+For AI writing philosophy and operating rules, use `00_agd/README.md` (English: `00_agd/README.en.md`) as the unified guide.
 
 For new document creation (wizard top menu `4`), filename-only output is auto-routed by doc type:
 
@@ -250,7 +250,7 @@ The PR template is copied to `.github/pull_request_template.md`.
 - Korean start guide: `README.md`
 - Korean AI execution guide: `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md`
 - English AI execution guide: `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
-- Docs root folder guide: `00_agd/agd_docs/README.md`
+- Unified docs-root/operations guide: `00_agd/README.en.md` (Korean source: `00_agd/README.md`)
 - Isolated package guide (EN): `00_agd/README.en.md`
 - Isolated package guide (KO): `00_agd/README.md`
 - One-command bootstrap (cmd): `00_agd/setup.cmd`

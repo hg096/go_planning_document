@@ -20,7 +20,7 @@ func ensureDocsRoot() error {
 			return err
 		}
 	}
-	return writeScaffoldReadmeIfMissing(docsRootDir, activeLang())
+	return nil
 }
 
 func writeScaffoldReadmeIfMissing(root, lang string) error {

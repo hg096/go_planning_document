@@ -1000,7 +1000,8 @@ func ensureKitRoot(root, lang string) error {
 			return err
 		}
 	}
-	return writeScaffoldReadmeIfMissing(cleanRoot, lang)
+	_ = lang
+	return nil
 }
 
 func createDocFromTemplate(templateName, outPath, title, owner, version, date string, force bool) error {

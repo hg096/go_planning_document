@@ -115,7 +115,7 @@ REM 또는
 문서 경로는 기본적으로 `00_agd\agd_docs`를 기준으로 처리됩니다.
 기존 문서를 열 때 파일명만 입력하면 `00_agd\agd_docs` 전체 하위 폴더에서 자동 탐색합니다.
 `00_agd\agd_docs` 아래 하위 폴더가 있으면 위자드에서 폴더 선택지가 함께 표시됩니다.
-`00_agd/agd_docs/README.md`는 스캐폴드 생성 시 언어(한국어/영어)에 맞춰 자동 생성되며, AI 작성 철학/운영 원칙 가이드가 포함됩니다.
+AI 작성 철학/운영 원칙 가이드는 `00_agd/README.md`(영문: `00_agd/README.en.md`)를 기준으로 확인합니다.
 
 새 문서 생성 시(위자드 첫 화면 메뉴 `4`) 파일명만 입력하면 문서 타입 기준 폴더로 자동 배치됩니다.
 
@@ -364,7 +364,7 @@ PR 템플릿은 `.github/pull_request_template.md`로 복사됩니다.
 - AI 실행 가이드(국문): `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md`
 - AI Execution Guide (English): `00_agd/docs/AGD_TEMPLATE_GUIDE_en.md`
 - Start Guide (English): `README.en.md`
-- 문서 루트 구조 가이드: `00_agd/agd_docs/README.md`
+- 문서 루트 구조/운영 통합 가이드: `00_agd/README.md`
 - 격리형 패키지 가이드: `00_agd/README.md`
 - 원클릭 부트스트랩 스크립트: `00_agd/setup.cmd`
 - 부트스트랩 스크립트(PowerShell): `00_agd/scripts/setup.ps1`
