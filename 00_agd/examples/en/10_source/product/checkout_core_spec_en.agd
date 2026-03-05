@@ -14,102 +14,112 @@ doc_base_path:
 
 @section CORE-000
 title: Input Guide
-summary: Minimum input rules for consistent writing by humans and AI
-links: GUIDE-INPUT
-content:
-<<<
-[Required input]
-1) Fill every blank after -, 1), and : with concrete content.
-2) Use specific numbers, dates, owners, and evidence whenever possible.
-3) If unknown, do not leave blank; write TBD (needs confirmation).
+{
+	summary: Minimum input rules for consistent writing by humans and AI
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Required input]
+	1) Fill every blank after -, 1), and : with concrete content.
+	2) Use specific numbers, dates, owners, and evidence whenever possible.
+	3) If unknown, do not leave blank; write TBD (needs confirmation).
 
-[AI request contract]
-- target_docs: actual file path
-- target_sections: section IDs or section paths
-- goal: why this change is needed (1-2 sentences)
-- constraints: scope/forbidden constraints
-- done: validation-based completion criteria
+	[AI request contract]
+	- target_docs: actual file path
+	- target_sections: section IDs or section paths
+	- goal: why this change is needed (1-2 sentences)
+	- constraints: scope/forbidden constraints
+	- done: validation-based completion criteria
 
-[AI output contract]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI output contract]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[Done checklist]
-- Are @map rows and @section IDs aligned?
-- For edits, is @change reason/impact recorded?
->>>
+	[Done checklist]
+	- Are @map rows and @section IDs aligned?
+	- For edits, is @change reason/impact recorded?
+	>>>
+}
 
 @section CORE-001
 title: Problem and Goal
-summary: Lock objective and done criteria with measurable metrics
-links: PRODUCT-CORE-001
-content:
-<<<
-[Problem to solve]
--
+{
+	summary: Lock objective and done criteria with measurable metrics
+	links: PRODUCT-CORE-001
+	content:
+	<<<
+	[Problem to solve]
+	-
 
-[Target metrics]
-1) metric:
-   - baseline:
-   - target:
+	[Target metrics]
+	1) metric:
+	   - baseline:
+	   - target:
 
-[Done criteria]
-1)
-2)
->>>
+	[Done criteria]
+	1)
+	2)
+	>>>
+}
 
 @section CORE-010
 title: Core User/Service Flow
-summary: Keep user scenario and backend flow in one coherent path
-links: FLOW-CORE-001
-content:
-<<<
-[Core user scenario]
-1) entry condition:
-2) key action:
-3) expected output:
+{
+	summary: Keep user scenario and backend flow in one coherent path
+	links: FLOW-CORE-001
+	content:
+	<<<
+	[Core user scenario]
+	1) entry condition:
+	2) key action:
+	3) expected output:
 
-[Service processing steps]
-1) input validation
-2) domain processing
-3) external integrations
-4) persistence and response
->>>
+	[Service processing steps]
+	1) input validation
+	2) domain processing
+	3) external integrations
+	4) persistence and response
+	>>>
+}
 
 @section CORE-020
 title: Technical Decisions and Constraints
-summary: Record high-cost technical decisions and hard constraints
-links: ADR-CORE-001
-content:
-<<<
-[Key decisions]
-1) decision:
-   - rationale:
-   - alternatives:
+{
+	summary: Record high-cost technical decisions and hard constraints
+	links: ADR-CORE-001
+	content:
+	<<<
+	[Key decisions]
+	1) decision:
+	   - rationale:
+	   - alternatives:
 
-[Constraints]
-- performance:
-- security/policy:
-- operations:
->>>
+	[Constraints]
+	- performance:
+	- security/policy:
+	- operations:
+	>>>
+}
 
 @section CORE-030
 title: AI Work Rules and Approval Gate
-summary: Define mandatory AI request fields and approval checks
-links: AIGATE-CORE-001
-content:
-<<<
-[Required fields for AI request]
-- target document:
-- target sections:
-- reason:
-- impact:
-- done criteria:
+{
+	summary: Define mandatory AI request fields and approval checks
+	links: AIGATE-CORE-001
+	content:
+	<<<
+	[Required fields for AI request]
+	- target document:
+	- target sections:
+	- reason:
+	- impact:
+	- done criteria:
 
-[Approval gate]
-1) if service logic changes, source doc must be updated first
-2) reject when @change(reason/impact) is missing
-3) reject when validation checklist is incomplete
->>>
+	[Approval gate]
+	1) if service logic changes, source doc must be updated first
+	2) reject when @change(reason/impact) is missing
+	3) reject when validation checklist is incomplete
+	>>>
+}
 
 @change CHG-2026-03-04-01
 target: CORE-010

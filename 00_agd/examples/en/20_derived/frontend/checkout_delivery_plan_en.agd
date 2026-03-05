@@ -15,84 +15,92 @@ source_sections: CORE-010->DEL-001,CORE-030->DEL-020
 
 @section DEL-000
 title: Input Guide
-summary: Minimum input rules for consistent writing by humans and AI
-links: GUIDE-INPUT
-content:
-<<<
-[Required input]
-1) Fill every blank after -, 1), and : with concrete content.
-2) Use specific numbers, dates, owners, and evidence whenever possible.
-3) If unknown, do not leave blank; write TBD (needs confirmation).
+{
+	summary: Minimum input rules for consistent writing by humans and AI
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Required input]
+	1) Fill every blank after -, 1), and : with concrete content.
+	2) Use specific numbers, dates, owners, and evidence whenever possible.
+	3) If unknown, do not leave blank; write TBD (needs confirmation).
 
-[AI request contract]
-- target_docs: actual file path
-- target_sections: section IDs or section paths
-- goal: why this change is needed (1-2 sentences)
-- constraints: scope/forbidden constraints
-- done: validation-based completion criteria
+	[AI request contract]
+	- target_docs: actual file path
+	- target_sections: section IDs or section paths
+	- goal: why this change is needed (1-2 sentences)
+	- constraints: scope/forbidden constraints
+	- done: validation-based completion criteria
 
-[AI output contract]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI output contract]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[Done checklist]
-- Are @map rows and @section IDs aligned?
-- For edits, is @change reason/impact recorded?
->>>
+	[Done checklist]
+	- Are @map rows and @section IDs aligned?
+	- For edits, is @change reason/impact recorded?
+	>>>
+}
 
 @section DEL-001
 title: Frontend Implementation Plan
-summary: Make UI behavior and implementation scope explicit
-links: DELIVERY-FE-001
-content:
-<<<
-[Page/feature scope]
-1) page:
-   - key action:
-   - data source:
-   - exception handling:
+{
+	summary: Make UI behavior and implementation scope explicit
+	links: DELIVERY-FE-001
+	content:
+	<<<
+	[Page/feature scope]
+	1) page:
+	   - key action:
+	   - data source:
+	   - exception handling:
 
-[Implementation tasks]
-1)
-2)
->>>
+	[Implementation tasks]
+	1)
+	2)
+	>>>
+}
 
 @section DEL-010
 title: QA Validation Plan
-summary: Standardize test scenarios and quality evidence
-links: DELIVERY-QA-001
-content:
-<<<
-[Functional validation]
-1) scenario:
-   - expected outcome:
+{
+	summary: Standardize test scenarios and quality evidence
+	links: DELIVERY-QA-001
+	content:
+	<<<
+	[Functional validation]
+	1) scenario:
+	   - expected outcome:
 
-[Regression validation]
-1) impacted feature:
-   - checks:
+	[Regression validation]
+	1) impacted feature:
+	   - checks:
 
-[Evidence]
-- test logs:
-- screenshots/links:
->>>
+	[Evidence]
+	- test logs:
+	- screenshots/links:
+	>>>
+}
 
 @section DEL-020
 title: Release Execution Checklist
-summary: Lock release and rollback criteria before execution
-links: DELIVERY-REL-001
-content:
-<<<
-[Pre-release checks]
-1)
-2)
+{
+	summary: Lock release and rollback criteria before execution
+	links: DELIVERY-REL-001
+	content:
+	<<<
+	[Pre-release checks]
+	1)
+	2)
 
-[Post-release checks]
-1)
-2)
+	[Post-release checks]
+	1)
+	2)
 
-[Rollback criteria]
-- condition:
-- procedure:
->>>
+	[Rollback criteria]
+	- condition:
+	- procedure:
+	>>>
+}
 
 @change CHG-2026-03-04-01
 target: DEL-001

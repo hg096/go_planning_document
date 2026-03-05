@@ -14,115 +14,127 @@ doc_base_path:
 
 @section EXP-000
 title: Input Guide
-summary: Minimum input rules for consistent writing by humans and AI
-links: GUIDE-INPUT
-content:
-<<<
-[Required input]
-1) Fill every blank after -, 1), and : with concrete content.
-2) Use specific numbers, dates, owners, and evidence whenever possible.
-3) If unknown, do not leave blank; write TBD (needs confirmation).
+{
+	summary: Minimum input rules for consistent writing by humans and AI
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Required input]
+	1) Fill every blank after -, 1), and : with concrete content.
+	2) Use specific numbers, dates, owners, and evidence whenever possible.
+	3) If unknown, do not leave blank; write TBD (needs confirmation).
 
-[AI request contract]
-- target_docs: actual file path
-- target_sections: section IDs or section paths
-- goal: why this change is needed (1-2 sentences)
-- constraints: scope/forbidden constraints
-- done: validation-based completion criteria
+	[AI request contract]
+	- target_docs: actual file path
+	- target_sections: section IDs or section paths
+	- goal: why this change is needed (1-2 sentences)
+	- constraints: scope/forbidden constraints
+	- done: validation-based completion criteria
 
-[AI output contract]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI output contract]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[Done checklist]
-- Are @map rows and @section IDs aligned?
-- For edits, is @change reason/impact recorded?
->>>
+	[Done checklist]
+	- Are @map rows and @section IDs aligned?
+	- For edits, is @change reason/impact recorded?
+	>>>
+}
 
 @section EXP-001
 title: Hypothesis
-summary: State a falsifiable hypothesis tied to business outcomes
-links: HYP-001
-content:
-<<<
-[Problem]
--
+{
+	summary: State a falsifiable hypothesis tied to business outcomes
+	links: HYP-001
+	content:
+	<<<
+	[Problem]
+	-
 
-[Hypothesis]
--
+	[Hypothesis]
+	-
 
-[Expected impact]
--
->>>
+	[Expected impact]
+	-
+	>>>
+}
 
 @section EXP-010
 title: Experiment Design
-summary: Define treatment/control and control variables clearly
-links: EXP-DESIGN-001
-content:
-<<<
-[Cohorts]
-- Treatment:
-- Control:
+{
+	summary: Define treatment/control and control variables clearly
+	links: EXP-DESIGN-001
+	content:
+	<<<
+	[Cohorts]
+	- Treatment:
+	- Control:
 
-[Duration]
-- Start:
-- End:
+	[Duration]
+	- Start:
+	- End:
 
-[Control variables]
-1)
-2)
->>>
+	[Control variables]
+	1)
+	2)
+	>>>
+}
 
 @section EXP-020
 title: Metrics
-summary: Define primary and guardrail metrics with numeric criteria
-links: KPI-EXP-001
-content:
-<<<
-[Primary metrics]
-1)
-2)
+{
+	summary: Define primary and guardrail metrics with numeric criteria
+	links: KPI-EXP-001
+	content:
+	<<<
+	[Primary metrics]
+	1)
+	2)
 
-[Guardrail metrics]
-1)
-2)
+	[Guardrail metrics]
+	1)
+	2)
 
-[Success criteria]
-- Minimum lift:
-- Significance threshold:
->>>
+	[Success criteria]
+	- Minimum lift:
+	- Significance threshold:
+	>>>
+}
 
 @section EXP-030
 title: Execution Plan
-summary: Define rollout steps and rollback conditions
-links: ROLLBACK-EXP-001
-content:
-<<<
-1) Preparation
-2) Launch
-3) Monitoring
-4) Stop/Ship
+{
+	summary: Define rollout steps and rollback conditions
+	links: ROLLBACK-EXP-001
+	content:
+	<<<
+	1) Preparation
+	2) Launch
+	3) Monitoring
+	4) Stop/Ship
 
-[Rollback trigger]
--
->>>
+	[Rollback trigger]
+	-
+	>>>
+}
 
 @section EXP-040
 title: Results and Conclusion
-summary: Capture outcomes and decision with evidence
-links: REPORT-EXP-001
-content:
-<<<
-[Result summary]
--
+{
+	summary: Capture outcomes and decision with evidence
+	links: REPORT-EXP-001
+	content:
+	<<<
+	[Result summary]
+	-
 
-[Interpretation]
--
+	[Interpretation]
+	-
 
-[Next action]
-1)
-2)
->>>
+	[Next action]
+	1)
+	2)
+	>>>
+}
 
 @change CHG-2026-03-04-01
 target: EXP-020

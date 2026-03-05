@@ -14,109 +14,121 @@ doc_base_path:
 
 @section HO-000
 title: Input Guide
-summary: Minimum input rules for consistent writing by humans and AI
-links: GUIDE-INPUT
-content:
-<<<
-[Required input]
-1) Fill every blank after -, 1), and : with concrete content.
-2) Use specific numbers, dates, owners, and evidence whenever possible.
-3) If unknown, do not leave blank; write TBD (needs confirmation).
+{
+	summary: Minimum input rules for consistent writing by humans and AI
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Required input]
+	1) Fill every blank after -, 1), and : with concrete content.
+	2) Use specific numbers, dates, owners, and evidence whenever possible.
+	3) If unknown, do not leave blank; write TBD (needs confirmation).
 
-[AI request contract]
-- target_docs: actual file path
-- target_sections: section IDs or section paths
-- goal: why this change is needed (1-2 sentences)
-- constraints: scope/forbidden constraints
-- done: validation-based completion criteria
+	[AI request contract]
+	- target_docs: actual file path
+	- target_sections: section IDs or section paths
+	- goal: why this change is needed (1-2 sentences)
+	- constraints: scope/forbidden constraints
+	- done: validation-based completion criteria
 
-[AI output contract]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI output contract]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[Done checklist]
-- Are @map rows and @section IDs aligned?
-- For edits, is @change reason/impact recorded?
->>>
+	[Done checklist]
+	- Are @map rows and @section IDs aligned?
+	- For edits, is @change reason/impact recorded?
+	>>>
+}
 
 @section HO-001
 title: Scope Agreement
-summary: Clarify scope early to reduce schedule risk
-links: SPRINT-001
-content:
-<<<
-[In scope]
-1)
-2)
-3)
+{
+	summary: Clarify scope early to reduce schedule risk
+	links: SPRINT-001
+	content:
+	<<<
+	[In scope]
+	1)
+	2)
+	3)
 
-[Out of scope]
-1)
-2)
->>>
+	[Out of scope]
+	1)
+	2)
+	>>>
+}
 
 @section HO-010
 title: API Contract
-summary: Align required fields and error semantics across teams
-links: OPENAPI-001
-content:
-<<<
-[Request]
-- Endpoint:
-- Required fields:
+{
+	summary: Align required fields and error semantics across teams
+	links: OPENAPI-001
+	content:
+	<<<
+	[Request]
+	- Endpoint:
+	- Required fields:
 
-[Response]
-- Success shape:
-- Error shape:
+	[Response]
+	- Success shape:
+	- Error shape:
 
-[Error codes]
-1)
-2)
-3)
->>>
+	[Error codes]
+	1)
+	2)
+	3)
+	>>>
+}
 
 @section HO-020
 title: State Transitions
-summary: Keep FE and BE state interpretation aligned
-links: FE-STATE-001
-content:
-<<<
-[State transitions]
-1) idle -> loading
-2) loading -> success
-3) loading -> fail
-4) fail -> loading
+{
+	summary: Keep FE and BE state interpretation aligned
+	links: FE-STATE-001
+	content:
+	<<<
+	[State transitions]
+	1) idle -> loading
+	2) loading -> success
+	3) loading -> fail
+	4) fail -> loading
 
-[Exception handling]
-- retryable true:
-- retryable false:
->>>
+	[Exception handling]
+	- retryable true:
+	- retryable false:
+	>>>
+}
 
 @section HO-030
 title: Test Criteria
-summary: Define release-blocking test criteria
-links: TESTPLAN-001
-content:
-<<<
-[Required tests]
-1)
-2)
-3)
+{
+	summary: Define release-blocking test criteria
+	links: TESTPLAN-001
+	content:
+	<<<
+	[Required tests]
+	1)
+	2)
+	3)
 
-[Done criteria]
-- P0 pass rate:
-- Mapping completeness:
->>>
+	[Done criteria]
+	- P0 pass rate:
+	- Mapping completeness:
+	>>>
+}
 
 @section HO-040
 title: Open Issues
-summary: Keep owner and status for each unresolved blocker
-links: ISSUE-BOARD-001
-content:
-<<<
-1) Issue: / Owner:
-2) Issue: / Owner:
-3) Issue: / Owner:
->>>
+{
+	summary: Keep owner and status for each unresolved blocker
+	links: ISSUE-BOARD-001
+	content:
+	<<<
+	1) Issue: / Owner:
+	2) Issue: / Owner:
+	3) Issue: / Owner:
+	>>>
+}
 
 @change CHG-2026-03-04-01
 target: HO-010

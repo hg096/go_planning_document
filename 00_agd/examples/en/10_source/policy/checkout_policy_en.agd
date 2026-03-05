@@ -15,98 +15,110 @@ doc_base_path:
 
 @section POL-000
 title: Input Guide
-summary: Minimum input rules for consistent writing by humans and AI
-links: GUIDE-INPUT
-content:
-<<<
-[Required input]
-1) Fill every blank after -, 1), and : with concrete content.
-2) Use specific numbers, dates, owners, and evidence whenever possible.
-3) If unknown, do not leave blank; write TBD (needs confirmation).
+{
+	summary: Minimum input rules for consistent writing by humans and AI
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Required input]
+	1) Fill every blank after -, 1), and : with concrete content.
+	2) Use specific numbers, dates, owners, and evidence whenever possible.
+	3) If unknown, do not leave blank; write TBD (needs confirmation).
 
-[AI request contract]
-- target_docs: actual file path
-- target_sections: section IDs or section paths
-- goal: why this change is needed (1-2 sentences)
-- constraints: scope/forbidden constraints
-- done: validation-based completion criteria
+	[AI request contract]
+	- target_docs: actual file path
+	- target_sections: section IDs or section paths
+	- goal: why this change is needed (1-2 sentences)
+	- constraints: scope/forbidden constraints
+	- done: validation-based completion criteria
 
-[AI output contract]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI output contract]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[Done checklist]
-- Are @map rows and @section IDs aligned?
-- For edits, is @change reason/impact recorded?
->>>
+	[Done checklist]
+	- Are @map rows and @section IDs aligned?
+	- For edits, is @change reason/impact recorded?
+	>>>
+}
 
 @section POL-001
 title: Purpose and Scope
-summary: Clarify why this policy exists and where it applies
-links: POLICY-SCOPE-001
-content:
-<<<
-[Purpose]
--
+{
+	summary: Clarify why this policy exists and where it applies
+	links: POLICY-SCOPE-001
+	content:
+	<<<
+	[Purpose]
+	-
 
-[Scope]
-- Systems:
-- Roles:
->>>
+	[Scope]
+	- Systems:
+	- Roles:
+	>>>
+}
 
 @section POL-010
 title: Core Principles
-summary: Define baseline principles that guide enforcement
-links: POLICY-PRINCIPLE-001
-content:
-<<<
-1)
-2)
-3)
->>>
+{
+	summary: Define baseline principles that guide enforcement
+	links: POLICY-PRINCIPLE-001
+	content:
+	<<<
+	1)
+	2)
+	3)
+	>>>
+}
 
 @section POL-020
 title: Roles and Responsibilities
-summary: Separate approval, execution, and audit responsibilities
-links: RACI-001
-content:
-<<<
-- Operations:
-- Engineering:
-- Security:
-- Decision approver:
->>>
+{
+	summary: Separate approval, execution, and audit responsibilities
+	links: RACI-001
+	content:
+	<<<
+	- Operations:
+	- Engineering:
+	- Security:
+	- Decision approver:
+	>>>
+}
 
 @section POL-030
 title: Exception and Approval Process
-summary: Define when exceptions are allowed and how they are controlled
-links: APPROVAL-001
-content:
-<<<
-[Exception criteria]
-1)
-2)
+{
+	summary: Define when exceptions are allowed and how they are controlled
+	links: APPROVAL-001
+	content:
+	<<<
+	[Exception criteria]
+	1)
+	2)
 
-[Approval flow]
-1) Request
-2) Review
-3) Approve
-4) Record
->>>
+	[Approval flow]
+	1) Request
+	2) Review
+	3) Approve
+	4) Record
+	>>>
+}
 
 @section POL-040
 title: Review and Revision Cadence
-summary: Define policy review cadence and revision trigger
-links: AUDIT-001
-content:
-<<<
-[Review cadence]
-- Monthly:
-- Quarterly:
+{
+	summary: Define policy review cadence and revision trigger
+	links: AUDIT-001
+	content:
+	<<<
+	[Review cadence]
+	- Monthly:
+	- Quarterly:
 
-[Revision trigger]
-1)
-2)
->>>
+	[Revision trigger]
+	1)
+	2)
+	>>>
+}
 
 @change CHG-2026-03-04-01
 target: POL-010
