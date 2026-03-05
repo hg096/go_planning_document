@@ -12,84 +12,92 @@ doc_base_path:
 
 @section DEL-000
 title: 작성 가이드
-summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
-links: GUIDE-INPUT
-content:
-<<<
-[반드시 입력]
-1) -, 1), : 뒤 빈칸을 실제 내용으로 채운다.
-2) 숫자/기한/담당자/근거는 가능한 구체적으로 적는다.
-3) 미정이면 빈칸으로 두지 말고 미정(확인 필요)로 남긴다.
+{
+	summary: 사용자와 AI가 같은 방식으로 작성하기 위한 최소 입력 규칙
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[반드시 입력]
+	1) -, 1), : 뒤 빈칸을 실제 내용으로 채운다.
+	2) 숫자/기한/담당자/근거는 가능한 구체적으로 적는다.
+	3) 미정이면 빈칸으로 두지 말고 미정(확인 필요)로 남긴다.
 
-[AI 요청 입력]
-- target_docs: 실제 파일 경로
-- target_sections: 섹션 ID 또는 section path
-- goal: 변경 목적(1~2문장)
-- constraints: 금지/범위 제한
-- done: 완료 기준
+	[AI 요청 입력]
+	- target_docs: 실제 파일 경로
+	- target_sections: 섹션 ID 또는 section path
+	- goal: 변경 목적(1~2문장)
+	- constraints: 금지/범위 제한
+	- done: 완료 기준
 
-[AI 출력]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI 출력]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[완료 체크]
-- @map과 @section ID가 일치하는가?
-- 변경 시 @change의 reason/impact를 남겼는가?
->>>
+	[완료 체크]
+	- @map과 @section ID가 일치하는가?
+	- 변경 시 @change의 reason/impact를 남겼는가?
+	>>>
+}
 
 @section DEL-001
 title: 프론트 구현 계획
-summary: 핵심 화면 동작과 구현 범위를 명확히 정의한다
-links: DELIVERY-FE-001
-content:
-<<<
-[페이지/기능 범위]
-1) 화면:
-   - 핵심 액션:
-   - 데이터 소스:
-   - 예외 처리:
+{
+	summary: 핵심 화면 동작과 구현 범위를 명확히 정의한다
+	links: DELIVERY-FE-001
+	content:
+	<<<
+	[페이지/기능 범위]
+	1) 화면:
+	   - 핵심 액션:
+	   - 데이터 소스:
+	   - 예외 처리:
 
-[구현 작업]
-1)
-2)
->>>
+	[구현 작업]
+	1)
+	2)
+	>>>
+}
 
 @section DEL-010
 title: QA 검증 계획
-summary: 기능/회귀 검증 항목과 테스트 증거를 표준화한다
-links: DELIVERY-QA-001
-content:
-<<<
-[기능 검증]
-1) 시나리오:
-   - 기대 결과:
+{
+	summary: 기능/회귀 검증 항목과 테스트 증거를 표준화한다
+	links: DELIVERY-QA-001
+	content:
+	<<<
+	[기능 검증]
+	1) 시나리오:
+	   - 기대 결과:
 
-[회귀 검증]
-1) 영향 기능:
-   - 확인 항목:
+	[회귀 검증]
+	1) 영향 기능:
+	   - 확인 항목:
 
-[증거]
-- 테스트 로그:
-- 스크린샷/링크:
->>>
+	[증거]
+	- 테스트 로그:
+	- 스크린샷/링크:
+	>>>
+}
 
 @section DEL-020
 title: 배포 실행 체크
-summary: 배포/롤백 판단 기준을 사전에 고정한다
-links: DELIVERY-REL-001
-content:
-<<<
-[배포 전 체크]
-1)
-2)
+{
+	summary: 배포/롤백 판단 기준을 사전에 고정한다
+	links: DELIVERY-REL-001
+	content:
+	<<<
+	[배포 전 체크]
+	1)
+	2)
 
-[배포 후 체크]
-1)
-2)
+	[배포 후 체크]
+	1)
+	2)
 
-[롤백 기준]
-- 조건:
-- 절차:
->>>
+	[롤백 기준]
+	- 조건:
+	- 절차:
+	>>>
+}
 
 @change CHG-{{DATE}}-01
 target: DEL-001
@@ -97,4 +105,3 @@ date: {{DATE}}
 author: {{OWNER}}
 reason: 템플릿 초기 생성
 impact: 프론트 구현과 QA/배포 검증 계획을 1문서로 통합
-

@@ -50,6 +50,9 @@ Use this sequence in project root:
 REM 1) download only 00_agd into current project root
 cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
 
+REM 1-1) preserve current 00_agd/agd_docs and download the rest into project root
+cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && (if not exist "00_agd" mkdir "00_agd") && robocopy "!T!\00_agd" "00_agd" /E /XD "agd_docs" /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul) & set EC=!ERRORLEVEL! & if !EC! LSS 8 set EC=0 & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
+
 REM 2) local setup (hooks + baseline checks)
 00_agd\setup.cmd
 
@@ -133,8 +136,9 @@ Wizard mutation action (`3`) now runs a guided flow:
 After new document creation (top menu `4`), wizard also asks you to choose `source/derived/later` so authority setup starts early.
 For new document creation, folder selection is limited to each doc type's allowed path (and its subfolders).
 All selection-style wizard screens (doc type/profile/folder/document/section/role/format) support `[0] Back`.
-In wizard menu `4` (New document), the default type set is reduced to these 7 integrated-first types:
+In wizard menu `4` (New document), the default type set includes these 8 types:
 
+- `service`
 - `core-spec`
 - `delivery-plan`
 - `meeting`
@@ -143,7 +147,7 @@ In wizard menu `4` (New document), the default type set is reduced to these 7 in
 - `handoff`
 - `policy`
 
-Document creation is focused on the same 7 integrated-first types.
+Document creation is focused on the same 8 types.
 
 Path input is resolved against `00_agd\agd_docs` by default.
 When opening existing docs, filename-only input is searched across subfolders.
@@ -152,6 +156,7 @@ If duplicate filenames exist under subfolders, use a relative path like `front/h
 
 For new document creation (wizard top menu `4`), filename-only output is auto-routed by doc type:
 
+- `service` -> `00_agd\agd_docs\10_source\service\<file>.agd`
 - `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
 - `delivery-plan` -> `00_agd\agd_docs\20_derived\frontend\<file>.agd`
 - `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`

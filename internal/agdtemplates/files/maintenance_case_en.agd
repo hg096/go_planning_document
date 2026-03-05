@@ -16,140 +16,156 @@ doc_base_path:
 
 @section MNT-000
 title: Input Guide
-summary: Minimum input rules for consistent writing by humans and AI
-links: GUIDE-INPUT
-content:
-<<<
-[Required input]
-1) Fill every blank after -, 1), and : with concrete content.
-2) Use specific numbers, dates, owners, and evidence whenever possible.
-3) If unknown, do not leave blank; write TBD (needs confirmation).
+{
+	summary: Minimum input rules for consistent writing by humans and AI
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Required input]
+	1) Fill every blank after -, 1), and : with concrete content.
+	2) Use specific numbers, dates, owners, and evidence whenever possible.
+	3) If unknown, do not leave blank; write TBD (needs confirmation).
 
-[AI request contract]
-- target_docs: actual file path
-- target_sections: section IDs or section paths
-- goal: why this change is needed (1-2 sentences)
-- constraints: scope/forbidden constraints
-- done: validation-based completion criteria
+	[AI request contract]
+	- target_docs: actual file path
+	- target_sections: section IDs or section paths
+	- goal: why this change is needed (1-2 sentences)
+	- constraints: scope/forbidden constraints
+	- done: validation-based completion criteria
 
-[AI output contract]
-- Changed files / Changed sections / Reason / Impact / Risks / Validation
+	[AI output contract]
+	- Changed files / Changed sections / Reason / Impact / Risks / Validation
 
-[Done checklist]
-- Are @map rows and @section IDs aligned?
-- For edits, is @change reason/impact recorded?
->>>
+	[Done checklist]
+	- Are @map rows and @section IDs aligned?
+	- For edits, is @change reason/impact recorded?
+	>>>
+}
 
 @section MNT-001
 title: Scope and Target Tagging
-summary: Lock maintenance scope to explicit feature/section targets
-links: MAINT-TAG-001
-content:
-<<<
-[Target]
-- feature_tag:
-- source_doc:
-- section_ids:
-- module/page:
+{
+	summary: Lock maintenance scope to explicit feature/section targets
+	links: MAINT-TAG-001
+	content:
+	<<<
+	[Target]
+	- feature_tag:
+	- source_doc:
+	- section_ids:
+	- module/page:
 
-[Goal]
-- requested outcome:
-- out-of-scope:
->>>
+	[Goal]
+	- requested outcome:
+	- out-of-scope:
+	>>>
+}
 
 @section MNT-010
 title: Baseline Snapshot
-summary: Capture current behavior and constraints before changes
-links: MAINT-BASELINE-001
-content:
-<<<
-[Current behavior]
-- expected:
-- actual:
+{
+	summary: Capture current behavior and constraints before changes
+	links: MAINT-BASELINE-001
+	content:
+	<<<
+	[Current behavior]
+	- expected:
+	- actual:
 
-[Constraints]
-- dependency:
-- policy/security:
-- operational limit:
->>>
+	[Constraints]
+	- dependency:
+	- policy/security:
+	- operational limit:
+	>>>
+}
 
 @section MNT-020
 title: Change Plan
-summary: Plan implementation, risk, and rollback before execution
-links: MAINT-PLAN-001
-content:
-<<<
-[Plan]
-1)
-2)
+{
+	summary: Plan implementation, risk, and rollback before execution
+	links: MAINT-PLAN-001
+	content:
+	<<<
+	[Plan]
+	1)
+	2)
 
-[Risk and rollback]
-- risk:
-- rollback trigger:
-- rollback steps:
->>>
+	[Risk and rollback]
+	- risk:
+	- rollback trigger:
+	- rollback steps:
+	>>>
+}
 
 @section MNT-030
 title: AI Work Request
-summary: Provide exact instructions for safe AI execution
-links: MAINT-AI-HANDOFF-001
-content:
-<<<
-[Request template]
-- target document:
-- target sections:
-- requested change:
-- reason:
-- impact:
-- constraints:
-- done criteria:
->>>
+{
+	summary: Provide exact instructions for safe AI execution
+	links: MAINT-AI-HANDOFF-001
+	content:
+	<<<
+	[Request template]
+	- target document:
+	- target sections:
+	- requested change:
+	- reason:
+	- impact:
+	- constraints:
+	- done criteria:
+	>>>
+}
 
 @section MNT-040
 title: AI Work Result Summary
-summary: Summarize AI output so human review is fast
-links: MAINT-AI-RESULT-001
-content:
-<<<
-[AI execution summary]
-- changed sections:
-- added @change entries:
-- key diffs:
+{
+	summary: Summarize AI output so human review is fast
+	links: MAINT-AI-RESULT-001
+	content:
+	<<<
+	[AI execution summary]
+	- changed sections:
+	- added @change entries:
+	- key diffs:
 
-[Review notes]
-- items to verify:
->>>
+	[Review notes]
+	- items to verify:
+	>>>
+}
 
 @section MNT-050
 title: Validation Checklist
-summary: Verify maintenance outcome and regression surface
-links: MAINT-VALIDATE-001
-content:
-<<<
-[Checks]
-- unit/integration:
-- e2e/regression:
-- log/metric/alert:
+{
+	summary: Verify maintenance outcome and regression surface
+	links: MAINT-VALIDATE-001
+	content:
+	<<<
+	[Checks]
+	- unit/integration:
+	- e2e/regression:
+	- log/metric/alert:
 
-[Result]
-- pass/fail:
-- evidence links:
->>>
+	[Result]
+	- pass/fail:
+	- evidence links:
+	>>>
+}
 
 @section MNT-060
 title: Release Decision
-summary: Decide release or hold with explicit follow-up
-links: MAINT-RELEASE-001
-content:
-<<<
-[Decision]
-- release / hold:
-- reason:
+{
+	summary: Decide release or hold with explicit follow-up
+	links: MAINT-RELEASE-001
+	content:
+	<<<
+	[Decision]
+	- release / hold:
+	- reason:
 
-[Follow-up]
-1)
-2)
->>>
+	[Follow-up]
+	1)
+	2)
+	>>>
+}
 
 @change CHG-{{DATE}}-01
 target: MNT-001
@@ -157,4 +173,3 @@ date: {{DATE}}
 author: {{OWNER}}
 reason: Initial template scaffolding
 impact: Enables single-file maintenance flow from scope tagging to release decision
-

@@ -29,3 +29,8 @@ func TestExperimentDocTypeIsSelectable(t *testing.T) {
 	}
 }
 
+func TestServiceDocTypeIsSelectable(t *testing.T) {
+	if !isAllowedCreateDocType("service") {
+		t.Fatalf("service must be allowed")
+	}
+}

@@ -59,6 +59,11 @@ AGD의 답은 "완전한 문서 1개"를 만드는 것이 아니라, **충돌을
 REM 1) 현재 프로젝트 루트에 00_agd 폴더만 내려받기
 cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && xcopy "!T!\00_agd" "00_agd" /e /i /y >nul) & set EC=!ERRORLEVEL! & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
 
+
+REM 1-1) 현재 프로젝트 루트에 00_agd/agd_docs 는 보호하고 내려받기
+cmd /v:on /c "set T=%TEMP%\agd_tmp_%RANDOM%%RANDOM%&&(git clone -n --depth 1 --filter=blob:none --sparse https://github.com/hg096/go_planning_document.git "!T!" && git -C "!T!" sparse-checkout set 00_agd && git -C "!T!" checkout -q && (if not exist "00_agd" mkdir "00_agd") && robocopy "!T!\00_agd" "00_agd" /E /XD "agd_docs" /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul) & set EC=!ERRORLEVEL! & if !EC! LSS 8 set EC=0 & if exist "!T!" rd /s /q "!T!" & exit /b !EC!"
+
+
 REM 2) 로컬 운영 세팅(훅/검증 적용)
 00_agd\setup.cmd
 
@@ -114,6 +119,7 @@ REM 또는
 
 새 문서 생성 시(위자드 첫 화면 메뉴 `4`) 파일명만 입력하면 문서 타입 기준 폴더로 자동 배치됩니다.
 
+- `service` -> `00_agd\agd_docs\10_source\service\<file>.agd`
 - `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
 - `delivery-plan` -> `00_agd\agd_docs\20_derived\frontend\<file>.agd`
 - `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`
@@ -151,7 +157,7 @@ REM 또는
 ```
 
 추가로 위자드의 선택형 화면(문서 타입/킷 프로필/폴더/문서/섹션/역할/출력 형식) 하단에는 공통으로 `[0] 뒤로가기`가 제공됩니다.
-`[4] 새 문서 만들기`의 문서 타입 목록은 7개 통합 타입(코어 스펙/전달 계획/회의/실험/로드맵/핸드오프/정책) 순서로 정렬됩니다.
+`[4] 새 문서 만들기`의 문서 타입 목록은 8개 타입(서비스/코어 스펙/전달 계획/회의/실험/로드맵/핸드오프/정책) 순서로 정렬됩니다.
 
 위자드의 수정 작업(메뉴 `3`)에는 가이드드 플로우가 적용됩니다.
 
@@ -161,8 +167,9 @@ REM 또는
 
 또한 새 문서 생성(첫 화면 메뉴 `4`) 직후에는 `source/derived/later` 역할 선택 단계를 거쳐, 기준 문서 운영을 빠르게 시작할 수 있습니다.
 새 문서 생성 시 폴더 선택은 문서 타입별 허용 경로(및 해당 경로 하위 폴더)로 제한됩니다.
-위자드(첫 화면 메뉴 `5`)의 기본 문서 타입은 문서 수 절감을 위해 아래 7개로 축소되어 있습니다.
+위자드(첫 화면 메뉴 `5`)의 기본 문서 타입은 아래 8개입니다.
 
+- `service`
 - `core-spec`
 - `delivery-plan`
 - `meeting`
@@ -171,7 +178,7 @@ REM 또는
 - `handoff`
 - `policy`
 
-문서 생성 기능은 위 7개 통합 타입 중심으로 운영됩니다.
+문서 생성 기능은 위 8개 타입 중심으로 운영됩니다.
 
 ## 3. 핵심 개념 (이것만 기억하면 됩니다)
 

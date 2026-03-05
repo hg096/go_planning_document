@@ -55,7 +55,9 @@ func normalizeDocTypeKey(kind string) string {
 	raw = strings.TrimSuffix(raw, "-ko")
 	raw = strings.TrimSuffix(raw, "-en")
 	switch raw {
-	case "prd", "service", "system", "service-logic", "adr", "guide", "ai", "ai-planning-guide", "ai-guide":
+	case "service", "system", "service-logic":
+		return "service"
+	case "prd", "adr", "guide", "ai", "ai-planning-guide", "ai-guide":
 		return "core-spec"
 	case "qa", "qaplan", "qa-plan", "frontend", "page-logic", "frontend-page", "runbook":
 		return "delivery-plan"
@@ -76,6 +78,8 @@ func normalizeDocTypeKey(kind string) string {
 
 func defaultSubdirForDocType(kind string) string {
 	switch normalizeDocTypeKey(kind) {
+	case "service":
+		return filepath.Join("10_source", "service")
 	case "policy":
 		return filepath.Join("10_source", "policy")
 	case "incident-case":

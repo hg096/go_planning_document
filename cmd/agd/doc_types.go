@@ -1,4 +1,4 @@
-﻿// doc_types.go defines document type catalogs and creation allowlists.
+// doc_types.go defines document type catalogs and creation allowlists.
 // doc_types.go는 문서 타입 카탈로그와 생성 허용 목록을 정의합니다.
 package main
 
@@ -21,6 +21,7 @@ func docTypeOptions() []docTypeOption {
 		{Key: "meeting", EN: "Meeting notes and decisions", KO: "회의 기록 및 의사결정"},
 		{Key: "policy", EN: "Policy and guideline document", KO: "정책 및 가이드 문서"},
 		{Key: "experiment", EN: "Experiment and A/B test plan", KO: "실험 및 A/B 테스트 계획"},
+		{Key: "service", EN: "Service logic source spec", KO: "서비스 로직 source 스펙"},
 		{Key: "core-spec", EN: "Unified core planning spec", KO: "통합 코어 기획 스펙"},
 		{Key: "delivery-plan", EN: "Unified frontend delivery plan", KO: "통합 프런트엔드 전달 계획"},
 	}
@@ -45,6 +46,7 @@ func printDocTypeCatalog(w io.Writer, withNumber bool) {
 
 func allowedCreateDocTypeKeys() []string {
 	return []string{
+		"service",
 		"core-spec",
 		"delivery-plan",
 		"meeting",
@@ -102,9 +104,19 @@ func isAllowedCreateDocType(kind string) bool {
 func allowedCLITemplates() []string {
 	keys := allowedCreateDocTypeKeys()
 	out := make([]string, 0, len(keys)*2)
+	seen := make(map[string]struct{}, len(keys)*2)
 	for _, key := range keys {
-		out = append(out, key+"-ko")
-		out = append(out, key+"-en")
+		for _, lang := range []string{"ko", "en"} {
+			templateName, ok := easyTypeToTemplate(key + "-" + lang)
+			if !ok {
+				continue
+			}
+			if _, exists := seen[templateName]; exists {
+				continue
+			}
+			seen[templateName] = struct{}{}
+			out = append(out, templateName)
+		}
 	}
 	return out
 }

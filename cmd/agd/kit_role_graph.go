@@ -1106,7 +1106,7 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 	switch profile {
 	case "starter-kit":
 		return []kitDocSpec{
-			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - Core Spec", TitleKO: "%s - Core Spec", Role: "source"},
+			{Key: "service", DocType: "service", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service", TitleEN: "%s - Service Logic Source", TitleKO: "%s - 서비스 로직 Source", Role: "source"},
 			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Release Policy", TitleKO: "%s - Release Policy", Role: "source"},
 			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "roadmap", TitleEN: "%s - Roadmap", TitleKO: "%s - Roadmap"},
 		}
@@ -1114,7 +1114,7 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 		return []kitDocSpec{
 			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - New Project Core Spec", TitleKO: "%s - New Project Core Spec", Role: "source"},
 			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "product"), FileSuffix: "policy", TitleEN: "%s - New Project Policy", TitleKO: "%s - New Project Policy", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("20_derived", "frontend"), FileSuffix: "delivery_plan", TitleEN: "%s - New Project Delivery Plan", TitleKO: "%s - New Project Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
+			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - New Project Delivery Plan", TitleKO: "%s - New Project Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
 			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("10_source", "product"), FileSuffix: "roadmap", TitleEN: "%s - New Project Roadmap", TitleKO: "%s - New Project Roadmap"},
 		}
 	case "maintenance":

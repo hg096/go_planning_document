@@ -146,18 +146,21 @@ func Serialize(doc *Document) string {
 	for _, section := range doc.Sections {
 		sb.WriteString(fmt.Sprintf("@section %s\n", strings.TrimSpace(section.ID)))
 		sb.WriteString(fmt.Sprintf("title: %s\n", strings.TrimSpace(section.Title)))
-		sb.WriteString(fmt.Sprintf("summary: %s\n", strings.TrimSpace(section.Summary)))
+		sb.WriteString("{\n")
+		sb.WriteString(fmt.Sprintf("\tsummary: %s\n", strings.TrimSpace(section.Summary)))
 		if strings.TrimSpace(section.Path) != "" {
-			sb.WriteString(fmt.Sprintf("path: %s\n", strings.TrimSpace(section.Path)))
+			sb.WriteString(fmt.Sprintf("\tpath: %s\n", strings.TrimSpace(section.Path)))
 		}
-		sb.WriteString(fmt.Sprintf("links: %s\n", strings.Join(section.Links, ", ")))
-		sb.WriteString("content:\n")
-		sb.WriteString("<<<\n")
-		if strings.TrimSpace(section.Content) != "" {
-			sb.WriteString(strings.TrimRight(section.Content, "\n"))
+		sb.WriteString(fmt.Sprintf("\tlinks: %s\n", strings.Join(section.Links, ", ")))
+		sb.WriteString("\tcontent:\n")
+		sb.WriteString("\t<<<\n")
+		serializedContent := serializeSectionContentWithTab(section.Content)
+		if strings.TrimSpace(serializedContent) != "" {
+			sb.WriteString(serializedContent)
 			sb.WriteString("\n")
 		}
-		sb.WriteString(">>>\n\n")
+		sb.WriteString("\t>>>\n")
+		sb.WriteString("}\n\n")
 	}
 
 	for _, change := range doc.Changes {
@@ -288,6 +291,10 @@ func parseFieldsWithContent(b *block) (map[string]string, string, []string) {
 			i++
 			continue
 		}
+		if trimmed == "{" || trimmed == "}" {
+			i++
+			continue
+		}
 
 		if strings.EqualFold(trimmed, "content:") {
 			i++
@@ -352,6 +359,28 @@ func parseCSV(raw string) []string {
 		}
 	}
 	return out
+}
+
+func serializeSectionContentWithTab(content string) string {
+	trimmed := strings.TrimRight(content, "\n")
+	if strings.TrimSpace(trimmed) == "" {
+		return ""
+	}
+
+	lines := strings.Split(trimmed, "\n")
+	normalized := make([]string, 0, len(lines))
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			normalized = append(normalized, line)
+			continue
+		}
+		if strings.HasPrefix(line, "\t") {
+			normalized = append(normalized, line)
+			continue
+		}
+		normalized = append(normalized, "\t"+line)
+	}
+	return strings.Join(normalized, "\n")
 }
 
 func orderedMetaKeys(meta map[string]string) []string {
