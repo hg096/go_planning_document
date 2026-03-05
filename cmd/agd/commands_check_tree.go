@@ -78,9 +78,6 @@ func collectDesignWarnings(root, filePath string, doc *agd.Document) []string {
 		} else if authority != "source" {
 			warnings = append(warnings, fmt.Sprintf("10_source document should be authority=source (got %q)", authority))
 		}
-		if strings.HasPrefix(rel, "10_source/service/") && doc.SectionByID("SYS-070") == nil {
-			warnings = append(warnings, "service source document should include SYS-070 (Abort Metrics and Guardrails)")
-		}
 	}
 
 	if strings.HasPrefix(rel, "20_derived/") {

@@ -312,9 +312,6 @@ func evaluateServiceGate(doc *agd.Document, now time.Time, maxAgeDays int, allow
 	if strings.ToLower(strings.TrimSpace(doc.Meta["authority"])) != "source" {
 		result.Errors = append(result.Errors, "meta.authority must be source")
 	}
-	if doc.SectionByID("SYS-070") == nil {
-		result.Errors = append(result.Errors, "SYS-070 section is required for service-change guard")
-	}
 	if len(doc.Changes) == 0 {
 		result.Errors = append(result.Errors, "at least one @change entry is required")
 		return result
