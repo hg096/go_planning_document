@@ -1,0 +1,137 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- OPS-000 | Document Guide | Define operations review scope
+- OPS-001 | Publish Criteria | Define what can be exposed to users
+- OPS-010 | Automation Review | Define review criteria for automated changes
+- OPS-020 | Security and Contamination Prevention | Prevent polluted input, impersonation, and policy violations
+- OPS-030 | Operations Buttons and Destructive Work | Classify manual and destructive operations
+- OPS-040 | No Data and Partial Failure | Define user-facing policy for empty and partial failure states
+- OPS-050 | QA and Operations Alerts | Define test points and operator alerts
+
+@section OPS-000
+title: Document Guide
+{
+	summary: What operators must review
+	path:
+	links: GUIDE-OPS
+	content:
+	<<<
+	[Question this document answers]
+	- Which results can be published, held, or blocked?
+	>>>
+}
+
+@section OPS-001
+title: Publish Criteria
+{
+	summary: Minimum bar for user-facing output
+	path:
+	links: OPS-PUBLISH-001
+	content:
+	<<<
+	[Publishable]
+	1)
+	2)
+
+	[Not publishable]
+	1)
+	2)
+	>>>
+}
+
+@section OPS-010
+title: Automation Review
+{
+	summary: Review gates before automated output is accepted
+	path:
+	links: OPS-AUTO-001
+	content:
+	<<<
+	[Review targets]
+	-
+
+	[Approval criteria]
+	-
+	>>>
+}
+
+@section OPS-020
+title: Security and Contamination Prevention
+{
+	summary: Prevent malicious input, impersonation, and policy contamination
+	path:
+	links: OPS-SECURITY-001
+	content:
+	<<<
+	[Risks]
+	1)
+	2)
+
+	[Defense]
+	-
+	>>>
+}
+
+@section OPS-030
+title: Operations Buttons and Destructive Work
+{
+	summary: Classify manual, reset, and reprocessing operations
+	path:
+	links: OPS-DESTRUCTIVE-001
+	content:
+	<<<
+	[Normal work]
+	-
+
+	[Destructive work]
+	-
+
+	[Confirm/audit rule]
+	-
+	>>>
+}
+
+@section OPS-040
+title: No Data and Partial Failure
+{
+	summary: Define user and operator visibility for empty or partial failures
+	path:
+	links: OPS-FAILURE-001
+	content:
+	<<<
+	[User-facing]
+	-
+
+	[Operator-facing]
+	-
+	>>>
+}
+
+@section OPS-050
+title: QA and Operations Alerts
+{
+	summary: QA items and alert conditions
+	path:
+	links: OPS-QA-001
+	content:
+	<<<
+	[QA]
+	1)
+	2)
+
+	[Alerts]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: OPS-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial operations review document for new project kit
+impact: Aligns publish criteria, automation review, security, and failure handling before implementation

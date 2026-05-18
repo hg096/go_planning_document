@@ -356,8 +356,24 @@ func easyTypeToTemplate(kind string) (string, bool) {
 	}
 
 	switch raw {
-	case "prd", "adr", "guide", "ai-guide", "ai-planning-guide", "aiguide":
+	case "prd", "guide", "ai-guide", "ai-planning-guide", "aiguide":
 		return "core-spec-" + lang, true
+	case "adr", "architecture", "architecture-decision":
+		return "architecture-" + lang, true
+	case "project-plan", "new-project-plan":
+		return "project-plan-" + lang, true
+	case "project-logic", "implementation-logic":
+		return "project-logic-" + lang, true
+	case "project-data-contract", "data-contract":
+		return "project-data-contract-" + lang, true
+	case "project-strategy", "autonomous-strategy", "strategy":
+		return "project-strategy-" + lang, true
+	case "project-ops-review", "ops-review":
+		return "project-ops-review-" + lang, true
+	case "project-implementation-plan", "implementation-plan":
+		return "project-implementation-plan-" + lang, true
+	case "project-ai-checklist", "ai-checklist":
+		return "project-ai-checklist-" + lang, true
 	case "roadmap":
 		return "roadmap-" + lang, true
 	case "handoff":

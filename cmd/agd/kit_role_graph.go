@@ -462,10 +462,15 @@ func kitProjectScopedSubdir(profile, baseSubdir, projectKey string) string {
 		if key == "" {
 			return base
 		}
+		projectRoot := filepath.Join("20_new_project", key)
+		normBase := filepath.ToSlash(filepath.Clean(base))
+		if normBase == "20_new_project" || strings.HasPrefix(normBase, "20_new_project/") {
+			return projectRoot
+		}
 		return filepath.Join(base, key)
 	}
 	if prof == "maintenance" {
-		maintenanceBase := filepath.Join("30_shared", "maintenance")
+		maintenanceBase := filepath.Join("20_new_project", "delivery")
 		if filepath.Clean(base) == filepath.Clean(maintenanceBase) {
 			return base
 		}
@@ -1107,24 +1112,28 @@ func kitProfileSpecs(profile string) []kitDocSpec {
 	switch profile {
 	case "starter-kit":
 		return []kitDocSpec{
-			{Key: "service", DocType: "service", Subdir: filepath.Join("10_source", "service"), FileSuffix: "service", TitleEN: "%s - Service Logic Source", TitleKO: "%s - 서비스 로직 Source", Role: "source"},
-			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "policy"), FileSuffix: "policy", TitleEN: "%s - Release Policy", TitleKO: "%s - Release Policy", Role: "source"},
-			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("30_shared", "roadmap"), FileSuffix: "roadmap", TitleEN: "%s - Roadmap", TitleKO: "%s - Roadmap"},
+			{Key: "service", DocType: "service", Subdir: filepath.Join("10_core_logic", "service"), FileSuffix: "service", TitleEN: "%s - Service Logic Source", TitleKO: "%s - 서비스 로직 Source", Role: "source"},
+			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_core_logic", "policy"), FileSuffix: "policy", TitleEN: "%s - Release Policy", TitleKO: "%s - Release Policy", Role: "source"},
+			{Key: "architecture", DocType: "architecture", Subdir: filepath.Join("10_core_logic", "architecture"), FileSuffix: "architecture", TitleEN: "%s - Architecture Decision Source", TitleKO: "%s - 아키텍처 의사결정 Source", Role: "source"},
+			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("20_new_project", "roadmap"), FileSuffix: "roadmap", TitleEN: "%s - Roadmap", TitleKO: "%s - Roadmap"},
 		}
 	case "new-project":
 		return []kitDocSpec{
-			{Key: "core_spec", DocType: "core-spec", Subdir: filepath.Join("10_source", "product"), FileSuffix: "core_spec", TitleEN: "%s - New Project Core Spec", TitleKO: "%s - New Project Core Spec", Role: "source"},
-			{Key: "policy", DocType: "policy", Subdir: filepath.Join("10_source", "product"), FileSuffix: "policy", TitleEN: "%s - New Project Policy", TitleKO: "%s - New Project Policy", Role: "source"},
-			{Key: "delivery_plan", DocType: "delivery-plan", Subdir: filepath.Join("10_source", "product"), FileSuffix: "delivery_plan", TitleEN: "%s - New Project Delivery Plan", TitleKO: "%s - New Project Delivery Plan", Role: "derived", SourceKey: "core_spec", SourceSections: "CORE-010->DEL-001,CORE-030->DEL-020"},
-			{Key: "roadmap", DocType: "roadmap", Subdir: filepath.Join("10_source", "product"), FileSuffix: "roadmap", TitleEN: "%s - New Project Roadmap", TitleKO: "%s - New Project Roadmap"},
+			{Key: "plan", DocType: "project-plan", Subdir: "20_new_project", FileSuffix: "01_기획", TitleEN: "%s - Project Plan", TitleKO: "%s - 기획", Role: "source"},
+			{Key: "logic", DocType: "project-logic", Subdir: "20_new_project", FileSuffix: "02_구현_로직정리", TitleEN: "%s - Implementation Logic", TitleKO: "%s - 구현 로직정리", Role: "derived", SourceKey: "plan", SourceSections: "PLAN-001->LOG-001,PLAN-020->LOG-040"},
+			{Key: "data_contract", DocType: "project-data-contract", Subdir: "20_new_project", FileSuffix: "03_상세1_데이터계약", TitleEN: "%s - Data Contract", TitleKO: "%s - 상세1 데이터계약", Role: "derived", SourceKey: "plan", SourceSections: "PLAN-010->DATA-001,PLAN-040->DATA-040"},
+			{Key: "strategy", DocType: "project-strategy", Subdir: "20_new_project", FileSuffix: "04_상세2_자율전략", TitleEN: "%s - Strategy", TitleKO: "%s - 상세2 자율전략", Role: "derived", SourceKey: "plan", SourceSections: "PLAN-020->STRAT-010,PLAN-030->STRAT-030"},
+			{Key: "ops_review", DocType: "project-ops-review", Subdir: "20_new_project", FileSuffix: "05_상세3_운영검수", TitleEN: "%s - Operations Review", TitleKO: "%s - 상세3 운영검수", Role: "derived", SourceKey: "plan", SourceSections: "PLAN-020->OPS-001,PLAN-040->OPS-030"},
+			{Key: "implementation_plan", DocType: "project-implementation-plan", Subdir: "20_new_project", FileSuffix: "06_구현전환계획", TitleEN: "%s - Implementation Transition Plan", TitleKO: "%s - 구현전환계획", Role: "derived", SourceKey: "plan", SourceSections: "PLAN-020->IMPL-010,PLAN-030->IMPL-050"},
+			{Key: "ai_checklist", DocType: "project-ai-checklist", Subdir: "20_new_project", FileSuffix: "07_AI구현체크리스트", TitleEN: "%s - AI Implementation Checklist", TitleKO: "%s - AI 구현체크리스트", Role: "derived", SourceKey: "plan", SourceSections: "PLAN-020->CHECK-010,PLAN-040->CHECK-080"},
 		}
 	case "maintenance":
 		return []kitDocSpec{
-			{Key: "maintenance_case", DocType: "maintenance-case", Subdir: filepath.Join("30_shared", "maintenance"), FileSuffix: "maintenance_case", TitleEN: "%s - Maintenance Case", TitleKO: "%s - Maintenance Case", Role: "source"},
+			{Key: "maintenance_case", DocType: "maintenance-case", Subdir: filepath.Join("20_new_project", "delivery"), FileSuffix: "maintenance_case", TitleEN: "%s - Maintenance Case", TitleKO: "%s - Maintenance Case", Role: "source"},
 		}
 	case "incident":
 		return []kitDocSpec{
-			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("30_shared", "errFix"), FileSuffix: "incident_case", TitleEN: "%s - Incident Case", TitleKO: "%s - Incident Case", Role: "source"},
+			{Key: "incident_case", DocType: "incident-case", Subdir: filepath.Join("20_new_project", "delivery"), FileSuffix: "incident_case", TitleEN: "%s - Incident Case", TitleKO: "%s - Incident Case", Role: "source"},
 		}
 	default:
 		return nil

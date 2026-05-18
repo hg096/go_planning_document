@@ -310,18 +310,9 @@ func wizardCheckAll(reader *bufio.Reader) int {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
 		return 1
 	}
-	includeArchiveAnswer, err := promptOptional(reader, text("Include 90_archive? (y/N)", "Include 90_archive? (y/N)"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
-		return 1
-	}
-
 	args := make([]string, 0, 3)
 	if isYesInput(strictAnswer) {
 		args = append(args, "--strict")
-	}
-	if isYesInput(includeArchiveAnswer) {
-		args = append(args, "--include-archive")
 	}
 	if strings.TrimSpace(root) != "" {
 		args = append(args, root)
@@ -552,11 +543,6 @@ func wizardRoleGraph(reader *bufio.Reader) int {
 	if strings.TrimSpace(scopeInput) == "0" {
 		return 0
 	}
-	includeArchiveAnswer, err := promptOptional(reader, text("Include 90_archive? (y/N)", "Include 90_archive? (y/N)"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
-		return 1
-	}
 	outPath, err := promptOptional(reader, text("Output file (Enter to print on screen)", "Output file (Enter to print on screen)"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "wizard error: %v\n", err)
@@ -603,9 +589,6 @@ func wizardRoleGraph(reader *bufio.Reader) int {
 	}
 	if scope != roleGraphScopeAll {
 		args = append(args, "--scope", string(scope))
-	}
-	if isYesInput(includeArchiveAnswer) {
-		args = append(args, "--include-archive")
 	}
 	if strings.TrimSpace(outPath) != "" {
 		args = append(args, "--out", strings.TrimSpace(outPath))
@@ -980,6 +963,22 @@ func folderDescription(rel string) string {
 		return text("temporary drafts and triage", "임시 초안 및 분류")
 	case "10_source":
 		return text("source-of-truth documents", "기준(source) 문서")
+	case "10_core_logic":
+		return text("core logic source documents", "핵심 로직 기준 문서")
+	case "10_core_logic/service":
+		return text("service/domain logic source docs", "서비스/도메인 핵심 로직 문서")
+	case "10_core_logic/policy":
+		return text("policy/guideline source docs", "정책/가이드 핵심 로직 문서")
+	case "10_core_logic/architecture":
+		return text("architecture decision source docs", "아키텍처 의사결정 문서")
+	case "20_new_project":
+		return text("new project planning documents", "신규 프로젝트 기획 문서")
+	case "20_new_project/product":
+		return text("new project product/source docs", "신규 프로젝트 제품/기준 문서")
+	case "20_new_project/delivery":
+		return text("new project delivery docs", "신규 프로젝트 전달 계획 문서")
+	case "20_new_project/roadmap":
+		return text("new project roadmaps and milestones", "신규 프로젝트 로드맵 및 마일스톤")
 	case "10_source/product":
 		return text("product requirements source docs", "제품 요구사항 source 문서")
 	case "10_source/service":
@@ -1017,6 +1016,10 @@ func folderDescription(rel string) string {
 	}
 
 	switch {
+	case strings.HasPrefix(normLower, "10_core_logic/"):
+		return text("custom core logic subfolder", "사용자 지정 핵심 로직 하위 폴더")
+	case strings.HasPrefix(normLower, "20_new_project/"):
+		return text("custom new project subfolder", "사용자 지정 신규 프로젝트 하위 폴더")
 	case strings.HasPrefix(normLower, "10_source/"):
 		return text("custom source subfolder", "사용자 지정 source 하위 폴더")
 	case strings.HasPrefix(normLower, "20_derived/"):
@@ -1237,6 +1240,12 @@ func collectIncidentSectionCandidates(root string) ([]incidentSectionCandidate, 
 	domainByPath := func(docRel string) string {
 		norm := strings.ToLower(filepath.ToSlash(strings.TrimSpace(docRel)))
 		switch {
+		case strings.HasPrefix(norm, "10_core_logic/service/"):
+			return "service"
+		case strings.HasPrefix(norm, "20_new_project/delivery/"):
+			return "delivery"
+		case strings.HasPrefix(norm, "20_new_project/"):
+			return "new-project"
 		case strings.HasPrefix(norm, "10_source/service/"):
 			return "service"
 		case strings.HasPrefix(norm, "20_derived/frontend/"):
@@ -1256,9 +1265,9 @@ func collectIncidentSectionCandidates(root string) ([]incidentSectionCandidate, 
 		domain string
 		rel    string
 	}{
-		{domain: "service", rel: filepath.Join("10_source", "service")},
-		{domain: "frontend", rel: filepath.Join("20_derived", "frontend")},
-		{domain: "source", rel: filepath.Join("10_source", "product")},
+		{domain: "service", rel: filepath.Join("10_core_logic", "service")},
+		{domain: "delivery", rel: filepath.Join("20_new_project", "delivery")},
+		{domain: "new-project", rel: filepath.Join("20_new_project", "product")},
 	}
 
 	out := make([]incidentSectionCandidate, 0)

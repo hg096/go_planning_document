@@ -14,7 +14,7 @@
 - `target_docs`, `target_sections`, `goal`, `constraints`, `done`
 
 2. 기준선 확인
-- `00_agd/agd_docs/10_source/*` 기준 문서를 먼저 읽습니다.
+- `00_agd/agd_docs/10_core_logic/*` 핵심 로직 문서를 먼저 읽습니다.
 - 같은 주제의 source 문서가 여러 개인지 충돌을 점검합니다.
 
 3. 섹션 단위 수정
@@ -151,37 +151,23 @@ done: 어떤 검증 결과가 나오면 완료인지
 
 ### 6-1) 폴더 구조
 
-- `00_inbox`: 임시 초안/분류 전 메모
-- `10_source/*`: 기준(source) 문서
-- `20_derived/*`: source와 연결된 파생 문서
-- `30_shared/*`: 공유 계획/협업 문서
-- `90_archive`: 보관 문서
+- `10_core_logic/*`: 핵심 로직 기준 문서
+- `20_new_project/*`: 신규 프로젝트 기획 문서
 
 ### 6-2) 주제별 권장 배치
 
-- `10_source/product`: 제품 범위/성공기준
-- `10_source/service`: 서비스/백엔드 로직 기준
-- `10_source/policy`: 규칙/표준/승인/배포 정책
-- `10_source/architecture`: ADR/트레이드오프
+- `10_core_logic/service`: 서비스/백엔드 로직, 도메인 규칙, 실패 분기
+- `10_core_logic/policy`: 규칙/표준/승인/배포 정책
+- `10_core_logic/architecture`: ADR/트레이드오프
 
-- `20_derived/frontend`: 화면별 구현/검증/배포 문서
-- `20_derived/qa`: 회귀/권한/복구 테스트 문서
-- `20_derived/ops`: 운영 런북 문서
-
-- `30_shared/meeting`: 의사결정/액션 로그
-- `30_shared/handoff`: 릴리즈 인수인계
-- `30_shared/roadmap`: 마일스톤/우선순위
-- `30_shared/postmortem`: 장애 회고
-- `30_shared/experiment`: 실험 기록
-- `30_shared/maintenance`: 유지보수 단일 흐름
-- `30_shared/errFix`: 장애/버그 단일 흐름
+- `20_new_project/<project-key>`: 프로젝트 범위, 정책, 전달 계획, 로드맵을 한 폴더에 모음
 
 ### 6-3) Guide-First 운용법
 
 1) `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md` 또는 `AGD_TEMPLATE_GUIDE_en.md`를 먼저 읽는다.
-2) 서비스 주제는 `10_source/service` 단일완결 우선 원칙으로 유지한다.
-3) source 문서를 기준으로 derived를 연결한다.
-4) 서비스 source 변경 시 연결된 derived/source_sections를 같은 변경셋에서 동기화한다.
+2) 핵심 로직은 `10_core_logic/service` 단일완결 우선 원칙으로 유지한다.
+3) 신규 프로젝트 문서는 필요한 경우 핵심 로직 source를 `source_doc`/`source_sections`로 연결한다.
+4) 핵심 로직 변경 시 연결된 신규 프로젝트 문서를 같은 변경셋에서 동기화한다.
 5) 변경은 항상 `@change(reason/impact)`를 남긴다.
 6) 검증 3종 + 블라인드 재구성 테스트 통과 전 완료 보고를 금지한다.
 
@@ -195,7 +181,7 @@ done: 어떤 검증 결과가 나오면 완료인지
 
 ### 6-5) 블라인드 재구성 테스트
 
-- 입력: `10_source/service` 문서만 제공(코드 참조 금지)
+- 입력: `10_core_logic/service` 문서만 제공(코드 참조 금지)
 - 산출: 도메인별 의사구현서(호출순서, DTO, 실패분기, 상태전이)
 - 합격: 필수 블록 누락 0건 + 매핑 불일치 0건
 
@@ -219,14 +205,6 @@ done: 어떤 검증 결과가 나오면 완료인지
 
 ### 6-8) 일반 품질 기준
 
-- source 문서: 구현 가능한 계약 수준으로 작성
-- derived 문서: source 섹션과 `source_sections`로 추적 가능하게 작성
-- shared 문서: 운영/협업 실행에 필요한 의사결정 맥락 유지
+- 핵심 로직 문서: 구현 가능한 계약 수준으로 작성
+- 신규 프로젝트 문서: 기존 동작에 의존하는 경우 `source_doc`/`source_sections`로 핵심 로직과 연결
 - `@map`/`@section`/`@change` 정합성 유지
-
-### 6-9) END__ 종료 규칙
-
-- 유지보수 종료 문서: `30_shared/maintenance/END__*_maintenance_case.agd`
-- 장애 종료 문서: `30_shared/errFix/END__*_incident_case.agd`
-- `END__*` 문서는 스캔/선택/역할 그래프 기본 흐름에서 제외된다.
-- 종료 해제 시 `END__` 접두어를 제거한다.

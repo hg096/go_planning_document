@@ -1,0 +1,137 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- OPS-000 | 문서 안내 | 운영 검수 문서의 범위를 정의한다
+- OPS-001 | 공개 기준 | 어떤 결과를 사용자에게 공개할 수 있는지 정리한다
+- OPS-010 | 자동화 검수 | 자동 보정/추천/승격 결과를 검수하는 기준을 정리한다
+- OPS-020 | 보안과 오염 방지 | 입력 오염, 권한, source 사칭, 정책 위반을 막는 기준을 정리한다
+- OPS-030 | 운영 버튼과 파괴적 작업 | 수동 실행, 초기화, 재처리 작업의 위험도를 정리한다
+- OPS-040 | 데이터 없음과 부분 실패 | no-data, provider 실패, quota 오류의 사용자-facing 정책을 정리한다
+- OPS-050 | QA와 운영 알림 | 테스트 포인트와 운영자가 확인해야 하는 알림 기준을 정리한다
+
+@section OPS-000
+title: 문서 안내
+{
+	summary: 운영자가 무엇을 검수해야 하는지 정의한다
+	path:
+	links: GUIDE-OPS
+	content:
+	<<<
+	[이 문서가 답하는 질문]
+	- 어떤 결과를 공개하고, 어떤 결과를 보류/차단해야 하는가?
+	>>>
+}
+
+@section OPS-001
+title: 공개 기준
+{
+	summary: 사용자에게 보여줄 수 있는 결과의 최소 기준을 정의한다
+	path:
+	links: OPS-PUBLISH-001
+	content:
+	<<<
+	[공개 가능]
+	1)
+	2)
+
+	[공개 불가]
+	1)
+	2)
+	>>>
+}
+
+@section OPS-010
+title: 자동화 검수
+{
+	summary: 자동화 결과를 그대로 반영하지 않기 위한 검수 기준을 정의한다
+	path:
+	links: OPS-AUTO-001
+	content:
+	<<<
+	[검수 대상]
+	-
+
+	[승인 기준]
+	-
+	>>>
+}
+
+@section OPS-020
+title: 보안과 오염 방지
+{
+	summary: 악성 입력, source 사칭, 정책 오염을 막는 기준을 정의한다
+	path:
+	links: OPS-SECURITY-001
+	content:
+	<<<
+	[위험]
+	1)
+	2)
+
+	[방어]
+	-
+	>>>
+}
+
+@section OPS-030
+title: 운영 버튼과 파괴적 작업
+{
+	summary: 수동 실행/초기화/재처리 작업의 위험도를 구분한다
+	path:
+	links: OPS-DESTRUCTIVE-001
+	content:
+	<<<
+	[일반 작업]
+	-
+
+	[파괴적 작업]
+	-
+
+	[confirm/audit 기준]
+	-
+	>>>
+}
+
+@section OPS-040
+title: 데이터 없음과 부분 실패
+{
+	summary: 빈 결과와 일부 실패를 사용자와 운영자에게 어떻게 보여줄지 정의한다
+	path:
+	links: OPS-FAILURE-001
+	content:
+	<<<
+	[사용자-facing]
+	-
+
+	[운영자-facing]
+	-
+	>>>
+}
+
+@section OPS-050
+title: QA와 운영 알림
+{
+	summary: QA 항목과 운영 알림 조건을 정의한다
+	path:
+	links: OPS-QA-001
+	content:
+	<<<
+	[QA]
+	1)
+	2)
+
+	[알림]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: OPS-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: 신규 프로젝트 운영 검수 문서 초기 생성
+impact: 공개 기준, 자동화 검수, 보안/실패 대응을 구현 전부터 합의할 수 있게 함

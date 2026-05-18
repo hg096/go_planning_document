@@ -7,8 +7,8 @@ import (
 
 func TestKitProfileSpecsStarterKitUsesUnifiedTemplates(t *testing.T) {
 	specs := kitProfileSpecs("starter-kit")
-	if len(specs) != 3 {
-		t.Fatalf("starter-kit should generate 3 docs, got=%d", len(specs))
+	if len(specs) != 4 {
+		t.Fatalf("starter-kit should generate 4 docs, got=%d", len(specs))
 	}
 
 	byKey := map[string]kitDocSpec{}
@@ -24,6 +24,16 @@ func TestKitProfileSpecsStarterKitUsesUnifiedTemplates(t *testing.T) {
 	if _, ok := byKey["delivery_plan"]; ok {
 		t.Fatalf("starter-kit should not generate delivery_plan")
 	}
+	architectureDoc, ok := byKey["architecture"]
+	if !ok {
+		t.Fatalf("starter-kit should generate architecture example doc")
+	}
+	if architectureDoc.Subdir != filepath.Join("10_core_logic", "architecture") {
+		t.Fatalf("architecture doc should be under core logic architecture folder, got=%q", architectureDoc.Subdir)
+	}
+	if architectureDoc.Role != "source" {
+		t.Fatalf("architecture doc must be source, got=%q", architectureDoc.Role)
+	}
 
 	if _, ok := byKey["prd"]; ok {
 		t.Fatalf("legacy prd doc should not be generated in starter-kit")
@@ -33,10 +43,10 @@ func TestKitProfileSpecsStarterKitUsesUnifiedTemplates(t *testing.T) {
 	}
 }
 
-func TestKitProfileSpecsNewProjectUnifiesUnderProductFolder(t *testing.T) {
+func TestKitProfileSpecsNewProjectUsesFocusedDocTypes(t *testing.T) {
 	specs := kitProfileSpecs("new-project")
-	if len(specs) != 4 {
-		t.Fatalf("new-project should generate 4 docs, got=%d", len(specs))
+	if len(specs) != 7 {
+		t.Fatalf("new-project should generate 7 docs, got=%d", len(specs))
 	}
 
 	byKey := map[string]kitDocSpec{}
@@ -44,14 +54,45 @@ func TestKitProfileSpecsNewProjectUnifiesUnderProductFolder(t *testing.T) {
 		byKey[spec.Key] = spec
 	}
 
-	delivery, ok := byKey["delivery_plan"]
+	plan, ok := byKey["plan"]
 	if !ok {
-		t.Fatalf("new-project delivery_plan doc must exist")
+		t.Fatalf("new-project plan doc must exist")
 	}
-	if delivery.Subdir != filepath.Join("10_source", "product") {
-		t.Fatalf("new-project delivery_plan should be under product folder, got=%q", delivery.Subdir)
+	if plan.Role != "source" {
+		t.Fatalf("new-project plan doc must be source, got=%q", plan.Role)
 	}
-	if delivery.Role != "derived" {
-		t.Fatalf("new-project delivery_plan role must remain derived, got=%q", delivery.Role)
+	checklist, ok := byKey["ai_checklist"]
+	if !ok {
+		t.Fatalf("new-project AI checklist doc must exist")
+	}
+	if checklist.SourceKey != "plan" {
+		t.Fatalf("AI checklist should derive from project plan source, got=%q", checklist.SourceKey)
+	}
+	for _, spec := range specs {
+		if spec.Role == "derived" && spec.SourceKey != "plan" {
+			t.Fatalf("%s should derive from project plan source, got=%q", spec.Key, spec.SourceKey)
+		}
+	}
+}
+
+func TestNewProjectKitScopesEveryDocIntoProjectFolder(t *testing.T) {
+	for _, spec := range kitProfileSpecs("new-project") {
+		got := kitProjectScopedSubdir("new-project", spec.Subdir, "checkout")
+		want := filepath.Join("20_new_project", "checkout")
+		if got != want {
+			t.Fatalf("%s scoped folder=%q want %q", spec.Key, got, want)
+		}
+	}
+}
+
+func TestKitProfileSpecsMaintenanceIncidentAvoidSharedFolder(t *testing.T) {
+	for _, profile := range []string{"maintenance", "incident"} {
+		specs := kitProfileSpecs(profile)
+		if len(specs) != 1 {
+			t.Fatalf("%s should generate one doc, got=%d", profile, len(specs))
+		}
+		if specs[0].Subdir != filepath.Join("20_new_project", "delivery") {
+			t.Fatalf("%s should use new project delivery folder, got=%q", profile, specs[0].Subdir)
+		}
 	}
 }

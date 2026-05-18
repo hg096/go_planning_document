@@ -1,0 +1,168 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- IMPL-000 | 문서 안내 | 구현 전환 범위와 읽는 순서를 정리한다
+- IMPL-001 | 현재 기준 전환 대상 | 현재 코드/문서에서 바꿔야 할 대상을 정리한다
+- IMPL-010 | 1단계 기반 구조 | migration, config, 기본 타입을 만드는 기준을 정리한다
+- IMPL-020 | 2단계 핵심 흐름 연결 | 핵심 서비스 흐름을 새 구조에 연결하는 기준을 정리한다
+- IMPL-030 | 3단계 근거와 상태 저장 | 결과, 근거, 상태, 로그 저장 기준을 정리한다
+- IMPL-040 | 4단계 자동화/운영 확장 | 자동화와 운영 도구를 붙이는 기준을 정리한다
+- IMPL-050 | 구현 순서와 게이트 | 각 단계 완료 조건과 다음 단계 진입 조건을 정리한다
+- IMPL-060 | 테스트와 검증 기준 | 반드시 통과해야 할 테스트와 운영 검증 포인트를 정리한다
+- IMPL-070 | 비범위와 금지사항 | 이번 구현에서 하지 않을 것과 금지 구조를 정리한다
+
+@section IMPL-000
+title: 문서 안내
+{
+	summary: 구현 전환의 실행 순서와 gate를 정의한다
+	path:
+	links: GUIDE-IMPLEMENT
+	content:
+	<<<
+	[이 문서가 답하는 질문]
+	- 어떤 순서로 구현하면 위험을 줄이면서 목표 구조로 옮길 수 있는가?
+	>>>
+}
+
+@section IMPL-001
+title: 현재 기준 전환 대상
+{
+	summary: 현재 코드/문서에서 변경해야 할 지점을 정리한다
+	path:
+	links: IMPL-CURRENT-001
+	content:
+	<<<
+	[전환 대상]
+	1)
+	2)
+
+	[유지할 것]
+	-
+	>>>
+}
+
+@section IMPL-010
+title: 1단계 기반 구조
+{
+	summary: 데이터/설정/타입/migration 기반을 먼저 만든다
+	path:
+	links: IMPL-STEP-1
+	content:
+	<<<
+	[작업]
+	1)
+	2)
+
+	[완료 기준]
+	-
+	>>>
+}
+
+@section IMPL-020
+title: 2단계 핵심 흐름 연결
+{
+	summary: 핵심 서비스 흐름을 새 기반 구조에 연결한다
+	path:
+	links: IMPL-STEP-2
+	content:
+	<<<
+	[작업]
+	1)
+	2)
+
+	[완료 기준]
+	-
+	>>>
+}
+
+@section IMPL-030
+title: 3단계 근거와 상태 저장
+{
+	summary: 결과를 설명하고 복구할 수 있는 근거/상태 저장을 붙인다
+	path:
+	links: IMPL-STEP-3
+	content:
+	<<<
+	[작업]
+	-
+
+	[완료 기준]
+	-
+	>>>
+}
+
+@section IMPL-040
+title: 4단계 자동화/운영 확장
+{
+	summary: 자동화, 운영 버튼, 알림, 보정 흐름을 확장한다
+	path:
+	links: IMPL-STEP-4
+	content:
+	<<<
+	[작업]
+	-
+
+	[완료 기준]
+	-
+	>>>
+}
+
+@section IMPL-050
+title: 구현 순서와 게이트
+{
+	summary: 단계별 진입/완료 조건을 정의한다
+	path:
+	links: IMPL-GATE-001
+	content:
+	<<<
+	[게이트]
+	1) 단계:
+	   - 진입 조건:
+	   - 완료 조건:
+	   - 중단 조건:
+	>>>
+}
+
+@section IMPL-060
+title: 테스트와 검증 기준
+{
+	summary: 구현 완료 전 통과해야 할 검증을 정리한다
+	path:
+	links: IMPL-VALIDATION-001
+	content:
+	<<<
+	[테스트]
+	1)
+	2)
+
+	[운영 검증]
+	-
+	>>>
+}
+
+@section IMPL-070
+title: 비범위와 금지사항
+{
+	summary: 이번 구현에서 하지 않을 일과 되돌리면 안 되는 구조를 고정한다
+	path:
+	links: IMPL-NON-GOAL-001
+	content:
+	<<<
+	[비범위]
+	-
+
+	[금지사항]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: IMPL-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: 신규 프로젝트 구현전환계획 문서 초기 생성
+impact: 기획/상세 문서를 실제 구현 순서와 검증 gate로 전환할 수 있게 함

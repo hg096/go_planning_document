@@ -8,32 +8,42 @@ import (
 )
 
 func TestKitProjectScopedSubdir(t *testing.T) {
-	got := kitProjectScopedSubdir("new-project", filepath.Join("20_derived", "frontend"), "checkout")
-	want := filepath.Join("20_derived", "frontend", "checkout")
+	got := kitProjectScopedSubdir("new-project", filepath.Join("20_new_project", "delivery"), "checkout")
+	want := filepath.Join("20_new_project", "checkout")
 	if got != want {
 		t.Fatalf("unexpected scoped subdir: got=%q want=%q", got, want)
 	}
 
-	keepDerived := kitProjectScopedSubdir("starter-kit", filepath.Join("20_derived", "frontend"), "checkout")
-	if keepDerived != filepath.Join("20_derived", "frontend") {
+	gotProduct := kitProjectScopedSubdir("new-project", filepath.Join("20_new_project", "product"), "checkout")
+	if gotProduct != want {
+		t.Fatalf("new-project docs should share one project folder: got=%q want=%q", gotProduct, want)
+	}
+
+	gotRoadmap := kitProjectScopedSubdir("new-project", filepath.Join("20_new_project", "roadmap"), "checkout")
+	if gotRoadmap != want {
+		t.Fatalf("new-project docs should share one project folder: got=%q want=%q", gotRoadmap, want)
+	}
+
+	keepDerived := kitProjectScopedSubdir("starter-kit", filepath.Join("20_new_project", "delivery"), "checkout")
+	if keepDerived != filepath.Join("20_new_project", "delivery") {
 		t.Fatalf("starter-kit should not append project key: got=%q", keepDerived)
 	}
 
-	keepMaintenance := kitProjectScopedSubdir("maintenance", filepath.Join("30_shared", "maintenance"), "checkout")
-	if keepMaintenance != filepath.Join("30_shared", "maintenance") {
+	keepMaintenance := kitProjectScopedSubdir("maintenance", filepath.Join("20_new_project", "delivery"), "checkout")
+	if keepMaintenance != filepath.Join("20_new_project", "delivery") {
 		t.Fatalf("maintenance doc should stay single-file path: got=%q", keepMaintenance)
 	}
 
-	keepIncident := kitProjectScopedSubdir("incident", filepath.Join("30_shared", "errFix"), "checkout")
-	if keepIncident != filepath.Join("30_shared", "errFix") {
+	keepIncident := kitProjectScopedSubdir("incident", filepath.Join("20_new_project", "delivery"), "checkout")
+	if keepIncident != filepath.Join("20_new_project", "delivery") {
 		t.Fatalf("incident should not append project key: got=%q", keepIncident)
 	}
 
-	if keep := kitProjectScopedSubdir("maintenance", filepath.Join("10_source", "product"), ""); keep != filepath.Join("10_source", "product") {
+	if keep := kitProjectScopedSubdir("maintenance", filepath.Join("20_new_project", "product"), ""); keep != filepath.Join("20_new_project", "product") {
 		t.Fatalf("empty key should keep base subdir, got=%q", keep)
 	}
 
-	if keep := kitProjectScopedSubdir("new-project", filepath.Join("20_derived", "frontend"), ""); keep != filepath.Join("20_derived", "frontend") {
+	if keep := kitProjectScopedSubdir("new-project", filepath.Join("20_new_project", "delivery"), ""); keep != filepath.Join("20_new_project", "delivery") {
 		t.Fatalf("new-project with empty key should keep base subdir, got=%q", keep)
 	}
 }

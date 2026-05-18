@@ -1,0 +1,150 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- PLAN-000 | Document Guide | Define reading order and file responsibilities
+- PLAN-001 | Service Definition | Lock product position and one-line definition
+- PLAN-010 | User Output | Define what users actually receive
+- PLAN-020 | Core Principles | Summarize policy and decision principles
+- PLAN-030 | Success Criteria | Define metrics, done criteria, and non-goals
+- PLAN-040 | Operations Scope | Define collection, review, release, and exception handling
+
+@section PLAN-000
+title: Document Guide
+{
+	summary: Starting point and reading order for the project document set
+	path:
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Question this document answers]
+	- What are we building, and which principles decide whether it succeeded?
+
+	[Reading order]
+	1) 01_plan: product definition and baseline
+	2) 02_implementation_logic: end-to-end processing flow
+	3) 03_data_contract: storage and I/O contracts
+	4) 04_strategy: automation and strategy evolution
+	5) 05_ops_review: operations and exception handling
+	6) 06_implementation_plan: implementation stages and gates
+	7) 07_ai_checklist: AI implementation checklist
+	>>>
+}
+
+@section PLAN-001
+title: Service Definition
+{
+	summary: Product position and one-line definition
+	path:
+	links: PRODUCT-001
+	content:
+	<<<
+	[One-line definition]
+	-
+
+	[Target users]
+	-
+
+	[Problems to solve]
+	1)
+	2)
+
+	[Non-goals]
+	1)
+	2)
+	>>>
+}
+
+@section PLAN-010
+title: User Output
+{
+	summary: Define screens, APIs, reports, or other final user outputs
+	path:
+	links: USER-OUTPUT-001
+	content:
+	<<<
+	[Final output]
+	1)
+	2)
+
+	[User states]
+	- success:
+	- empty:
+	- failure:
+
+	[Admin/operator output]
+	-
+	>>>
+}
+
+@section PLAN-020
+title: Core Principles
+{
+	summary: Stable decision principles for implementation and operations
+	path:
+	links: POLICY-001
+	content:
+	<<<
+	[Principles]
+	1)
+	2)
+	3)
+
+	[Forbidden patterns]
+	1)
+	2)
+	>>>
+}
+
+@section PLAN-030
+title: Success Criteria
+{
+	summary: Metrics, completion criteria, and non-goals
+	path:
+	links: SUCCESS-001
+	content:
+	<<<
+	[Target metrics]
+	- metric:
+	- baseline:
+	- target:
+
+	[Done criteria]
+	1)
+	2)
+
+	[Out of scope]
+	-
+	>>>
+}
+
+@section PLAN-040
+title: Operations Scope
+{
+	summary: Separate normal operations from risky operations
+	path:
+	links: OPS-SCOPE-001
+	content:
+	<<<
+	[Normal operations]
+	1)
+	2)
+
+	[Risky operations]
+	1)
+	2)
+
+	[Signals operators should watch]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: PLAN-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial seven-document new project planning kit
+impact: Establishes the project baseline for detail, implementation, and AI checklist documents

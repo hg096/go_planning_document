@@ -1,0 +1,120 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- STRAT-000 | 문서 안내 | 전략/자동화 문서가 다루는 범위를 정의한다
+- STRAT-001 | 현재 고정 규칙 | 코드나 수동 운영에 박혀 있는 규칙을 정리한다
+- STRAT-010 | 목표 전략 모델 | 전략을 데이터/설정/정책으로 분리하는 구조를 정리한다
+- STRAT-020 | 전략 진화 | 시스템이나 운영자가 전략 수정안을 만드는 방식을 정리한다
+- STRAT-030 | Shadow 평가와 승격 | 새 전략을 검증하고 승격하는 기준을 정리한다
+- STRAT-040 | 실패와 후퇴 | 전략이 나빠졌을 때 보류와 rollback 기준을 정리한다
+
+@section STRAT-000
+title: 문서 안내
+{
+	summary: 전략 자동화와 자율 보정 범위를 정의한다
+	path:
+	links: GUIDE-STRATEGY
+	content:
+	<<<
+	[이 문서가 답하는 질문]
+	- 어떤 판단 규칙을 코드 밖으로 빼고, 어떻게 검증 후 승격할 것인가?
+	>>>
+}
+
+@section STRAT-001
+title: 현재 고정 규칙
+{
+	summary: 데이터/설정으로 옮겨야 할 하드코딩 또는 수동 규칙을 기록한다
+	path:
+	links: STRAT-CURRENT-001
+	content:
+	<<<
+	[현재 고정값]
+	1)
+	2)
+
+	[문제]
+	-
+	>>>
+}
+
+@section STRAT-010
+title: 목표 전략 모델
+{
+	summary: 전략을 버전과 규칙 단위로 관리하는 목표 구조를 정의한다
+	path:
+	links: STRAT-MODEL-001
+	content:
+	<<<
+	[전략 구성]
+	- version:
+	- rule:
+	- weight:
+	- window:
+	- blocklist:
+
+	[불변 조건]
+	-
+	>>>
+}
+
+@section STRAT-020
+title: 전략 진화
+{
+	summary: 전략 수정 proposal 생성 방식을 정의한다
+	path:
+	links: STRAT-EVOLUTION-001
+	content:
+	<<<
+	[관찰 신호]
+	-
+
+	[proposal 생성]
+	1)
+	2)
+	>>>
+}
+
+@section STRAT-030
+title: Shadow 평가와 승격
+{
+	summary: 새 전략을 비공개로 검증하고 승격하는 gate를 정의한다
+	path:
+	links: STRAT-PROMOTE-001
+	content:
+	<<<
+	[shadow 평가]
+	-
+
+	[승격 기준]
+	1)
+	2)
+	>>>
+}
+
+@section STRAT-040
+title: 실패와 후퇴
+{
+	summary: 전략 품질이 나빠졌을 때 보류/롤백하는 기준을 정의한다
+	path:
+	links: STRAT-ROLLBACK-001
+	content:
+	<<<
+	[실패 신호]
+	-
+
+	[후퇴 절차]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: STRAT-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: 신규 프로젝트 전략/자동화 문서 초기 생성
+impact: 고정 규칙을 데이터화하고 검증 후 승격하는 운영 구조를 설계할 수 있게 함

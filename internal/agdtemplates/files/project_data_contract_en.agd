@@ -1,0 +1,126 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- DATA-000 | Document Guide | Define data contract scope
+- DATA-001 | Public/Response Contract | Define user-facing result data
+- DATA-010 | Input Contract | Define external, collected, or user input
+- DATA-020 | Storage Contract | Define table, collection, or file storage
+- DATA-030 | Decision and Evidence Contract | Separate score, status, evidence, and audit logs
+- DATA-040 | Failure and Recovery Contract | Define partial failure, retry, correction, and rollback data
+
+@section DATA-000
+title: Document Guide
+{
+	summary: Scope of the data contract document
+	path:
+	links: GUIDE-DATA
+	content:
+	<<<
+	[Question this document answers]
+	- Which data shapes should implementation read and write?
+	>>>
+}
+
+@section DATA-001
+title: Public/Response Contract
+{
+	summary: Final data shape for UI or API
+	path:
+	links: DATA-PUBLIC-001
+	content:
+	<<<
+	[Fields]
+	- name:
+	  - type:
+	  - required:
+	  - description:
+
+	[Sort/filter]
+	-
+	>>>
+}
+
+@section DATA-010
+title: Input Contract
+{
+	summary: Incoming data and normalization rules
+	path:
+	links: DATA-INPUT-001
+	content:
+	<<<
+	[Input sources]
+	1)
+	2)
+
+	[Normalization]
+	-
+	>>>
+}
+
+@section DATA-020
+title: Storage Contract
+{
+	summary: Storage units and relationships
+	path:
+	links: DATA-STORAGE-001
+	content:
+	<<<
+	[Storage unit]
+	1) name:
+	   - purpose:
+	   - fields:
+	   - uniqueness:
+
+	[Relationships]
+	-
+	>>>
+}
+
+@section DATA-030
+title: Decision and Evidence Contract
+{
+	summary: Keep decision evidence recoverable
+	path:
+	links: DATA-EVIDENCE-001
+	content:
+	<<<
+	[Status]
+	- accepted:
+	- rejected:
+	- quarantined:
+
+	[Evidence]
+	- score:
+	- reason:
+	- source:
+	- audit:
+	>>>
+}
+
+@section DATA-040
+title: Failure and Recovery Contract
+{
+	summary: Failure state, retry, and rollback data
+	path:
+	links: DATA-RECOVERY-001
+	content:
+	<<<
+	[Failure types]
+	1)
+	2)
+
+	[Recovery data]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: DATA-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial data contract document for new project kit
+impact: Aligns storage, I/O, evidence, and recovery data for implementation

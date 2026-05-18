@@ -118,18 +118,16 @@ REM 또는
 AI 작성 철학/운영 원칙 가이드는 `00_agd/README.md`(영문: `00_agd/README.en.md`)를 기준으로 확인합니다.
 
 새 문서 생성 시(위자드 첫 화면 메뉴 `4`) 파일명만 입력하면 문서 타입 기준 폴더로 자동 배치됩니다.
+프로젝트 단위 기획은 메뉴 `[2] 문서 킷 생성`에서 `new-project`를 선택해 만듭니다.
 
-- `service` -> `00_agd\agd_docs\10_source\service\<file>.agd`
-- `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
-- `delivery-plan` -> `00_agd\agd_docs\20_derived\frontend\<file>.agd`
-- `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`
-- `meeting` -> `00_agd\agd_docs\30_shared\meeting\<file>.agd`
-- `experiment` -> `00_agd\agd_docs\30_shared\experiment\<file>.agd`
-- `roadmap` -> `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
-- `handoff` -> `00_agd\agd_docs\30_shared\handoff\<file>.agd`
+- `service` -> `00_agd\agd_docs\10_core_logic\service\<file>.agd`
+- `policy` -> `00_agd\agd_docs\10_core_logic\policy\<file>.agd`
+- `architecture` -> `00_agd\agd_docs\10_core_logic\architecture\<file>.agd`
+- 그 외 신규 프로젝트 문서는 명시 경로를 지정하거나 `new-project` 킷으로 생성
 
 원하는 위치를 직접 지정해 문서를 생성할 수 있습니다.
-`delivery-plan`은 프런트 페이지 단위 관리가 쉽도록 `20_derived\frontend` 하위(예: `checkout`, `home`)로 나눠 작성하는 것을 권장합니다.
+핵심 로직은 `10_core_logic`, 새로 추진하는 기획은 `20_new_project` 아래에 모읍니다.
+`new-project` 킷은 `20_new_project\<project-key>` 아래에 7개 문서를 한 번에 생성합니다.
 
 현재 위자드 메뉴(한국어 빌드 기준):
 

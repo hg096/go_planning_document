@@ -1,0 +1,120 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- STRAT-000 | Document Guide | Define strategy and automation scope
+- STRAT-001 | Current Fixed Rules | Record rules embedded in code or manual operation
+- STRAT-010 | Target Strategy Model | Define rules as data, settings, or policy
+- STRAT-020 | Strategy Evolution | Define proposal generation
+- STRAT-030 | Shadow Evaluation and Promotion | Define validation and promotion criteria
+- STRAT-040 | Failure and Rollback | Define hold and rollback rules
+
+@section STRAT-000
+title: Document Guide
+{
+	summary: Strategy automation and correction scope
+	path:
+	links: GUIDE-STRATEGY
+	content:
+	<<<
+	[Question this document answers]
+	- Which decision rules move out of code, and how are they validated before promotion?
+	>>>
+}
+
+@section STRAT-001
+title: Current Fixed Rules
+{
+	summary: Hardcoded or manual rules that should move to data/settings
+	path:
+	links: STRAT-CURRENT-001
+	content:
+	<<<
+	[Fixed values]
+	1)
+	2)
+
+	[Problem]
+	-
+	>>>
+}
+
+@section STRAT-010
+title: Target Strategy Model
+{
+	summary: Versioned strategy and rule management
+	path:
+	links: STRAT-MODEL-001
+	content:
+	<<<
+	[Strategy parts]
+	- version:
+	- rule:
+	- weight:
+	- window:
+	- blocklist:
+
+	[Invariants]
+	-
+	>>>
+}
+
+@section STRAT-020
+title: Strategy Evolution
+{
+	summary: Strategy proposal generation
+	path:
+	links: STRAT-EVOLUTION-001
+	content:
+	<<<
+	[Signals]
+	-
+
+	[Proposal generation]
+	1)
+	2)
+	>>>
+}
+
+@section STRAT-030
+title: Shadow Evaluation and Promotion
+{
+	summary: Validate new strategy privately before promotion
+	path:
+	links: STRAT-PROMOTE-001
+	content:
+	<<<
+	[Shadow evaluation]
+	-
+
+	[Promotion criteria]
+	1)
+	2)
+	>>>
+}
+
+@section STRAT-040
+title: Failure and Rollback
+{
+	summary: Hold or rollback when strategy quality degrades
+	path:
+	links: STRAT-ROLLBACK-001
+	content:
+	<<<
+	[Failure signals]
+	-
+
+	[Rollback procedure]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: STRAT-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial strategy and automation document for new project kit
+impact: Enables rule externalization and validation-gated promotion

@@ -1,0 +1,193 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- CHECK-000 | 문서 안내 | AI 구현자가 이 체크리스트를 어떻게 써야 하는지 정리한다
+- CHECK-010 | 구현 전 준비 | 문서, 코드, 테스트 범위를 확인하는 사전 체크리스트를 정리한다
+- CHECK-020 | 현재 구조 인벤토리 | 제거/이관/유지 대상을 빠짐없이 확인한다
+- CHECK-030 | 데이터와 계약 작성 | migration, 모델, 입출력 계약 작성 체크리스트를 정리한다
+- CHECK-040 | 서비스와 Repository | 타입, repository, service 연결 체크리스트를 정리한다
+- CHECK-050 | 핵심 흐름 구현 | 사용자-facing 핵심 흐름 구현 체크리스트를 정리한다
+- CHECK-060 | 근거와 상태 처리 | 결과 근거, 실패 상태, audit 저장 체크리스트를 정리한다
+- CHECK-070 | 자동화와 운영 도구 | 자동화, 운영 버튼, 보정 흐름 체크리스트를 정리한다
+- CHECK-080 | 테스트와 검증 | 단계별 테스트, 빌드, AGD 검증 체크리스트를 정리한다
+- CHECK-090 | 코드 리뷰 셀프 점검 | 완료 전 회귀/보안/운영 리스크를 정리한다
+- CHECK-100 | 완료 보고 기준 | 최종 응답에 포함해야 할 변경 요약과 검증 결과를 정리한다
+
+@section CHECK-000
+title: 문서 안내
+{
+	summary: AI 구현자가 작업 중 직접 체크하는 실행 문서다
+	path:
+	links: GUIDE-AI-CHECK
+	content:
+	<<<
+	[사용법]
+	1) 작업 전 CHECK-010부터 확인한다.
+	2) 구현 중 완료한 항목은 증거와 함께 표시한다.
+	3) 완료 보고 전 CHECK-080~100을 다시 확인한다.
+	>>>
+}
+
+@section CHECK-010
+title: 구현 전 준비
+{
+	summary: 작업 전 읽어야 할 문서와 금지 범위를 확인한다
+	path:
+	links: CHECK-PREFLIGHT
+	content:
+	<<<
+	[확인]
+	- 대상 문서:
+	- 대상 섹션:
+	- 변경 목적:
+	- 금지 범위:
+	>>>
+}
+
+@section CHECK-020
+title: 현재 구조 인벤토리
+{
+	summary: 기존 코드/문서에서 제거, 이관, 유지할 대상을 정리한다
+	path:
+	links: CHECK-INVENTORY
+	content:
+	<<<
+	[제거]
+	-
+
+	[이관]
+	-
+
+	[유지]
+	-
+	>>>
+}
+
+@section CHECK-030
+title: 데이터와 계약 작성
+{
+	summary: migration, 모델, 입출력 계약을 구현한다
+	path:
+	links: CHECK-DATA
+	content:
+	<<<
+	[체크]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-040
+title: 서비스와 Repository
+{
+	summary: repository와 service 책임 경계를 구현한다
+	path:
+	links: CHECK-REPOSITORY
+	content:
+	<<<
+	[체크]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-050
+title: 핵심 흐름 구현
+{
+	summary: 사용자-facing 핵심 흐름을 연결한다
+	path:
+	links: CHECK-FLOW
+	content:
+	<<<
+	[체크]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-060
+title: 근거와 상태 처리
+{
+	summary: 결과 근거, 실패 상태, audit를 남긴다
+	path:
+	links: CHECK-EVIDENCE
+	content:
+	<<<
+	[체크]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-070
+title: 자동화와 운영 도구
+{
+	summary: 자동화, 운영 버튼, 보정 흐름을 구현한다
+	path:
+	links: CHECK-OPS
+	content:
+	<<<
+	[체크]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-080
+title: 테스트와 검증
+{
+	summary: 테스트, 빌드, AGD 검증을 수행한다
+	path:
+	links: CHECK-VALIDATION
+	content:
+	<<<
+	[검증]
+	- unit:
+	- integration:
+	- build:
+	- AGD:
+	>>>
+}
+
+@section CHECK-090
+title: 코드 리뷰 셀프 점검
+{
+	summary: 완료 전 회귀/보안/운영 리스크를 확인한다
+	path:
+	links: CHECK-REVIEW
+	content:
+	<<<
+	[리스크]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-100
+title: 완료 보고 기준
+{
+	summary: 최종 응답에 포함할 내용을 정의한다
+	path:
+	links: CHECK-DONE
+	content:
+	<<<
+	[보고]
+	- 변경 파일:
+	- 변경 섹션:
+	- reason:
+	- impact:
+	- validation:
+	- 남은 일:
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: CHECK-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: 신규 프로젝트 AI 구현 체크리스트 초기 생성
+impact: AI 구현자가 기획 의도와 검증 기준을 놓치지 않고 작업할 수 있게 함

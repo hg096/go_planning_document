@@ -1,0 +1,164 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- ADR-000 | Input Guide | How to fill this architecture decision record
+- ADR-001 | Decision Summary | Define the key decision, status, owner, and scope
+- ADR-010 | Problem and Context | Record why this decision is needed and which constraints matter
+- ADR-020 | Options and Rationale | Compare selected and rejected options using the same criteria
+- ADR-030 | Impact and Risks | Capture code, operations, security, and cost impact
+- ADR-040 | Validation and Reversal | Define validation method and conditions for revisiting the decision
+
+@section ADR-000
+title: Input Guide
+{
+	summary: Architecture decisions should preserve rationale and reversal conditions, not only the choice
+	path:
+	links: GUIDE-ADR
+	content:
+	<<<
+	[Writing rules]
+	1) State the decision in one sentence and include status: proposed, accepted, deprecated, or superseded.
+	2) Record rejected options and rejection reasons beside the selected option.
+	3) Include validation method and reversal conditions so the decision can be revisited later.
+
+	[AI request contract]
+	- target_docs: this ADR file path
+	- target_sections: ADR section IDs
+	- goal: which decision or review should be documented
+	- constraints: technical, organizational, schedule, or cost constraints
+	- done: approval or validation completion criteria
+	>>>
+}
+
+@section ADR-001
+title: Decision Summary
+{
+	summary: Lock decision title, status, decision owner, and scope
+	path:
+	links: ADR-SUMMARY
+	content:
+	<<<
+	[Decision]
+	-
+
+	[Status]
+	- proposed | accepted | deprecated | superseded:
+
+	[Scope]
+	- included:
+	- excluded:
+
+	[Owner/reviewers]
+	- owner:
+	- reviewers:
+	>>>
+}
+
+@section ADR-010
+title: Problem and Context
+{
+	summary: Record the background, current problem, and relevant constraints
+	path:
+	links: ADR-CONTEXT
+	content:
+	<<<
+	[Background]
+	-
+
+	[Current problem]
+	1)
+	2)
+
+	[Constraints]
+	- schedule:
+	- performance:
+	- security/policy:
+	- operations:
+	>>>
+}
+
+@section ADR-020
+title: Options and Rationale
+{
+	summary: Compare the selected option and rejected alternatives with consistent criteria
+	path:
+	links: ADR-OPTIONS
+	content:
+	<<<
+	[Selected option]
+	- option:
+	- rationale:
+	- expected effect:
+
+	[Alternatives]
+	1) alternative:
+	   - upside:
+	   - rejection reason:
+	2) alternative:
+	   - upside:
+	   - rejection reason:
+
+	[Decision criteria]
+	- complexity:
+	- change cost:
+	- scalability:
+	- operational stability:
+	>>>
+}
+
+@section ADR-030
+title: Impact and Risks
+{
+	summary: Make code, data, operations, and team-process impact explicit
+	path:
+	links: ADR-IMPACT
+	content:
+	<<<
+	[Impact scope]
+	- code:
+	- data:
+	- deployment/operations:
+	- documentation/team process:
+
+	[Risks]
+	1) risk:
+	   - mitigation:
+	2) risk:
+	   - mitigation:
+	>>>
+}
+
+@section ADR-040
+title: Validation and Reversal
+{
+	summary: Define validation method, observed signals, and reversal/review conditions
+	path:
+	links: ADR-VALIDATION
+	content:
+	<<<
+	[Validation method]
+	1)
+	2)
+
+	[Observed signals]
+	- metric:
+	- baseline:
+	- failure signal:
+
+	[Reversal conditions]
+	- condition:
+	- rollback procedure:
+	- follow-up document:
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: ADR-001
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial architecture decision template scaffolding
+impact: Separates technical decision rationale, alternatives, risks, and reversal conditions from service logic

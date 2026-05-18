@@ -1,0 +1,156 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- LOG-000 | Document Guide | Define implementation-flow scope and downstream detail docs
+- LOG-001 | End-to-End Pipeline | Define processing order from input to user output
+- LOG-010 | Step Processing | Define input, output, and failure handling per step
+- LOG-020 | Public/Admin Flow | Separate user-facing and operator-facing flows
+- LOG-030 | Batch and Automation | Define scheduled runs, correction, promotion, and rollback
+- LOG-040 | Implementation Priority | Define migration order from current to target structure
+- LOG-050 | Maintenance Structure | Define change points and ownership boundaries
+
+@section LOG-000
+title: Document Guide
+{
+	summary: Implementation discussion starts here
+	path:
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[Question this document answers]
+	- In which order does this project process data and publish output?
+
+	[Next documents]
+	- data/storage contracts: 03
+	- automation/strategy: 04
+	- operations/exceptions: 05
+	- implementation order: 06
+	>>>
+}
+
+@section LOG-001
+title: End-to-End Pipeline
+{
+	summary: Full processing order in one place
+	path:
+	links: PIPELINE-001
+	content:
+	<<<
+	[Flow]
+	1) collect input
+	2) normalize
+	3) validate
+	4) process core logic
+	5) persist
+	6) publish/respond
+	7) observe/correct
+	>>>
+}
+
+@section LOG-010
+title: Step Processing
+{
+	summary: Input and output contract for each step
+	path:
+	links: PIPELINE-STEP-001
+	content:
+	<<<
+	[Step contract]
+	1) step:
+	   - input:
+	   - output:
+	   - failure handling:
+	2) step:
+	   - input:
+	   - output:
+	   - failure handling:
+	>>>
+}
+
+@section LOG-020
+title: Public/Admin Flow
+{
+	summary: Separate public user flow from admin/debug flow
+	path:
+	links: UI-OPS-001
+	content:
+	<<<
+	[Public flow]
+	-
+
+	[Admin flow]
+	-
+
+	[Forbidden flow]
+	-
+	>>>
+}
+
+@section LOG-030
+title: Batch and Automation
+{
+	summary: Scheduled execution, correction, promotion, and rollback
+	path:
+	links: AUTO-001
+	content:
+	<<<
+	[Scheduled runs]
+	1)
+	2)
+
+	[Correction]
+	1)
+	2)
+
+	[Promotion/rollback]
+	-
+	>>>
+}
+
+@section LOG-040
+title: Implementation Priority
+{
+	summary: What to build first and what to extend later
+	path:
+	links: IMPLEMENT-001
+	content:
+	<<<
+	[First]
+	-
+
+	[Second]
+	-
+
+	[Later]
+	-
+	>>>
+}
+
+@section LOG-050
+title: Maintenance Structure
+{
+	summary: Module responsibility and change boundaries
+	path:
+	links: MAINTAIN-001
+	content:
+	<<<
+	[Ownership]
+	- module:
+	  - responsibility:
+	  - change reason:
+
+	[Where change must not accumulate]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: LOG-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial implementation logic document for new project kit
+impact: Turns planning baseline into an executable end-to-end flow

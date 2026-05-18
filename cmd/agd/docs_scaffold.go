@@ -10,150 +10,76 @@ import (
 const docsRootLeafDir = "agd_docs"
 
 var docsScaffoldFolders = []string{
-	"00_inbox",
-	filepath.Join("10_source", "product"),
-	filepath.Join("10_source", "service"),
-	filepath.Join("10_source", "policy"),
-	filepath.Join("10_source", "architecture"),
-	filepath.Join("20_derived", "frontend"),
-	filepath.Join("20_derived", "qa"),
-	filepath.Join("20_derived", "ops"),
-	filepath.Join("30_shared", "meeting"),
-	filepath.Join("30_shared", "handoff"),
-	filepath.Join("30_shared", "roadmap"),
-	filepath.Join("30_shared", "postmortem"),
-	filepath.Join("30_shared", "experiment"),
-	filepath.Join("30_shared", "maintenance"),
-	filepath.Join("30_shared", "errFix"),
-	"90_archive",
+	filepath.Join("10_core_logic", "service"),
+	filepath.Join("10_core_logic", "policy"),
+	filepath.Join("10_core_logic", "architecture"),
+	"20_new_project",
 }
 
 const docsScaffoldReadmeEN = `# AGD Docs Folder Guide
 
-This directory uses a default hierarchy for scalable document management.
+This directory uses a focused hierarchy for planning work.
 
-- 00_inbox: temporary drafts and triage
-- 10_source/*: source-of-truth documents
-- 20_derived/*: derived documents linked to source docs
-- 30_shared/*: shared planning/coordination docs
-- 90_archive: retired documents
+- 10_core_logic/*: source-of-truth logic documents
+- 20_new_project/*: new project planning documents
 
 Recommended practice:
 
-1) Keep one source doc per topic under 10_source.
-2) Keep derived docs under 20_derived and connect source_doc/source_sections.
-3) In 20_derived/frontend, create one .agd file per page/screen.
-4) Move outdated docs to 90_archive instead of deleting immediately.
+1) Put existing product/service rules under 10_core_logic first.
+2) Put new initiatives under 20_new_project and link them back to core logic.
+3) Keep one core logic source per topic, then let project docs reference it with source_doc/source_sections.
+4) Keep outdated or paused material inside the nearest project folder with an explicit status.
 
 Folder details:
 
-- 00_inbox: capture raw ideas before formal structuring
+- 10_core_logic/service: backend/service logic, domain rules, failure branches, state transitions
+- 10_core_logic/policy: rules, standards, approval/release policy
+- 10_core_logic/architecture: architecture decisions (ADR) and trade-offs
 
-- 10_source/product: product scope, requirements, release decision source
-- 10_source/service: backend/service logic source and operational guardrails
-- 10_source/policy: rules, standards, release/approval policy source
-- 10_source/architecture: architecture decisions (ADR) and trade-offs
-
-- 20_derived/frontend: UI flow/spec docs derived from source logic (one page/screen per file)
-- 20_derived/qa: test plans/checklists derived from source requirements
-- 20_derived/ops: runbook/operations docs derived from service/policy
-
-- 30_shared/meeting: meeting notes, decisions, follow-up owners
-- 30_shared/handoff: cross-team handoff package and acceptance checklist
-- 30_shared/roadmap: milestone timeline, priority changes, dependency view
-- 30_shared/postmortem: incident retrospectives and prevention actions
-- 30_shared/experiment: hypotheses, experiment setup, result summary
-- 30_shared/maintenance: active maintenance workspace (single-file flow)
-- 30_shared/errFix: active incident/bug workspace (single-file flow)
-
-- 90_archive: retired docs kept for traceability/audit
-
-Path references (updated):
-
-- postmortem: 30_shared/postmortem/<file>.agd
-- maintenance-case: 30_shared/maintenance/<project>_maintenance_case.agd
-- incident-case: 30_shared/errFix/<project>_incident_case.agd
+- 20_new_project/<project-key>: project scope, policy, delivery plan, and roadmap in one folder
 
 AI planning/writing guide (merged into this README):
 
 1) Core philosophy: control conflict/traceability first, not raw file count.
-2) Authority rule: keep one source doc per topic and converge derived docs to source.
+2) Authority rule: core logic is the baseline; new project docs must point back to it when they depend on existing behavior.
 3) Prompt contract (required): target section IDs, purpose, constraints, done criteria.
 4) AI output (required): updated section IDs, reason, impact, follow-up checklist.
 5) Every mutation must append @change with both reason and impact.
 6) Keep @map, @section, and @change aligned after each edit.
-7) Standard loop: edit -> @change -> map-sync -> check -> source-first conflict resolution.
-
-END__ close rule:
-
-- maintenance close file: 30_shared/maintenance/END__*_maintenance_case.agd
-- incident close file: 30_shared/errFix/END__*_incident_case.agd
-- these files are excluded from scan/select/role-graph flows
-- remove END__ to reactivate a closed case
+7) Standard loop: edit -> @change -> map-sync -> check -> core-logic-first conflict resolution.
 `
 
 const docsScaffoldReadmeKO = `# AGD 문서 폴더 가이드
 
-이 디렉터리는 확장 가능한 문서 관리를 위한 기본 계층 구조를 사용합니다.
+이 디렉터리는 기획 문서의 핵심을 두 축으로 좁혀 관리합니다.
 
-- 00_inbox: 임시 초안 및 분류
-- 10_source/*: 기준(source) 문서
-- 20_derived/*: source와 연결된 파생 문서
-- 30_shared/*: 공유 계획/협업 문서
-- 90_archive: 보관 문서
+- 10_core_logic/*: 핵심 로직 기준 문서
+- 20_new_project/*: 신규 프로젝트 기획 문서
 
 권장 방식:
 
-1) 주제마다 10_source 아래에 기준 문서를 1개 유지합니다.
-2) 파생 문서는 20_derived 아래에 두고 source_doc/source_sections를 연결합니다.
-3) 20_derived/frontend는 페이지(화면)별로 .agd 파일을 분리해 작성합니다.
-4) 오래된 문서는 바로 삭제하지 말고 90_archive로 이동합니다.
+1) 기존 제품/서비스의 판단 기준은 먼저 10_core_logic 아래에 둡니다.
+2) 새로 시작하는 일은 20_new_project 아래에 두고, 필요한 경우 핵심 로직 문서를 source_doc/source_sections로 연결합니다.
+3) 주제별 핵심 로직 source는 1개만 유지하고 신규 프로젝트 문서는 그 기준으로 수렴시킵니다.
+4) 중단/보류된 문서는 별도 보관 폴더를 만들지 말고 가장 가까운 프로젝트 폴더 안에서 상태를 명시합니다.
 
 폴더별 상세 설명:
 
-- 00_inbox: 정리 전 아이디어/요청을 임시로 모아두는 공간
+- 10_core_logic/service: 서비스/백엔드 로직, 도메인 규칙, 실패 분기, 상태 전이
+- 10_core_logic/policy: 규칙, 표준, 승인/배포 정책
+- 10_core_logic/architecture: 아키텍처 의사결정(ADR)과 트레이드오프 기록
 
-- 10_source/product: 제품 범위, 요구사항, 릴리즈 기준을 정의하는 기준 문서
-- 10_source/service: 서비스/백엔드 로직과 운영 가드레일을 정의하는 기준 문서
-- 10_source/policy: 규칙, 표준, 승인/배포 정책을 관리하는 기준 문서
-- 10_source/architecture: 아키텍처 의사결정(ADR)과 트레이드오프 기록
-
-- 20_derived/frontend: source 로직에서 파생된 화면/UX 흐름 문서 (페이지/파일 단위 분리 작성 원칙)
-- 20_derived/qa: source 요구사항에서 파생된 테스트 계획/체크리스트
-- 20_derived/ops: 서비스/정책 기반으로 파생된 운영 runbook 문서
-
-- 30_shared/meeting: 회의 기록, 의사결정, 후속 액션 담당자 정리
-- 30_shared/handoff: 팀 간 인수인계 패키지와 수락 체크리스트
-- 30_shared/roadmap: 마일스톤 일정, 우선순위 변경, 의존성 정리
-- 30_shared/postmortem: 장애/이슈 회고와 재발 방지 액션 기록
-- 30_shared/experiment: 가설, 실험 설계, 결과 요약 관리
-- 30_shared/maintenance: 유지보수 진행 문서를 모으는 단일 흐름 작업 공간
-- 30_shared/errFix: 오류,버그 대응 문서를 모으는 단일 흐름 작업 공간
-
-- 90_archive: 종료 문서를 추적 가능하게 보관하는 아카이브
-
-경로 참고 (업데이트):
-
-- postmortem: 30_shared/postmortem/<file>.agd
-- maintenance-case: 30_shared/maintenance/<project>_maintenance_case.agd
-- incident-case: 30_shared/errFix/<project>_incident_case.agd
+- 20_new_project/<project-key>: 프로젝트 범위, 정책, 전달 계획, 로드맵을 한 폴더에 모음
 
 AI 기획/작성 가이드 (이 README에 통합):
 
 1) 핵심 철학: 파일 수보다 충돌 통제와 추적 가능성을 우선합니다.
-2) 권위 규칙: 주제별 source 문서 1개를 유지하고 파생 문서를 source로 수렴합니다.
+2) 권위 규칙: 핵심 로직을 기준선으로 두고 신규 프로젝트 문서는 필요한 경우 그 기준선을 참조합니다.
 3) 프롬프트 계약(필수): 대상 섹션 ID, 목적, 제약 조건, 완료 기준.
 4) AI 출력(필수): 수정 섹션 ID, reason, impact, 후속 체크리스트.
 5) 모든 수정은 @change에 reason과 impact를 함께 기록합니다.
 6) 수정 후 @map, @section, @change 정합성을 확인합니다.
-7) 표준 루프: 수정 -> @change -> map-sync -> check -> source 우선 충돌 해결.
-
-END__ 종료 규칙:
-
-- 유지보수 종료 문서: 30_shared/maintenance/END__*_maintenance_case.agd
-- 오류,버그 종료 문서: 30_shared/errFix/END__*_incident_case.agd
-- 이 파일들은 스캔/선택/역할 그래프 흐름에서 자동 제외됩니다.
-- 종료 해제 시 END__ 접두어를 제거하면 됩니다.
+7) 표준 루프: 수정 -> @change -> map-sync -> check -> 핵심 로직 우선 충돌 해결.
 `
 
 func docsScaffoldReadmeByLang(lang string) string {

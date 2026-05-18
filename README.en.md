@@ -154,19 +154,17 @@ When opening existing docs, filename-only input is searched across subfolders.
 If duplicate filenames exist under subfolders, use a relative path like `front/home`.
 For AI writing philosophy and operating rules, use `00_agd/README.md` (English: `00_agd/README.en.md`) as the unified guide.
 
-For new document creation (wizard top menu `4`), filename-only output is auto-routed by doc type:
+For new document creation (wizard top menu `4`), filename-only output is auto-routed by doc type.
+For project-level planning, use menu `[2] Generate doc kit` and choose `new-project`.
 
-- `service` -> `00_agd\agd_docs\10_source\service\<file>.agd`
-- `core-spec` -> `00_agd\agd_docs\10_source\product\<file>.agd`
-- `delivery-plan` -> `00_agd\agd_docs\20_derived\frontend\<file>.agd`
-- `policy` -> `00_agd\agd_docs\10_source\policy\<file>.agd`
-- `meeting` -> `00_agd\agd_docs\30_shared\meeting\<file>.agd`
-- `experiment` -> `00_agd\agd_docs\30_shared\experiment\<file>.agd`
-- `roadmap` -> `00_agd\agd_docs\30_shared\roadmap\<file>.agd`
-- `handoff` -> `00_agd\agd_docs\30_shared\handoff\<file>.agd`
+- `service` -> `00_agd\agd_docs\10_core_logic\service\<file>.agd`
+- `policy` -> `00_agd\agd_docs\10_core_logic\policy\<file>.agd`
+- `architecture` -> `00_agd\agd_docs\10_core_logic\architecture\<file>.agd`
+- for other project docs, provide an explicit path or create them with the `new-project` kit
 
 You can also create documents by specifying an explicit target path.
-For page-by-page management, place `delivery-plan` docs under `20_derived\frontend` subfolders (for example, `checkout`, `home`).
+Keep core logic under `10_core_logic` and new initiatives under `20_new_project`.
+The `new-project` kit creates seven documents together under `20_new_project\<project-key>`.
 
 ## 5. Document Roles: source / derived
 

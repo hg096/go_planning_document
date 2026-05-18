@@ -1,0 +1,156 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- LOG-000 | 문서 안내 | 구현 흐름 문서의 범위와 다음에 볼 상세 문서를 정리한다
+- LOG-001 | End-to-End 파이프라인 | 입력부터 사용자 결과물까지 전체 처리 순서를 정리한다
+- LOG-010 | 단계별 처리 | 각 단계의 입력, 출력, 실패 처리를 정리한다
+- LOG-020 | 공개/관리자 흐름 | 사용자-facing 흐름과 운영자-facing 흐름을 구분한다
+- LOG-030 | 배치와 자동화 | 주기 실행, 자동 보정, 승격/롤백 흐름을 정리한다
+- LOG-040 | 구현 우선순위 | 현재 상태에서 목표 구조로 옮길 순서를 정리한다
+- LOG-050 | 유지보수 구조 | 변경 지점과 책임 경계를 정리한다
+
+@section LOG-000
+title: 문서 안내
+{
+	summary: 구현 논의를 시작할 때 먼저 보는 문서 안내
+	path:
+	links: GUIDE-INPUT
+	content:
+	<<<
+	[이 문서가 답하는 질문]
+	- 이 프로젝트는 어떤 순서로 데이터를 처리하고 언제 결과물로 내보내는가?
+
+	[다음에 볼 문서]
+	- 데이터 저장/입출력 계약은 03 문서
+	- 전략/자동화 구조는 04 문서
+	- 운영 검수와 예외 처리는 05 문서
+	- 실제 구현 순서는 06 문서
+	>>>
+}
+
+@section LOG-001
+title: End-to-End 파이프라인
+{
+	summary: 전체 처리 순서를 한 번에 보여준다
+	path:
+	links: PIPELINE-001
+	content:
+	<<<
+	[전체 흐름]
+	1) 입력 수집
+	2) 정규화
+	3) 검증
+	4) 핵심 처리
+	5) 저장
+	6) 공개/응답
+	7) 관찰/보정
+	>>>
+}
+
+@section LOG-010
+title: 단계별 처리
+{
+	summary: 각 단계가 입력과 출력을 어떻게 넘기는지 정리한다
+	path:
+	links: PIPELINE-STEP-001
+	content:
+	<<<
+	[단계별 계약]
+	1) 단계:
+	   - 입력:
+	   - 출력:
+	   - 실패 처리:
+	2) 단계:
+	   - 입력:
+	   - 출력:
+	   - 실패 처리:
+	>>>
+}
+
+@section LOG-020
+title: 공개/관리자 흐름
+{
+	summary: 공개 사용자 흐름과 관리자/디버그 흐름을 분리한다
+	path:
+	links: UI-OPS-001
+	content:
+	<<<
+	[공개 흐름]
+	-
+
+	[관리자 흐름]
+	-
+
+	[금지 흐름]
+	-
+	>>>
+}
+
+@section LOG-030
+title: 배치와 자동화
+{
+	summary: 주기 실행과 자동 보정/승격/롤백 흐름을 정리한다
+	path:
+	links: AUTO-001
+	content:
+	<<<
+	[주기 실행]
+	1)
+	2)
+
+	[자동 보정]
+	1)
+	2)
+
+	[승격/롤백]
+	-
+	>>>
+}
+
+@section LOG-040
+title: 구현 우선순위
+{
+	summary: 가장 먼저 구현해야 할 흐름과 나중에 확장할 흐름을 나눈다
+	path:
+	links: IMPLEMENT-001
+	content:
+	<<<
+	[1순위]
+	-
+
+	[2순위]
+	-
+
+	[나중]
+	-
+	>>>
+}
+
+@section LOG-050
+title: 유지보수 구조
+{
+	summary: 모듈 책임과 변경 지점을 정리한다
+	path:
+	links: MAINTAIN-001
+	content:
+	<<<
+	[책임 경계]
+	- 모듈:
+	  - 책임:
+	  - 변경 이유:
+
+	[변경이 모이면 안 되는 곳]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: LOG-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: 신규 프로젝트 구현 로직 문서 초기 생성
+impact: 기획 기준을 구현 가능한 end-to-end 흐름으로 전환할 수 있게 함

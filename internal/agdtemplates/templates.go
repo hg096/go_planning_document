@@ -34,6 +34,22 @@ func Names() []string {
 		"incident-case-en",
 		"maintenance-case-ko",
 		"maintenance-case-en",
+		"architecture-ko",
+		"architecture-en",
+		"project-plan-ko",
+		"project-plan-en",
+		"project-logic-ko",
+		"project-logic-en",
+		"project-data-contract-ko",
+		"project-data-contract-en",
+		"project-strategy-ko",
+		"project-strategy-en",
+		"project-ops-review-ko",
+		"project-ops-review-en",
+		"project-implementation-plan-ko",
+		"project-implementation-plan-en",
+		"project-ai-checklist-ko",
+		"project-ai-checklist-en",
 		"core-spec-ko",
 		"core-spec-en",
 		"delivery-plan-ko",
@@ -114,6 +130,38 @@ func nameToPath(name string) (string, error) {
 		return "files/maintenance_case_ko.agd", nil
 	case "maintenance-case-en":
 		return "files/maintenance_case_en.agd", nil
+	case "architecture-ko":
+		return "files/architecture_ko.agd", nil
+	case "architecture-en":
+		return "files/architecture_en.agd", nil
+	case "project-plan-ko":
+		return "files/project_plan_ko.agd", nil
+	case "project-plan-en":
+		return "files/project_plan_en.agd", nil
+	case "project-logic-ko":
+		return "files/project_logic_ko.agd", nil
+	case "project-logic-en":
+		return "files/project_logic_en.agd", nil
+	case "project-data-contract-ko":
+		return "files/project_data_contract_ko.agd", nil
+	case "project-data-contract-en":
+		return "files/project_data_contract_en.agd", nil
+	case "project-strategy-ko":
+		return "files/project_strategy_ko.agd", nil
+	case "project-strategy-en":
+		return "files/project_strategy_en.agd", nil
+	case "project-ops-review-ko":
+		return "files/project_ops_review_ko.agd", nil
+	case "project-ops-review-en":
+		return "files/project_ops_review_en.agd", nil
+	case "project-implementation-plan-ko":
+		return "files/project_implementation_plan_ko.agd", nil
+	case "project-implementation-plan-en":
+		return "files/project_implementation_plan_en.agd", nil
+	case "project-ai-checklist-ko":
+		return "files/project_ai_checklist_ko.agd", nil
+	case "project-ai-checklist-en":
+		return "files/project_ai_checklist_en.agd", nil
 	case "core-spec-ko":
 		return "files/core_spec_ko.agd", nil
 	case "core-spec-en":
@@ -143,6 +191,22 @@ func defaultTitle(name string) string {
 		return "New Incident Root Trace Case"
 	case "maintenance-case-ko", "maintenance-case-en":
 		return "New Maintenance Unified Case"
+	case "architecture-ko", "architecture-en":
+		return "New Architecture Decision Record"
+	case "project-plan-ko", "project-plan-en":
+		return "New Project Plan"
+	case "project-logic-ko", "project-logic-en":
+		return "New Project Implementation Logic"
+	case "project-data-contract-ko", "project-data-contract-en":
+		return "New Project Data Contract"
+	case "project-strategy-ko", "project-strategy-en":
+		return "New Project Strategy"
+	case "project-ops-review-ko", "project-ops-review-en":
+		return "New Project Operations Review"
+	case "project-implementation-plan-ko", "project-implementation-plan-en":
+		return "New Project Implementation Plan"
+	case "project-ai-checklist-ko", "project-ai-checklist-en":
+		return "New Project AI Checklist"
 	case "core-spec-ko", "core-spec-en":
 		return "New Core Spec"
 	case "delivery-plan-ko", "delivery-plan-en":

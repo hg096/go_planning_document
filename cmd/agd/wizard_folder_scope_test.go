@@ -8,7 +8,7 @@ import (
 )
 
 func TestIsPathWithinBase(t *testing.T) {
-	base := filepath.Clean(filepath.Join("agd_docs", "10_source", "product"))
+	base := filepath.Clean(filepath.Join("agd_docs", "20_new_project", "product"))
 
 	if !isPathWithinBase(base, base) {
 		t.Fatalf("base path must be allowed")
@@ -16,11 +16,10 @@ func TestIsPathWithinBase(t *testing.T) {
 	if !isPathWithinBase(base, filepath.Join(base, "checkout")) {
 		t.Fatalf("child path must be allowed")
 	}
-	if isPathWithinBase(base, filepath.Join("agd_docs", "10_source", "service")) {
+	if isPathWithinBase(base, filepath.Join("agd_docs", "10_core_logic", "service")) {
 		t.Fatalf("sibling path must be blocked")
 	}
 	if isPathWithinBase(base, filepath.Join("agd_docs", "30_shared", "roadmap")) {
 		t.Fatalf("other root path must be blocked")
 	}
 }
-

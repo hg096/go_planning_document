@@ -22,6 +22,7 @@ func docTypeOptions() []docTypeOption {
 		{Key: "policy", EN: "Policy and guideline document", KO: "정책 및 가이드 문서"},
 		{Key: "experiment", EN: "Experiment and A/B test plan", KO: "실험 및 A/B 테스트 계획"},
 		{Key: "service", EN: "Service logic source spec", KO: "서비스 로직 source 스펙"},
+		{Key: "architecture", EN: "Architecture decision source", KO: "아키텍처 의사결정 source"},
 		{Key: "core-spec", EN: "Unified core planning spec", KO: "통합 코어 기획 스펙"},
 		{Key: "delivery-plan", EN: "Unified frontend delivery plan", KO: "통합 프런트엔드 전달 계획"},
 	}
@@ -47,6 +48,7 @@ func printDocTypeCatalog(w io.Writer, withNumber bool) {
 func allowedCreateDocTypeKeys() []string {
 	return []string{
 		"service",
+		"architecture",
 		"core-spec",
 		"delivery-plan",
 		"meeting",

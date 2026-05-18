@@ -1,0 +1,168 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- IMPL-000 | Document Guide | Define implementation scope and reading order
+- IMPL-001 | Current Transition Targets | Identify current code/docs to change
+- IMPL-010 | Stage 1 Foundation | Define migration, config, and base types
+- IMPL-020 | Stage 2 Core Flow Wiring | Connect core service flow to the new structure
+- IMPL-030 | Stage 3 Evidence and State | Persist result evidence, state, and logs
+- IMPL-040 | Stage 4 Automation and Operations | Add automation and operator tooling
+- IMPL-050 | Order and Gates | Define stage completion and entry conditions
+- IMPL-060 | Tests and Validation | Define required tests and operations checks
+- IMPL-070 | Non-goals and Forbidden Patterns | Define what this implementation must not do
+
+@section IMPL-000
+title: Document Guide
+{
+	summary: Implementation order and gates
+	path:
+	links: GUIDE-IMPLEMENT
+	content:
+	<<<
+	[Question this document answers]
+	- In which order can we implement the target structure with minimal risk?
+	>>>
+}
+
+@section IMPL-001
+title: Current Transition Targets
+{
+	summary: Current code or docs that must change
+	path:
+	links: IMPL-CURRENT-001
+	content:
+	<<<
+	[Transition targets]
+	1)
+	2)
+
+	[Keep]
+	-
+	>>>
+}
+
+@section IMPL-010
+title: Stage 1 Foundation
+{
+	summary: Build data, config, type, and migration foundation
+	path:
+	links: IMPL-STEP-1
+	content:
+	<<<
+	[Tasks]
+	1)
+	2)
+
+	[Done]
+	-
+	>>>
+}
+
+@section IMPL-020
+title: Stage 2 Core Flow Wiring
+{
+	summary: Connect core service flow to the new foundation
+	path:
+	links: IMPL-STEP-2
+	content:
+	<<<
+	[Tasks]
+	1)
+	2)
+
+	[Done]
+	-
+	>>>
+}
+
+@section IMPL-030
+title: Stage 3 Evidence and State
+{
+	summary: Add evidence and state needed for explainability and recovery
+	path:
+	links: IMPL-STEP-3
+	content:
+	<<<
+	[Tasks]
+	-
+
+	[Done]
+	-
+	>>>
+}
+
+@section IMPL-040
+title: Stage 4 Automation and Operations
+{
+	summary: Extend automation, operator tools, alerts, and correction flows
+	path:
+	links: IMPL-STEP-4
+	content:
+	<<<
+	[Tasks]
+	-
+
+	[Done]
+	-
+	>>>
+}
+
+@section IMPL-050
+title: Order and Gates
+{
+	summary: Entry and completion conditions for each stage
+	path:
+	links: IMPL-GATE-001
+	content:
+	<<<
+	[Gates]
+	1) stage:
+	   - entry:
+	   - done:
+	   - stop condition:
+	>>>
+}
+
+@section IMPL-060
+title: Tests and Validation
+{
+	summary: Validation required before completion
+	path:
+	links: IMPL-VALIDATION-001
+	content:
+	<<<
+	[Tests]
+	1)
+	2)
+
+	[Operations validation]
+	-
+	>>>
+}
+
+@section IMPL-070
+title: Non-goals and Forbidden Patterns
+{
+	summary: Work this implementation must not do
+	path:
+	links: IMPL-NON-GOAL-001
+	content:
+	<<<
+	[Non-goals]
+	-
+
+	[Forbidden patterns]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: IMPL-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial implementation transition plan for new project kit
+impact: Turns planning/detail docs into implementation order and validation gates

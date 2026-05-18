@@ -14,7 +14,7 @@ Repeat steps 1-7 below to run AI workflows consistently without document gaps.
 - `target_docs`, `target_sections`, `goal`, `constraints`, `done`
 
 2. Check baseline
-- Read source docs under `00_agd/agd_docs/10_source/*` first.
+- Read core logic docs under `00_agd/agd_docs/10_core_logic/*` first.
 - Check whether multiple source docs exist for the same topic.
 
 3. Edit by section scope
@@ -151,37 +151,23 @@ The following section integrates the former `00_agd/agd_docs/README.md` operatio
 
 ### 6-1) Folder Structure
 
-- `00_inbox`: temporary draft and pre-triage notes
-- `10_source/*`: source-of-truth documents
-- `20_derived/*`: derived documents linked to source docs
-- `30_shared/*`: shared planning/collaboration docs
-- `90_archive`: archived documents
+- `10_core_logic/*`: source-of-truth core logic documents
+- `20_new_project/*`: new project planning documents
 
 ### 6-2) Recommended Placement by Topic
 
-- `10_source/product`: product scope and success criteria
-- `10_source/service`: service/backend logic baseline
-- `10_source/policy`: rules/standards/approval/release policy
-- `10_source/architecture`: ADR/trade-off records
+- `10_core_logic/service`: service/backend logic, domain rules, failure branches
+- `10_core_logic/policy`: rules/standards/approval/release policy
+- `10_core_logic/architecture`: ADR/trade-off records
 
-- `20_derived/frontend`: page-level implementation/validation/release docs
-- `20_derived/qa`: regression/permission/recovery test docs
-- `20_derived/ops`: operations runbook docs
-
-- `30_shared/meeting`: decision/action logs
-- `30_shared/handoff`: release handoff package
-- `30_shared/roadmap`: milestones/priorities
-- `30_shared/postmortem`: incident retrospectives
-- `30_shared/experiment`: experiment records
-- `30_shared/maintenance`: single-flow maintenance workspace
-- `30_shared/errFix`: single-flow incident/bug workspace
+- `20_new_project/<project-key>`: project scope, policy, delivery plan, and roadmap in one folder
 
 ### 6-3) Guide-First Operation
 
 1) Read `00_agd/docs/AGD_TEMPLATE_GUIDE_ko.md` or `AGD_TEMPLATE_GUIDE_en.md` first.
-2) For service topics, keep `10_source/service` as the single authoritative flow.
-3) Link derived docs from the source baseline.
-4) When service source changes, sync linked derived/source_sections in the same change set.
+2) For core logic, keep `10_core_logic/service` as the single authoritative flow.
+3) Link new project docs to core logic with `source_doc`/`source_sections` when needed.
+4) When core logic changes, sync linked new project docs in the same change set.
 5) Always record `@change(reason/impact)`.
 6) Do not report completion before passing 3 validations + blind reconstruction test.
 
@@ -195,7 +181,7 @@ The following section integrates the former `00_agd/agd_docs/README.md` operatio
 
 ### 6-5) Blind Reconstruction Test
 
-- input: only `10_source/service` document(s) (no code reference)
+- input: only `10_core_logic/service` document(s) (no code reference)
 - output: domain pseudo-implementation (call order, DTO, failure branches, state transitions)
 - pass criteria: 0 missing required blocks + 0 mapping mismatch
 
@@ -219,14 +205,6 @@ Reference examples: `00_agd/examples/ko/*`
 
 ### 6-8) General Quality Standards
 
-- source docs: executable contract quality
-- derived docs: traceable via source sections and `source_sections`
-- shared docs: preserve decision context needed for operations/collaboration
+- core logic docs: executable contract quality
+- new project docs: traceable to core logic through `source_doc`/`source_sections` when they depend on existing behavior
 - keep `@map`/`@section`/`@change` consistent
-
-### 6-9) END__ Close Rules
-
-- maintenance close docs: `30_shared/maintenance/END__*_maintenance_case.agd`
-- incident close docs: `30_shared/errFix/END__*_incident_case.agd`
-- `END__*` docs are excluded from default scan/select/role-graph flows
-- remove the `END__` prefix to reopen

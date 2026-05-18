@@ -57,8 +57,10 @@ func normalizeDocTypeKey(kind string) string {
 	switch raw {
 	case "service", "system", "service-logic":
 		return "service"
-	case "prd", "adr", "guide", "ai", "ai-planning-guide", "ai-guide":
+	case "prd", "guide", "ai", "ai-planning-guide", "ai-guide":
 		return "core-spec"
+	case "adr", "architecture", "architecture-decision":
+		return "architecture"
 	case "qa", "qaplan", "qa-plan", "frontend", "page-logic", "frontend-page", "runbook":
 		return "delivery-plan"
 	case "minutes":
@@ -79,27 +81,29 @@ func normalizeDocTypeKey(kind string) string {
 func defaultSubdirForDocType(kind string) string {
 	switch normalizeDocTypeKey(kind) {
 	case "service":
-		return filepath.Join("10_source", "service")
+		return filepath.Join("10_core_logic", "service")
 	case "policy":
-		return filepath.Join("10_source", "policy")
+		return filepath.Join("10_core_logic", "policy")
+	case "architecture":
+		return filepath.Join("10_core_logic", "architecture")
 	case "incident-case":
-		return filepath.Join("30_shared", "errFix")
+		return filepath.Join("20_new_project", "delivery")
 	case "maintenance-case":
-		return filepath.Join("30_shared", "maintenance")
+		return filepath.Join("20_new_project", "delivery")
 	case "core-spec":
-		return filepath.Join("10_source", "product")
+		return filepath.Join("20_new_project", "product")
 	case "delivery-plan":
-		return filepath.Join("20_derived", "frontend")
+		return filepath.Join("20_new_project", "delivery")
 	case "meeting":
-		return filepath.Join("30_shared", "meeting")
+		return filepath.Join("20_new_project", "delivery")
 	case "handoff":
-		return filepath.Join("30_shared", "handoff")
+		return filepath.Join("20_new_project", "delivery")
 	case "roadmap":
-		return filepath.Join("30_shared", "roadmap")
+		return filepath.Join("20_new_project", "roadmap")
 	case "experiment":
-		return filepath.Join("30_shared", "experiment")
+		return filepath.Join("20_new_project", "product")
 	default:
-		return "00_inbox"
+		return filepath.Join("20_new_project", "product")
 	}
 }
 

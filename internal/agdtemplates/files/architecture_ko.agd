@@ -1,0 +1,164 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- ADR-000 | 작성 가이드 | 아키텍처 결정 문서를 어떻게 채울지 확인한다
+- ADR-001 | 결정 요약 | 이번 문서가 고정하는 핵심 결정과 상태를 정의한다
+- ADR-010 | 문제와 맥락 | 왜 결정이 필요한지, 어떤 제약이 있는지 기록한다
+- ADR-020 | 선택지와 판단 근거 | 검토한 대안과 선택/기각 이유를 비교한다
+- ADR-030 | 영향과 리스크 | 코드, 운영, 보안, 비용에 미치는 영향을 정리한다
+- ADR-040 | 검증과 되돌릴 조건 | 결정이 맞는지 확인할 방법과 철회 조건을 명시한다
+
+@section ADR-000
+title: 작성 가이드
+{
+	summary: 아키텍처 결정은 선택 자체보다 이유와 되돌릴 조건을 남기는 문서다
+	path:
+	links: GUIDE-ADR
+	content:
+	<<<
+	[작성 원칙]
+	1) 결정은 한 문장으로 적고 상태를 명시한다. 예: proposed, accepted, deprecated.
+	2) 선택한 이유뿐 아니라 버린 대안과 버린 이유를 같이 남긴다.
+	3) 나중에 뒤집을 수 있도록 검증 방법과 철회 조건을 적는다.
+
+	[AI 요청 입력]
+	- target_docs: 이 ADR 문서 경로
+	- target_sections: ADR 섹션 ID
+	- goal: 어떤 결정/검토를 문서화할지
+	- constraints: 기술/조직/일정/비용 제약
+	- done: 승인 또는 검증 완료 기준
+	>>>
+}
+
+@section ADR-001
+title: 결정 요약
+{
+	summary: 결정 제목, 상태, 결정권자, 적용 범위를 고정한다
+	path:
+	links: ADR-SUMMARY
+	content:
+	<<<
+	[결정]
+	-
+
+	[상태]
+	- proposed | accepted | deprecated | superseded:
+
+	[적용 범위]
+	- 포함:
+	- 제외:
+
+	[결정권자/참여자]
+	- owner:
+	- reviewers:
+	>>>
+}
+
+@section ADR-010
+title: 문제와 맥락
+{
+	summary: 이 결정을 해야 하는 배경, 현재 문제, 제약 조건을 기록한다
+	path:
+	links: ADR-CONTEXT
+	content:
+	<<<
+	[배경]
+	-
+
+	[현재 문제]
+	1)
+	2)
+
+	[제약]
+	- 일정:
+	- 성능:
+	- 보안/정책:
+	- 운영:
+	>>>
+}
+
+@section ADR-020
+title: 선택지와 판단 근거
+{
+	summary: 선택한 안과 버린 대안을 같은 기준으로 비교한다
+	path:
+	links: ADR-OPTIONS
+	content:
+	<<<
+	[선택한 안]
+	- 안:
+	- 이유:
+	- 기대 효과:
+
+	[대안]
+	1) 대안:
+	   - 장점:
+	   - 기각 이유:
+	2) 대안:
+	   - 장점:
+	   - 기각 이유:
+
+	[판단 기준]
+	- 복잡도:
+	- 변경 비용:
+	- 확장성:
+	- 운영 안정성:
+	>>>
+}
+
+@section ADR-030
+title: 영향과 리스크
+{
+	summary: 결정이 코드/데이터/운영/팀 작업에 미치는 영향을 명시한다
+	path:
+	links: ADR-IMPACT
+	content:
+	<<<
+	[영향 범위]
+	- 코드:
+	- 데이터:
+	- 배포/운영:
+	- 문서/팀 프로세스:
+
+	[리스크]
+	1) 리스크:
+	   - 대응:
+	2) 리스크:
+	   - 대응:
+	>>>
+}
+
+@section ADR-040
+title: 검증과 되돌릴 조건
+{
+	summary: 결정 검증 방법, 관찰 지표, 철회/재검토 조건을 정의한다
+	path:
+	links: ADR-VALIDATION
+	content:
+	<<<
+	[검증 방법]
+	1)
+	2)
+
+	[관찰 지표]
+	- 지표:
+	- 기준값:
+	- 실패 신호:
+
+	[되돌릴 조건]
+	- 조건:
+	- 되돌리는 절차:
+	- 후속 문서:
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: ADR-001
+date: {{DATE}}
+author: {{OWNER}}
+reason: 아키텍처 의사결정 템플릿 초기 생성
+impact: 서비스 로직과 분리해 기술 선택의 근거, 대안, 리스크, 철회 조건을 추적 가능하게 함

@@ -1,0 +1,193 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- CHECK-000 | Document Guide | How AI implementers should use this checklist
+- CHECK-010 | Preflight | Confirm docs, code, and test scope
+- CHECK-020 | Current Structure Inventory | Identify removal, migration, and keep targets
+- CHECK-030 | Data and Contract Work | Checklist for migration, models, and I/O contracts
+- CHECK-040 | Service and Repository | Checklist for types, repositories, and service wiring
+- CHECK-050 | Core Flow Implementation | Checklist for user-facing core flow
+- CHECK-060 | Evidence and State Handling | Checklist for evidence, failure state, and audit storage
+- CHECK-070 | Automation and Operations Tools | Checklist for automation and operator workflows
+- CHECK-080 | Tests and Validation | Checklist for tests, build, and AGD validation
+- CHECK-090 | Self Review | Regression, security, and operations risk review
+- CHECK-100 | Completion Report | Required final response contents
+
+@section CHECK-000
+title: Document Guide
+{
+	summary: Execution checklist used directly by AI implementers
+	path:
+	links: GUIDE-AI-CHECK
+	content:
+	<<<
+	[Usage]
+	1) Read CHECK-010 before implementation.
+	2) Mark completed items with evidence while working.
+	3) Re-check CHECK-080 through CHECK-100 before reporting completion.
+	>>>
+}
+
+@section CHECK-010
+title: Preflight
+{
+	summary: Confirm required docs and forbidden scope before work
+	path:
+	links: CHECK-PREFLIGHT
+	content:
+	<<<
+	[Confirm]
+	- target docs:
+	- target sections:
+	- goal:
+	- forbidden scope:
+	>>>
+}
+
+@section CHECK-020
+title: Current Structure Inventory
+{
+	summary: Identify what to remove, migrate, or keep
+	path:
+	links: CHECK-INVENTORY
+	content:
+	<<<
+	[Remove]
+	-
+
+	[Migrate]
+	-
+
+	[Keep]
+	-
+	>>>
+}
+
+@section CHECK-030
+title: Data and Contract Work
+{
+	summary: Implement migration, models, and I/O contracts
+	path:
+	links: CHECK-DATA
+	content:
+	<<<
+	[Checklist]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-040
+title: Service and Repository
+{
+	summary: Implement repository and service boundaries
+	path:
+	links: CHECK-REPOSITORY
+	content:
+	<<<
+	[Checklist]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-050
+title: Core Flow Implementation
+{
+	summary: Wire the user-facing core flow
+	path:
+	links: CHECK-FLOW
+	content:
+	<<<
+	[Checklist]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-060
+title: Evidence and State Handling
+{
+	summary: Persist evidence, failure state, and audit data
+	path:
+	links: CHECK-EVIDENCE
+	content:
+	<<<
+	[Checklist]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-070
+title: Automation and Operations Tools
+{
+	summary: Implement automation and operator workflows
+	path:
+	links: CHECK-OPS
+	content:
+	<<<
+	[Checklist]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-080
+title: Tests and Validation
+{
+	summary: Run tests, build, and AGD checks
+	path:
+	links: CHECK-VALIDATION
+	content:
+	<<<
+	[Validation]
+	- unit:
+	- integration:
+	- build:
+	- AGD:
+	>>>
+}
+
+@section CHECK-090
+title: Self Review
+{
+	summary: Check regression, security, and operations risks before completion
+	path:
+	links: CHECK-REVIEW
+	content:
+	<<<
+	[Risks]
+	1)
+	2)
+	>>>
+}
+
+@section CHECK-100
+title: Completion Report
+{
+	summary: Required final response contents
+	path:
+	links: CHECK-DONE
+	content:
+	<<<
+	[Report]
+	- changed files:
+	- changed sections:
+	- reason:
+	- impact:
+	- validation:
+	- remaining work:
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: CHECK-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: Initial AI implementation checklist for new project kit
+impact: Keeps AI implementation aligned with planning intent and validation requirements

@@ -22,8 +22,14 @@ func TestEnsureDocsRootDoesNotGenerateReadme(t *testing.T) {
 		t.Fatalf("README must not be auto-generated at docs root: %s", readmePath)
 	}
 
-	if info, err := os.Stat(filepath.Join(docsRootDir, "10_source", "product")); err != nil || !info.IsDir() {
+	if info, err := os.Stat(filepath.Join(docsRootDir, "20_new_project")); err != nil || !info.IsDir() {
 		t.Fatalf("docs scaffold directory should exist: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(docsRootDir, "00_inbox")); !os.IsNotExist(err) {
+		t.Fatalf("docs scaffold must not recreate 00_inbox")
+	}
+	if _, err := os.Stat(filepath.Join(docsRootDir, "90_archive")); !os.IsNotExist(err) {
+		t.Fatalf("docs scaffold must not recreate 90_archive")
 	}
 }
 
@@ -42,7 +48,13 @@ func TestEnsureKitRootDoesNotGenerateReadme(t *testing.T) {
 		t.Fatalf("README must not be auto-generated at kit root: %s", readmePath)
 	}
 
-	if info, err := os.Stat(filepath.Join(kitRoot, "10_source", "service")); err != nil || !info.IsDir() {
+	if info, err := os.Stat(filepath.Join(kitRoot, "10_core_logic", "service")); err != nil || !info.IsDir() {
 		t.Fatalf("kit scaffold directory should exist: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(kitRoot, "00_inbox")); !os.IsNotExist(err) {
+		t.Fatalf("kit scaffold must not recreate 00_inbox")
+	}
+	if _, err := os.Stat(filepath.Join(kitRoot, "90_archive")); !os.IsNotExist(err) {
+		t.Fatalf("kit scaffold must not recreate 90_archive")
 	}
 }

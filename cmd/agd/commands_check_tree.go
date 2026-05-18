@@ -72,11 +72,11 @@ func collectDesignWarnings(root, filePath string, doc *agd.Document) []string {
 	sourceDoc := strings.TrimSpace(doc.Meta["source_doc"])
 	sourceSections := strings.TrimSpace(doc.Meta["source_sections"])
 
-	if strings.HasPrefix(rel, "10_source/") {
+	if strings.HasPrefix(rel, "10_source/") || strings.HasPrefix(rel, "10_core_logic/") {
 		if authority == "" {
-			warnings = append(warnings, "10_source document should set meta.authority: source")
+			warnings = append(warnings, "core logic/source document should set meta.authority: source")
 		} else if authority != "source" {
-			warnings = append(warnings, fmt.Sprintf("10_source document should be authority=source (got %q)", authority))
+			warnings = append(warnings, fmt.Sprintf("core logic/source document should be authority=source (got %q)", authority))
 		}
 	}
 
@@ -94,8 +94,8 @@ func collectDesignWarnings(root, filePath string, doc *agd.Document) []string {
 			if sourcePath, err := resolveSourceDocPathForLint(filePath, sourceDoc); err == nil {
 				sourceRel := relativePathForReport(root, sourcePath)
 				sourceRel = filepath.ToSlash(filepath.Clean(sourceRel))
-				if !strings.HasPrefix(sourceRel, "10_source/") {
-					warnings = append(warnings, fmt.Sprintf("derived source_doc should point to 10_source (got %s)", sourceDoc))
+				if !strings.HasPrefix(sourceRel, "10_source/") && !strings.HasPrefix(sourceRel, "10_core_logic/") && !strings.HasPrefix(sourceRel, "20_new_project/product/") {
+					warnings = append(warnings, fmt.Sprintf("derived source_doc should point to core logic or project product source (got %s)", sourceDoc))
 				}
 			}
 		}

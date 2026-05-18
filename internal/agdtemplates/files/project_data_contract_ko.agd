@@ -1,0 +1,126 @@
+@meta
+title: {{TITLE}}
+version: {{VERSION}}
+owner: {{OWNER}}
+doc_base_path:
+
+@map
+- DATA-000 | 문서 안내 | 데이터 계약 문서의 범위를 정의한다
+- DATA-001 | 공개/응답 계약 | 사용자-facing 결과 데이터의 형태를 정리한다
+- DATA-010 | 입력 계약 | 외부 입력, 수집 데이터, 사용자 입력의 형태를 정리한다
+- DATA-020 | 저장 계약 | 테이블/컬렉션/파일 단위 저장 구조를 정리한다
+- DATA-030 | 판정과 근거 계약 | 점수, 상태, 근거, 감사 로그를 분리한다
+- DATA-040 | 실패와 복구 계약 | 부분 실패, 재시도, 보정, 롤백 데이터를 정리한다
+
+@section DATA-000
+title: 문서 안내
+{
+	summary: 이 문서가 다루는 데이터 계약 범위를 정의한다
+	path:
+	links: GUIDE-DATA
+	content:
+	<<<
+	[이 문서가 답하는 질문]
+	- 구현자가 어떤 데이터 형태를 읽고 쓰면 되는가?
+	>>>
+}
+
+@section DATA-001
+title: 공개/응답 계약
+{
+	summary: 사용자 화면이나 API가 읽는 최종 데이터 구조를 정의한다
+	path:
+	links: DATA-PUBLIC-001
+	content:
+	<<<
+	[필드]
+	- name:
+	  - type:
+	  - required:
+	  - 설명:
+
+	[정렬/필터]
+	-
+	>>>
+}
+
+@section DATA-010
+title: 입력 계약
+{
+	summary: 시스템으로 들어오는 입력과 정규화 규칙을 정의한다
+	path:
+	links: DATA-INPUT-001
+	content:
+	<<<
+	[입력 source]
+	1)
+	2)
+
+	[정규화]
+	-
+	>>>
+}
+
+@section DATA-020
+title: 저장 계약
+{
+	summary: 저장 단위와 관계를 정리한다
+	path:
+	links: DATA-STORAGE-001
+	content:
+	<<<
+	[저장 단위]
+	1) 이름:
+	   - 목적:
+	   - 주요 필드:
+	   - 고유성:
+
+	[관계]
+	-
+	>>>
+}
+
+@section DATA-030
+title: 판정과 근거 계약
+{
+	summary: 결과를 왜 선택/제외했는지 복원할 수 있게 근거를 분리한다
+	path:
+	links: DATA-EVIDENCE-001
+	content:
+	<<<
+	[상태]
+	- accepted:
+	- rejected:
+	- quarantined:
+
+	[근거]
+	- score:
+	- reason:
+	- source:
+	- audit:
+	>>>
+}
+
+@section DATA-040
+title: 실패와 복구 계약
+{
+	summary: 실패 상태, 재시도, 롤백에 필요한 데이터를 정의한다
+	path:
+	links: DATA-RECOVERY-001
+	content:
+	<<<
+	[실패 유형]
+	1)
+	2)
+
+	[복구 데이터]
+	-
+	>>>
+}
+
+@change CHG-{{DATE}}-01
+target: DATA-000
+date: {{DATE}}
+author: {{OWNER}}
+reason: 신규 프로젝트 데이터 계약 문서 초기 생성
+impact: 구현자가 저장/입출력/근거 데이터를 같은 기준으로 설계할 수 있게 함
